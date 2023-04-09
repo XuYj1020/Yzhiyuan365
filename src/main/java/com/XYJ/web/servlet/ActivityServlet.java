@@ -79,4 +79,15 @@ public class ActivityServlet extends BaseServlet{
         String jsonString = JSON.toJSONString(activitys);
         resp.getWriter().write(jsonString);
     }
+
+    public void selectActivityV(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        Activity activity = JSON.parseObject(params,Activity.class);
+        List<Activity> activities = activityservice.selectActivityV(activity);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(activities);
+        resp.getWriter().write(jsonString);
+    }
 }

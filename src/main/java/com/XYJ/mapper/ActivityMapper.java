@@ -13,4 +13,5 @@ public interface ActivityMapper {
 //    根据活动ID查询活动信息，包含活动的类别，发布组织等   联合查询
     List<Activity> selectByAcstyleidjoin(String activityid);
 
+    List<Activity> selectActivityV(Activity activity);
 }

@@ -4,10 +4,14 @@ import com.XYJ.mapper.ActivityMapper;
 import com.XYJ.pojo.Acstyle;
 import com.XYJ.pojo.Activity;
 
+import com.XYJ.pojo.Applicationreview;
+import com.alibaba.fastjson.JSON;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.XYJ.util.SqlSessionFactoryUtils.getSqlSessionFactory;
 
@@ -45,6 +49,14 @@ public class ActivityService {
         return activity;
     }
 
+    public List<Activity> selectActivityV(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        List<Activity> activitys = activitymapper.selectActivityV(activity);
+        sqlSession.close();
+        return activitys;
+    }
+
     public static void main(String[] args) {
         ActivityService activityService = new ActivityService();
         List<Activity> ac =  activityService.selectByAcstyleidjoin("HD1101019803312778");
@@ -53,5 +65,12 @@ public class ActivityService {
             System.out.println(activity.getAcstyles().getAcstyle());
             String a = activity.getAcstyles().getAcstyle();
         }
+
+        Map<String,Object> ainfo = new HashMap<>();
+//        ainfo.put("activityid","130304");
+        String jsonString = JSON.toJSONString(ainfo);
+        Activity act = JSON.parseObject(jsonString,Activity.class);
+        List<Activity> acts =  activityService.selectActivityV(act);
+        System.out.println(acts);
     }
 }
