@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace名称空间-->
+<!--<mapper namespace="test">-->
+<!--之前老表的sql语句-->
+<!--
+<mapper namespace="com.XYJ.mapper.AreaMapper">
+    <select id="SelectProvince" resultType="com.XYJ.pojo.Areas">
+        select AreaID,AreaName from areas where level = 1;
+    </select>
+-->
+
+<!--   Ancester省   ParentnodeID市  AreaName区-->
+<!--
+<select id="SelectadressByAreaID" resultType="com.XYJ.pojo.Areas">
+        select a.AreaName as Ancester,b.AreaName as ParentnodeID,c.AreaName as AreaName from areas as a ,areas as b ,areas as c where a.AreaID = b.ParentnodeID AND
+            b.AreaID = c.ParentnodeID and c.AreaID = #{AreaID};
+    </select>
+</mapper>
+  -->
+
+<mapper namespace="com.XYJ.mapper.AreaMapper">
+
+    <select id="SelectadressByAreaID" resultType="String">
+        select whole_name from area where  level = 3 and area_code = #{area_code};
+    </select>
+</mapper>

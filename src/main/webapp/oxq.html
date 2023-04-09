@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			.bg-purple-dark {
+			  background: #99a9bf;
+			}
+			.bg-purple {
+			  background: #d3dce6;
+							
+			}
+			.bg-purple-light {
+			  background: #e5e9f2;
+			}
+			.grid-content {
+			  border-radius: 40px;
+			  min-height: 36px;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<div id="app">
+			<el-row>
+				<el-col :span="4">
+					这里是logo
+				</el-col>
+				<el-col :span="18">
+					<div>
+						<el-row>
+							<el-col :span="3" :offset="16">
+								<!-- <span><el-link :underline="false" type="primary">您好，请登录</el-link></span> -->
+								<span v-if="!vname"><el-link :underline="false" type="primary" :href='vlongin'>您好，请登录</el-link></span>
+								<span v-if="vname"><el-link :underline="false" type="primary">您好，{{vname}}</el-link></span>
+								<p v-text="vlongin"></p>
+							</el-col>
+							<el-col :span="2">
+								<span v-if="!vname"><el-link :underline="false" type="primary" :href='vsignupnew'>个人注册</el-link></span>
+								<span v-if="vname"><el-link :underline="false" type="primary">退出登录</el-link></span>
+							</el-col>
+							<el-col :span="2">
+								<span><el-link :underline="false" type="primary">组织注册</el-link></span>
+							</el-col>
+<!-- 							<el-col :span="2">
+								<span><el-link :underline="false" type="primary">主要链接</el-link></span>
+							</el-col> --> 
+						</el-row>
+					</div>
+					<!-- 导航栏 -->
+					<div class="grid-content bg-purple daohang"> 
+					<!-- select	菜单激活回调	index: 选中菜单项的 index, indexPath: 选中菜单项的 index path -->
+						<!-- <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"  id="elmeun">
+							<el-menu-item index="1">首页</el-menu-item>
+							<el-submenu index="2">
+								<template slot="title">志愿者</template>
+								<el-menu-item index="2-1">选项1</el-menu-item>
+								<el-menu-item index="2-2">选项2</el-menu-item>
+								<el-menu-item index="2-3">选项3</el-menu-item>
+								<el-submenu index="2-4">
+									<template slot="title">选项4</template>
+										<el-menu-item index="2-4-1">选项1</el-menu-item>
+										<el-menu-item index="2-4-2">选项2</el-menu-item>
+										<el-menu-item index="2-4-3">选项3</el-menu-item>
+								</el-submenu>
+							</el-submenu>
+							<el-menu-item index="3">志愿组织</el-menu-item>
+							<el-menu-item index="4">活动招募</el-menu-item>
+							<el-menu-item index="5">志愿者培训</el-menu-item>
+							<el-menu-item index="6">志愿文化</el-menu-item>
+							<el-menu-item index="7">资料中心</el-menu-item>
+							<el-menu-item index="8"><el-link :underline="false" type="primary">关于我们</el-link></el-menu-item>
+						</el-menu> -->
+					</div>
+				</el-col>
+			</el-row>
+			<!-- 标题 -->
+			<el-row type="flex" justify="center">
+				<el-col :span="18">
+					<div>
+						<!-- <h1 style="text-align: center;">愿服务队到双山南社区开展创文巩卫活动</h1> -->
+					</div>
+				</el-col>
+			</el-row>
+			<el-row type="flex" justify="center">
+				<el-col :span="18">
+					<div>
+						<el-card class="box-card" shadow="never" style = "border: 0px">
+						  <div slot="header" class="clearfix">
+						    <span><h1 style="text-align: center;" v-text="organizations.oname"></h1></span>
+<!-- 							<div style="text-align: center;">
+								<span>分类：</span>
+								<span>发布时间：</span>
+								<span>发布组织：</span>
+							</div> -->
+						    <el-button style="float: right; padding: 3px 0" type="text">我要举报</el-button>
+						  </div>
+						  <!-- 内容 -->
+						  <div class="text item">
+							  <el-card class="box-card" shadow="never">
+							  <el-row>
+								<el-col :span="8">
+									<div style="height: 300px;">
+										<!-- <el-avatar shape="square" :size="325" :fit="fit" src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"></el-avatar> -->
+									</div>
+								</el-col>
+								<el-col :span="12">
+									
+										<div class="text item" style="height: 310px;">
+											<!-- 描述列表，一行一项 -->
+											<el-descriptions  :column="1">
+											    <el-descriptions-item label="组织类型"><el-tag size="small" v-text="organizations.otypes.otype"></el-tag></el-descriptions-item>
+											    <!-- <el-descriptions-item label="所在区域">18100000000</el-descriptions-item> -->
+											    <el-descriptions-item label="登记状况">{{organizations.registrationstatuss.registrationstatus}}</el-descriptions-item>
+											    <el-descriptions-item label="注册时间" >{{organizations.registrationtime}}</el-descriptions-item>
+												<el-descriptions-item label="组织人数"></el-descriptions-item>
+												<el-descriptions-item label="组织负责人">{{organizations.name}}</el-descriptions-item>
+												<el-descriptions-item label="活动时长"></el-descriptions-item>
+											    <el-descriptions-item label="联系地址">{{Areas}}&nbsp;{{organizations.oaddress}} </el-descriptions-item>
+											</el-descriptions>
+											<el-button type="warning" @click="sqjr" v-if="ojoins.auditstatusid == 1" >取消申请</el-button>
+											<el-button type="primary" @click="sqjr" v-else-if="omembers.memberstatusid !== 1 && omembers.memberstatusid !== 3">申请加入</el-button>
+											<el-button type="danger" @click="sqjr" v-else-if="omembers.memberstatusid === 1">退出组织</el-button>
+											<el-button v-else="omembers.memberstatusid === 3" :disabled="omembers.memberstatusid === 3">无法加入该组织</el-button>
+										</div>
+										    
+									
+								</el-col>
+							  </el-row>
+							  <el-card class="box-card" shadow="never">
+							    <div slot="header" class="clearfix">
+							      <span>组织介绍</span>
+							    </div>
+							    <div  class="text item" style="word-break: break-all;">
+							      {{organizations.ointroduce}}
+							    </div>
+							  </el-card>
+							  <el-card class="box-card" shadow="never">
+							    <div slot="header" class="clearfix">
+							      <span>进行中的活动</span>
+							    </div>
+							    <div  class="text item">
+							      
+							    </div>
+							  </el-card>
+							  <el-card class="box-card" shadow="never">
+							    <div slot="header" class="clearfix">
+							      <span>历史活动</span>
+							    </div>
+							    <div  class="text item">
+							      
+							    </div>
+							  </el-card>
+
+							</el-card>  
+						  </div>
+						</el-card>
+					</div>
+				</el-col>
+			</el-row>
+			
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created() {
+					this.vname=localStorage.getItem('vname'),
+					// 调用方法获取url参数
+					this.getQueryString();
+					console.log(this.query.organizationid);
+					// 获取组织详细信息
+					this.selectByOID();
+					console.log(this.organizations);
+					// this.SelectadressByAreaID();
+					console.log(this.organizations.district)
+					this.ov.volunteerid=localStorage.getItem('vid')
+					this.ov.organizationid=this.query.organizationid
+					// 
+					this.SelectomamberByOVID();
+					this.SelectojoinByOVID();
+				},
+				data(){
+					// console.log(location.search.split('?')[1])
+					// let param = location.search.split('?')[1],
+					
+					return {
+						Activitys:'',
+						vname:'',
+						// 登录页的跳转地址
+						vlongin:'',
+						// 注册页的跳转地址
+						vsignupnew:'',
+						// 存放url参数 ?后面
+						query:{},
+						// 组织信息
+						organizations:'',
+						// 省市区
+						Areas:'',
+						ov:{
+							volunteerid:'',
+							organizationid:''
+						},
+						omembers:'',
+						ojoins:''
+					      };
+				},
+				 methods: {
+					selectByOID(){
+						console.log(this.query.organizationid)
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/organization/selectByOID?organizationid="+this.query.organizationid,
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							// data:this.aa,
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// 得到类别中文
+							// console.log(resp.data[0].acstyles.acstyle)
+							// console.log(resp.data.datalist)
+							this.organizations=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					// url参数获取
+					getQueryString(){
+					  let params = location.search.split('?')[1]; // 获取?号后面的参数 name=&age=
+					  if (!params){
+							return null;// 如果无参，返回null
+					  }else{
+							let paramss = params.split("&"); // 将参数分割成数组 ['name=mick', 'age=20']
+							for (let i = 0; i < paramss.length; i++) {
+								let pair = paramss[i].split("="); // 将参数的key和值进行分割成 ['name', 'mick']
+								let key = decodeURIComponent(pair[0]); // 参数key
+								console.log(pair)
+								console.log(key)
+								let value = decodeURIComponent(pair[1]); // 参数值
+								this.query[key]=value
+							}
+							return null;
+							}
+					},
+					
+					// 通过活动类型编号查找活动类型
+					selectByOID(){
+						console.log(this.query.organizationid)
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/organization/selectByOID?organizationid="+this.query.organizationid,
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							// data:this.aa,
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// 得到类别中文
+							// console.log(resp.data[0].acstyles.acstyle)
+							// console.log(resp.data.datalist)
+							this.organizations=resp.data
+							this.SelectadressByAreaID()  
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					// 获取省市区信息
+					SelectadressByAreaID(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Area/SelectadressByAreaID?district="+this.organizations.district,
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							// data:this.aa,
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// 得到类别中文
+							// console.log(resp.data[0].acstyles.acstyle)
+							// console.log(resp.data.datalist)
+							this.Areas=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					//查找是否已加入组织或已退出组织或被拉黑,如果已退出组织查询是否有新的申请记录
+					SelectomamberByOVID(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Omembers/selectByOVid",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.ov
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.omembers = resp.data[0]
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					// 查找是否已经在申请中
+					SelectojoinByOVID(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/ojoin/selectByOVid",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.ov
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.ojoins = resp.data[0]
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+
+					// 按钮事件
+					sqjr(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/ojoin/insert",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.ov
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.$message({
+							  message: '成功发送加入申请',
+							  type: 'success'
+							});
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+							this.$message.error('出错了，请尝试再次申请');
+						  });
+					}
+					
+				}
+			})
+		</script>
+	</body>
+</html>

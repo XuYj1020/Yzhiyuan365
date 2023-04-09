@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace名称空间-->
+<!--<mapper namespace="test">-->
+<mapper namespace="com.XYJ.mapper.UserMapper">
+    <!--    resultType里面填类-->
+    <select id="selectAll" resultType="com.XYJ.pojo.User">
+            select * from volunteer;
+    </select>
+
+    <insert id="insert">
+            insert into volunteer(
+                    volunteerid        ,
+                    phone              ,
+                    password           ,
+                    name               ,
+                    idnumber           ,
+                    gender             ,
+                    birthday           ,
+                    province           ,
+                    city               ,
+                    district           ,
+        <if test="address != null and address != ''">
+                    address            ,
+        </if>
+                    education          ,
+                    occupation         ,
+                    politicaliandscape ,
+        <if test="email != null and email != ''">
+                    email              ,
+        </if>
+                    volunteerhours     ,
+                    volunteercoins     ,
+                    credit             ,
+                    registrationtime   ,
+                     userstatusid      ,
+                    lastlogintime      ,
+                    pictureaddress
+                    )
+                values(
+                    #{volunteerid       },
+                    #{phone             },
+                    #{password          },
+                    #{name              },
+                    #{idnumber          },
+                    #{gender            },
+                    #{birthday          },
+                    #{province          },
+                    #{city              },
+                    #{district          },
+        <if test="address != null and address != ''">
+                    #{address           },
+        </if>
+                    #{education         },
+                    #{occupation        },
+                    #{politicaliandscape},
+        <if test="email != null and email != ''">
+                    #{email             },
+        </if>
+                    0,
+                    0,
+                    100,
+                    now(),
+                    1,
+                    #{lastlogintime     },
+                    #{pictureaddress    }
+                    );
+    </insert>
+
+
+<!--    resultType="Integer"用来包装返回的结果是数值-->
+    <select id="Login" resultType="java.lang.Integer">
+        select count(*) from volunteer where phone = #{phone} and password = #{password};
+    </select>
+    <select id="selectByPhone" resultType="java.lang.Integer">
+        select count(*) from volunteer where phone = #{phone};
+    </select>
+    <select id="selectByIdnumber" resultType="java.lang.Integer">
+        select count(*) from volunteer where idnumber = #{idnumber};
+    </select>
+    <select id="selectByPhonePass" resultType="com.XYJ.pojo.User">
+        select * from volunteer where phone = #{phone} and password = #{password};
+    </select>
+    <select id="selectByVIDjoinOID" resultType="com.XYJ.pojo.User">
+        select volunteer.volunteerid,volunteer.name,volunteer.phone from volunteer , omembers where omembers.volunteerid = volunteer.volunteerid and omembers.organizationid = #{organizationid} and omembers.memberstatusid = 1;
+    </select>
+
+
+    <resultMap id="rs1" type="com.XYJ.pojo.User" >
+        <id column="volunteerid" property="volunteerid" ></id>
+        <result column="phone" property="phone" ></result>
+        <result column="password" property="password" ></result>
+        <result column="name" property="name" ></result>
+        <result column="idnumber" property="idnumber" ></result>
+        <result column="gender" property="gender" ></result>
+        <result column="birthday" property="birthday" ></result>
+        <result column="province" property="province" ></result>
+        <result column="city" property="city" ></result>
+        <result column="district" property="district" ></result>
+        <result column="address" property="address" ></result>
+        <result column="education" property="education" ></result>
+        <result column="occupation" property="occupation" ></result>
+        <result column="politicaliandscape" property="politicaliandscape" ></result>
+        <result column="email" property="email" ></result>
+        <result column="volunteerhours" property="volunteerhours" ></result>
+        <result column="volunteercoins" property="volunteercoins" ></result>
+        <result column="credit" property="credit" ></result>
+        <result column="registrationtime" property="registrationtime" ></result>
+        <result column="userstatusid" property="userstatusid" ></result>
+        <result column="lastlogintime" property="lastlogintime" ></result>
+        <result column="pictureaddress" property="pictureaddress" ></result>
+        <collection property="aleaders" ofType="com.XYJ.pojo.Aleader" >
+            <id column="leaderid" property="leaderid"></id>
+            <result column="activityid" property="activityid"></result>
+            <result column="stafid" property="stafid"></result>
+        </collection>
+    </resultMap>
+
+
+    <select id="selectByjoinAID" resultMap="rs1">
+        select volunteer.name,volunteer.phone,volunteer.volunteerid,aleader.leaderid from volunteer , aleader where volunteer.volunteerid = aleader.stafid and aleader.activityid = #{activityid};
+    </select>
+</mapper>

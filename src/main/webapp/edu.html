@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 教育 -->
+			<el-select v-model="education" placeholder="请选择">
+			    <el-option
+			      v-for="item in educations"
+			      :key="item.educationid"
+			      :label="item.education"
+			      :value="item.educationid">
+			      <span style="float: left">{{ item.education }}</span>
+			      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.educationid }}</span>
+			    </el-option>
+			  </el-select>
+			  <p v-text="education"></p>
+			  
+			  <!-- 职业 -->
+			  <el-select v-model="occupation" placeholder="请选择">
+			      <el-option
+			        v-for="item in occupations"
+			        :key="item.occupationid"
+			        :label="item.occupation"
+			        :value="item.occupationid">
+			        <span style="float: left">{{ item.occupation }}</span>
+			        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.occupationid }}</span>
+			      </el-option>
+			    </el-select>
+				<p v-text="occupation"></p>
+				
+				<!-- 政治面貌 -->
+				<el-select v-model="politicaliandscape" placeholder="请选择">
+				    <el-option
+				      v-for="item in politicaliandscapes"
+				      :key="item.politicaliandscapeid"
+				      :label="item.politicaliandscape"
+				      :value="item.politicaliandscapeid">
+				      <span style="float: left">{{ item.politicaliandscape }}</span>
+				      <span style="float: right; color: #8492a6; font-size: 13px">{{ item.politicaliandscapeid }}</span>
+				    </el-option>
+				  </el-select>
+			    <p v-text="politicaliandscape"></p>
+		</div>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		
+		<script>
+		  new Vue({
+		    el:"#app",
+			mounted() {
+				// var _this = this
+				// console.log('this',this)
+				// console.log('_this' , _this)
+				// 教育
+				this.selectEdu();
+				// axios({
+				//     method:"post",
+				//     url:"http://localhost:8080/Yzhiyuan365/Education/SelectAll"
+				//     // params:"code=1234",
+				//     // data:_this.obj
+				//   }).then(function (resp){
+				//     // console.log(resp)
+				// 	console.log(resp.data)
+				// 	// console.log(resp.data.datalist)
+				// 	_this.educations=resp.data
+				//   }).catch(function (error) {
+				//     console.log(error.response);//可以拿到后端返回的信息
+				//   });
+				  // 职业
+				  this.selectOccu();
+				  // axios({
+				  //     method:"post",
+				  //     url:"http://localhost:8080/Yzhiyuan365/Occupation/SelectAll"
+				  //     // params:"code=1234",
+				  //     // data:_this.obj
+				  //   }).then(function (resp){
+				  //     // console.log(resp)
+				  // 	console.log(resp.data)
+				  // 	// console.log(resp.data.datalist)
+				  // 	_this.occupations=resp.data
+				  //   }).catch(function (error) {
+				  //     console.log(error.response);//可以拿到后端返回的信息
+				  //   });
+					// 政治面貌
+					this.selectPol();
+					// axios({
+					//     method:"post",
+					//     url:"http://localhost:8080/Yzhiyuan365/Politicaliandscape/SelectAll"
+					//     // params:"code=1234",
+					//     // data:_this.obj
+					//   }).then(function (resp){
+					//     // console.log(resp)
+					// 	console.log(resp.data)
+					// 	// console.log(resp.data.datalist)
+					// 	_this.politicaliandscapes=resp.data
+					//   }).catch(function (error) {
+					//     console.log(error.response);//可以拿到后端返回的信息
+					//   });
+			},
+			methods:{
+				// var _this = this
+				selectEdu(){
+					// 教育
+					axios({
+					    method:"post",
+					    url:"http://localhost:8080/Yzhiyuan365/Education/SelectAll"
+					    // params:"code=1234",
+					    // data:_this.obj
+					  }).then(resp =>{
+					    // console.log(resp)
+						console.log(resp.data)
+						// console.log(resp.data.datalist)
+						this.educations=resp.data
+					  }).catch(error =>{
+					    console.log(error.response);//可以拿到后端返回的信息
+					  });
+				},
+				selectOccu(){
+					// 职业
+					axios({
+					    method:"post",
+					    url:"http://localhost:8080/Yzhiyuan365/Occupation/SelectAll"
+					    // params:"code=1234",
+					    // data:_this.obj
+					  }).then((resp)=>{
+					    // console.log(resp)
+						console.log(resp.data)
+						// console.log(resp.data.datalist)
+						this.occupations=resp.data
+					  }).catch((error) =>{
+					    console.log(error.response);//可以拿到后端返回的信息
+					  });
+				},
+				selectPol(){
+					// 政治面貌
+					axios({
+					    method:"post",
+					    url:"http://localhost:8080/Yzhiyuan365/Politicaliandscape/SelectAll"
+					    // params:"code=1234",
+					    // data:_this.obj
+					  }).then((resp)=>{
+					    // console.log(resp)
+						console.log(resp.data)
+						// console.log(resp.data.datalist)
+						this.politicaliandscapes=resp.data
+					  }).catch((error)=> {
+					    console.log(error.response);//可以拿到后端返回的信息
+					  });
+				}
+				
+				
+			},
+			 data() {
+			      return {
+			        educations: [],
+			        education: '',
+					occupations: [],
+					occupation: '',
+					politicaliandscapes: [],
+					politicaliandscape: ''
+				}
+				}
+			
+				})
+</script>
+	</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			.el-row {
+			    margin-bottom: 20px;
+			    &:last-child {
+			      margin-bottom: 0;
+			    }
+			  }
+			  .el-col {
+			    border-radius: 4px;
+			  }
+			  .bg-purple-dark {
+			    background: #99a9bf;
+			  }
+			  .bg-purple {
+			    background: #d3dce6;
+			  }
+			  .bg-purple-light {
+			    background: #e5e9f2;
+			  }
+			  .grid-content {
+			    border-radius: 4px;
+			    min-height: 36px;
+			  }
+			  .row-bg {
+			    padding: 10px 0;
+			    background-color: #f9fafc;
+			  }
+		</style>
+	</head>
+	<body>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<div id="app">
+			<el-row>
+				<el-col :span="24"><div class="grid-content bg-purple-dark">Y志愿</div></el-col>
+			</el-row>
+			<el-row type="flex" justify="center">
+				<el-col :span="16">
+				  <div class="grid-content bg-purple">
+					  <el-card class="box-card">
+					    <div slot="header" class="clearfix">
+					      <span style="text-align: center;"><h1>组织入驻</h1></span>
+					    </div>
+					    <div  class="text item">
+							<!-- 表单 -->
+							<el-row type="flex" justify="center">
+							<el-col :span="20">
+							<div>
+								<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
+									<el-form-item label="组织名称" prop="oname">
+									  <el-input v-model="ruleForm.oname"></el-input>
+									</el-form-item>
+									
+									<el-form-item label="登记状态" prop="registrationstatus">
+									    <el-select v-model="ruleForm.registrationstatus" placeholder="请选择登记状态" @change="selectOtype()">
+									      <el-option 
+										  v-for="items in Registrationstatuses"
+										  :key="items.registrationstatusid"
+										  :label="items.registrationstatus" 
+										  :value="items.registrationstatusid">
+										  </el-option>
+									      <!-- <el-option label="民政部门登记" value="2"></el-option> -->
+									    </el-select>
+									</el-form-item>
+									
+									<el-form-item label="组织类型" prop="otype">
+									    <el-select v-model="ruleForm.otype" placeholder="请选择组织类型">
+									      <el-option 
+										  v-for="items in Otypes"
+										  :key="items.otypeid"
+										  :label="items.otype" 
+										  :value="items.otypeid"> 
+										  </el-option>
+									    </el-select>
+									</el-form-item>
+									
+									<el-form-item label="社会统一信用代码" prop="unifiedcode" v-if="ruleForm.registrationstatus===1">
+									  <el-input v-model.trim="ruleForm.unifiedcode" style="width:300px"></el-input>
+									</el-form-item>
+									
+									<el-form-item label="地址" prop="selectedAds">
+										<el-cascader
+										    size="large"
+										    :options="ads"
+										    v-model="ruleForm.selectedAds"
+										    @change="handleChange">
+										  </el-cascader>
+									</el-form-item>
+									
+									<el-form-item label="详细地址" prop="oaddress">
+									  <el-input v-model.trim="ruleForm.oaddress" style="width:300px"></el-input>
+									</el-form-item>
+									
+									<el-form-item label="电子邮箱" prop="oemail" >
+									    <el-input v-model.trim="ruleForm.oemail" ></el-input>
+									</el-form-item>
+									
+									<el-form-item label="负责人姓名" prop="name" >
+									  <el-input v-model.trim="ruleForm.name" ></el-input>
+									</el-form-item>
+									
+									<el-form-item label="负责人身份证号" prop="idnumber" >
+									  <el-input v-model.trim="ruleForm.idnumber" ></el-input>
+									</el-form-item>
+									
+									<el-form-item label="负责人手机号" prop="phone">
+									  <el-input v-model.trim="ruleForm.phone" style="width:300px"></el-input>
+									</el-form-item>
+									
+									<el-form-item label="密码" prop="password">
+										<el-input type="password" v-model="ruleForm.password" autocomplete="off" ></el-input>
+									</el-form-item>
+									
+									<el-form-item label="确认密码" prop="checkPass">
+										<el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" ></el-input>
+									</el-form-item>
+									
+									<el-form-item label="短信验证码"  prop="verifycode">
+									  <el-input v-model.number.trim="ruleForm.verifycode" style="width:300px"></el-input>
+									  <span><el-button type="primary" plain id="fsdx" @click="fsdxForm()" :disabled="checkstate" size="small" v-text="fsdx">发送验证码</el-button></span>
+									</el-form-item>
+									
+									<el-form-item label="组织介绍"  prop="ointroduce">
+									  <el-input 
+									  type="textarea"
+									  placeholder="请输入50-300字组织介绍"
+									  v-model.trim="ruleForm.ointroduce" 
+									  minlength="50"
+									  maxlength="300"
+									  show-word-limit
+									  style="width:300px"></el-input>
+									</el-form-item>
+									
+									<el-form-item>
+										<el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+										<el-button @click="resetForm('ruleForm')">重置</el-button>
+									</el-form-item>
+								</el-form>
+							</div>
+					      </el-col>
+					      </el-row>
+					    </div>
+					  </el-card>
+				  </div>
+				</el-col>
+			</el-row>
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created() {
+					this.selectRegistrationstatuses();
+				},
+				data() {
+				    return {
+						
+						//登记状态选择
+						Registrationstatuses:[],
+						// 组织类型
+						Otypes:[],
+						// 地址选择
+						ads: regionData,
+						// 发送验证码按钮可否点击
+						checkstate:false,
+						// // 60秒倒计时
+						num:'60',
+						// 发送短信验证码的文字
+						fsdx:'发送验证码',
+						// 表单验证
+				      ruleForm: {
+						oname:'',
+						registrationstatus:'',
+						otype:'',
+						unifiedcode:'',
+						selectedAds:[],
+						oaddress:'',
+						oemail:'',
+						name:'',
+						idnumber:'',
+						phone:'',
+						password:'',
+				        checkPass: '',
+						ointroduce:'',
+						province:'',
+						city:'',
+						district:''					
+				      },
+					  
+					  // 表单验证规则
+				      rules: {
+						oname:[
+							{required: true, message: '请输入组织名称', trigger: 'blur'},
+						],
+						registrationstatus:[
+							{required: true, message: '请选择登记状态', trigger: 'blur'}
+						],
+						otype:[
+							{required: true, message: '请选择组织类别', trigger: 'blur'}
+						],
+						unifiedcode:[
+							{required: true, message: '请输入企业信用代码', trigger: 'blur'},
+							// 暂时不启用，测试阶段   该代码有效
+							// {pattern:/^([0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}|[1-9]\d{14})$/,message: '信用代码格式有误请检查', trigger: 'blur'},
+						],
+						selectedAds:[
+							{required: true, message: '请选择组织地址', trigger: 'blur'}
+						],
+						oaddress:[
+							{required: true, message: '请输入详细地址', trigger: 'blur'}
+						],
+						oemail:[
+							{required: true, message: '请输入组织邮箱', trigger: 'blur'},
+							{type:'email', message: '请输入正确的邮箱', trigger: 'blur'}
+						],
+						name:[
+							{required: true, message: '请输入负责人姓名', trigger: 'blur'}
+						],
+						idnumber:[
+							{required: true, message: '请输入负责人身份证号码', trigger: 'blur'},
+							{pattern:/^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,message: '身份证号格式错误', trigger: 'blur'}
+						],
+						phone:[
+							{required: true, message: '请输入负责人手机号', trigger: 'blur'},
+							{pattern:/^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/,message: '手机号格式错误', trigger: 'blur'}
+						],
+				        password: [
+							{required: true, message: '请输入密码', trigger: 'blur'}
+				        ],
+				        checkPass: [
+							{required: true, message: '请再次输入密码', trigger: 'blur'},
+							{ validator: this.validatePass2, trigger: 'blur' }
+				        ],
+						ointroduce:[
+							{required: true, message: '请输入组织介绍', trigger: 'blur'},
+							{min:50,max:300, message: '组织介绍应在50-300字之间', trigger: 'blur'}
+						]
+				      },
+					  
+				    };
+				},
+				methods: {
+					// 确认密码的校验
+					validatePass2(rule, value, callback) {
+						if (value !== this.ruleForm.password) {
+					    callback(new Error('两次输入密码不一致!'));
+					  } else {
+					    callback();
+					  }
+					},
+					// 提交按钮  官网案例方法
+				    // submitForm(formName) {
+						// refs 表单的名字
+				    //   this.$refs[formName].validate((valid) => {
+				    //     if (valid) {
+				    //       alert('submit!');
+				    //     } else {
+				    //       console.log('error submit!!');
+				    //       return false;
+				    //     }
+				    //   });
+				    // },
+					// 提交按钮   promas方法
+					submitForm() {
+					  this.$refs.ruleForm
+					  .validate()
+					  // 验证通过
+					  .then(()=>{
+						  // alert('submit!');
+						  axios({
+							  method:"post",
+							  url:"http://localhost:8080/Yzhiyuan365/organization/insert",
+							  data:this.ruleForm
+						  }).then((resp)=>{
+							  console.log(resp.data);
+						  }).catch((error)=>{
+							  console.log(error.response);
+						  })
+						   
+					  })
+					  .catch(()=>{
+						  console.log('error submit!!');
+					  })
+					},
+					// 重置按钮
+				    resetForm(formName) {
+				      this.$refs[formName].resetFields();
+				    },
+					
+					// 发送短信验证码按钮,执行一次单体验证,验证手机号是否正确
+					fsdxForm(){
+					  // let num = 60
+					  // let dxyzm = document.querySelector("#fsdx")
+					  // 如果正确errorMessage错误信息为 空
+					  this.$refs.ruleForm
+					  .validateField('phone',(errorMessage)=>{
+						  console.log(errorMessage)
+						  if(errorMessage){
+						  return
+						  }
+						  console.log('验证通过')
+						  // dxyzm.style.pointerEvents = 'none'
+						  this.checkstate = true
+						  this.fsdx = `60秒后重新发送`
+						  
+						  let time = setInterval(()=>{ 
+						  	  this.num--
+						  	  console.log(this.num)
+						  	  this.fsdx = `${this.num}秒后重新发送`
+						  	  // 不能点击
+						  	  if(this.num <= 0){
+						  		  clearInterval(time)
+						  		  this.fsdx = `重新发送`
+						  		  // 可以重新点击
+						  		  this.checkstate = false
+						  				}
+						  	},1000)
+					  })
+					},
+					
+					// 地址
+					handleChange (value) {
+						var a = this.ruleForm.selectedAds
+							this.ruleForm.province = a[0]
+							this.ruleForm.city = a[1]
+							this.ruleForm.district = a[2]
+							// console.log(this.ruleForm.province)
+							// console.log(this.ruleForm.city)
+							// console.log(this.ruleForm.district)
+						},
+						
+						
+					// 获取登记状态的下拉栏
+					selectRegistrationstatuses(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Registrationstatus/selectAll",
+							// headers:headers,
+							// headers:{
+							// 	'Access-Control-Allow-Origin':'*'
+							// }
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.Registrationstatuses=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					// 活动类别
+					selectOtype(){
+						this.ruleForm.otype=''
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/otype/selectByRegistrationstatusid",
+							// headers:headers,
+							// headers:{
+							// 	'Access-Control-Allow-Origin':'*'
+							// },
+							data:this.ruleForm.registrationstatus
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.Otypes=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					}
+					
+				}
+			})
+		</script>
+	</body>
+</html>

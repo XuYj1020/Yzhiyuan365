@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			.el-card{
+			  border-radius:30px;
+			  width: 380px;
+			  /* box-shadow: 0 2px 12px 0 rgb(243, 102, 102); */
+			  /* box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04); */
+			}
+			.grid-content {
+			  /* background: rgb(14, 214, 131); */
+			  border-radius: 4px;
+			  min-height: 80px;
+			}
+			.el-row {
+				/* 布局底部间距 */
+			  margin-bottom: 20px;
+			}
+			/* .el-input{
+			width: 250px;  
+			} */
+			/* 输入框尺寸 */
+			.el-form-item{
+			width: 300px;  
+			}
+			.el-button{
+			/* border: 2px solid red; */
+			width: 250px;
+/* 			padding-left: 10px
+			text-align: center; */
+			display: block;
+			margin: 0 auto;
+			text-align: center;
+			}
+			.lianjie{
+			width:250px;
+			/*			height:20px;*/
+			/*			border:2px solid red ;*/
+			text-align: center;
+			display: flex;        
+			flex-direction: row;           /*水平向右*/
+			justify-content:space-around;  /*两端对齐*/	
+			}
+			
+			
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-row type="flex" justify="center">
+			  <!-- justify 对齐方式 -->
+			  <el-col :span="24">
+			    <div class="grid-content">YU志愿</div>
+			  </el-col>
+			</el-row>
+			<el-row type="flex" justify="center">
+			<!-- justify 对齐方式 -->
+			      <el-col :span="6">
+			          <el-card shadow="always" >
+			            <h1 style="text-align: center;">欢迎登陆</h1>
+			            <el-divider></el-divider>
+			            <!-- form表单 -->
+						<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+							<el-form-item label="手机号" prop="phone" >
+						       <el-input v-model.trim="ruleForm.phone" placeholder="请输入手机号"></el-input>
+						     </el-form-item>
+						   <el-form-item label="密码" prop="password">
+						       <el-input type="password" v-model.trim="ruleForm.password" autocomplete="off" show-password placeholder="请输入密码"></el-input>
+						     </el-form-item>
+						     <!-- <el-form-item> -->
+						       <el-button type="primary" @click="submitForm('ruleForm')" >提交</el-button>
+						       <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
+							   <div class="lianjie">
+							   <span><el-link type="primary" href="./" style=>忘记密码?</el-link></span>
+							   <span><el-link type="primary" href="./vsignupnew.html">立即注册</el-link></span>
+							   </div>
+
+						     <!-- </el-form-item> -->
+						   </el-form>
+						   
+						</el-card>
+					</el-col>          
+				</el-row>      
+			<el-row type="flex" justify="center">
+			  <el-col :span="24"><div class="grid-content bg-purple-dark"></div></el-col>
+			</el-row>
+		</div>
+		
+		
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		
+		<script>
+			new Vue({
+				el:"#app",
+				data() {
+					var regphone = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
+				      var checkPhone = (rule, value, callback) => {
+				        if (!value) {
+				          return callback(new Error('手机号不能为空'));
+				        }
+				        setTimeout(() => {
+				            if (!regphone.test(value)) {
+				              callback(new Error('请输入正确的手机号'));
+				            } else {
+				              callback();
+				            }
+				        }, 1000);
+				      };
+				      var validatePassword = (rule, value, callback) => {
+				        if (value === '') {
+				          callback(new Error('请输入密码'));
+				        } else {
+				          if (this.ruleForm.checkPassword !== '') {
+				            this.$refs.ruleForm.validateField('checkPassword');
+				          }
+				          callback();
+				        }
+				      };
+				      
+				      return {
+				        ruleForm: {
+				          password: '',
+				          phone: ''
+				        },
+				        rules: {
+				          password: [
+				            { validator: validatePassword, trigger: 'blur' }
+				          ],
+				          phone: [
+				            { validator: checkPhone, trigger: 'blur' }
+				          ]
+				        }
+				      };
+				    },
+				    methods: {
+				      submitForm(formName) {
+				        this.$refs[formName].validate((valid) => {
+							// this.open()
+				          if (valid) {
+				            var _this = this
+				            axios({
+
+				                method:"post",
+				                url:"http://localhost:8080/Yzhiyuan365/user/selectByPhonePass",
+				                // params:"code=1234",
+				                data:_this.ruleForm,
+								headers:{
+									vtoken:localStorage.getItem('vtoken')
+								  },
+				              }).then(function (resp){
+				                console.log(resp.data)
+								if(resp.data){
+									/* //发现取到的是数组，所以要加下标  在没有传用户信息的时候
+									// console.log(resp.data[0].name)
+									// console.log(typeof resp.data)
+									// console.log("woshit")
+									// console.log(resp.data.name)
+									// localStorage.setItem('vname',resp.data[0].name)
+									// localStorage.setItem('vid',resp.data[0].volunteerid)
+									*/
+								   // 在后台传来map转的json后是一个对象，直接用键值对可以取到值
+								   localStorage.setItem('vtoken',resp.data.vtoken)
+								   localStorage.setItem('vname',resp.data.name)
+								   localStorage.setItem('vphone',resp.data.phone)
+								   localStorage.setItem('vid',resp.data.volunteerid)
+								   console.log(localStorage.getItem('vtoken'))
+									location.href = './index.html'
+								}else{
+									console.log(resp.data)
+									console.log("woshif")
+									// _this.test();
+									_this.open();
+									
+								}
+				              }).catch(function (error) {
+				                console.log(error.response);//可以拿到后端返回的信息
+				              });
+				          } else {
+				            console.log('error submit!!');
+				            return false;
+				          }
+				        });
+				      },
+				      resetForm(formName) {
+				        this.$refs[formName].resetFields();
+				      },
+					  test:function(){
+						  alert("222")
+					  },
+					  open:function() {
+					          this.$alert('账号或密码错误，请重新登录', '登录失败', {
+					            confirmButtonText: '确定',
+					            callback: action => {
+					              this.$message({
+					                type: 'info',
+					                message: `action: ${ action }`
+					              });
+					            }
+					          });
+					        }
+				    }
+				  
+			})
+		</script>
+	</body>
+</html>

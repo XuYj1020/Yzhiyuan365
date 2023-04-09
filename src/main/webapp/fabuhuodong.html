@@ -1,0 +1,513 @@
+<!-- 活动发布功能组织id应该从当前登录状态自动获取 -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<div id="app">
+			<el-row>
+				<el-col :span="24"><div class="grid-content bg-purple-dark">Y志愿</div></el-col>
+			</el-row>
+			<el-row type="flex" justify="center">
+				<el-col :span="16">
+				  <div class="grid-content bg-purple">
+					  <el-card class="box-card">
+					    <div slot="header" class="clearfix">
+					      <span style="text-align: center;"><h1>活动发布</h1></span>
+					    </div>
+					    <div  class="text item">
+							<!-- 表单 -->
+							<el-row type="flex" justify="center">
+							<el-col :span="20">
+							<div>
+								<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
+									<el-form-item label="组织名称">
+									  <!-- <el-input v-model="ruleForm.oname"></el-input> -->
+									  <!-- <p>{{ruleForm.organizationid}}</p> -->
+									  {{ruleForm.oname}}
+									</el-form-item>
+									
+									<el-form-item label="活动标题" prop="title">
+									     <el-input v-model="ruleForm.title"></el-input>
+									</el-form-item>
+									
+									<el-form-item label="活动类别" prop="acstyle">
+									    <el-select v-model="ruleForm.acstyle" placeholder="请选择活动类别">
+									      <el-option 
+										  v-for="items in Acstyles"
+										  :key="items.acstyleid"
+										  :label="items.acstyle" 
+										  :value="items.acstyleid"> 
+										  </el-option>
+									    </el-select>
+									</el-form-item>
+									
+									<!-- <p v-text="ruleForm.selectedAds"></p> -->
+									<el-form-item label="地址" prop="selectedAds">
+										<el-cascader
+										    size="large"
+										    :options="ads"
+										    v-model="ruleForm.selectedAds"
+										    @change="handleChange">
+										  </el-cascader>
+									</el-form-item>
+									
+									<el-form-item label="详细地址" prop="place">
+									  <el-input v-model.trim="ruleForm.place" style="width:300px"></el-input>
+									</el-form-item>
+									
+<!-- 									<el-form-item label="活动开始时间" prop="starttime" >
+									    <el-date-picker
+									          v-model="ruleForm.starttime"
+									          type="datetime"
+									          placeholder="选择日期时间">
+									    </el-date-picker>
+									</el-form-item>
+									
+									<el-form-item label="活动结束时间" prop="endtime" >
+									  <el-date-picker
+									        v-model="ruleForm.endtime"
+									        type="datetime"
+									        placeholder="选择日期时间">
+									  </el-date-picker>
+									</el-form-item> -->
+									
+									<!-- 时间要大于当前时间 -->
+									<el-form-item label="活动时间" prop="actiontime" >
+									  <div class="block">
+									    <el-date-picker
+									      v-model="ruleForm.actiontime"
+									      type="datetimerange"
+										  value-format="yyyy.MM.dd HH:mm:ss"
+									      range-separator="至"
+									      start-placeholder="开始日期"
+									      end-placeholder="结束日期">
+									    </el-date-picker>
+									  </div>
+									</el-form-item>
+									<p v-text="ruleForm.actiontime"></p>
+									
+									<el-form-item label="志愿时长" prop="volunteerhours">
+										<el-input-number v-model="ruleForm.volunteerhours" :precision="1" :step="0.5" :max="maxhour"></el-input-number>
+									</el-form-item>
+									
+									<el-form-item label="所需志愿者" prop="numberofrequiredvolunteer" >
+									  <el-input v-model.number.trim="ruleForm.numberofrequiredvolunteer" ></el-input>
+									</el-form-item>
+									
+<!-- 									<el-form-item label="开始报名时间" prop="enrolmentopeningtime">
+									  <el-input v-model.trim="ruleForm.enrolmentopeningtime" style="width:300px"></el-input>
+									</el-form-item>
+									
+									<el-form-item label="报名截止时间" prop="enrolmentdeadline">
+										<el-input v-model="ruleForm.enrolmentdeadline" autocomplete="off" ></el-input>
+									</el-form-item> -->
+									
+									<el-form-item label="志愿者招募时间" prop="enrolmenttime" >
+									  <div class="block">
+									    <el-date-picker
+									      v-model="ruleForm.enrolmenttime"
+									      type="datetimerange"
+										  value-format="yyyy.MM.dd HH:mm:ss"
+									      range-separator="至"
+									      start-placeholder="报名开始日期"
+									      end-placeholder="报名结束日期">
+									    </el-date-picker>
+									  </div>
+									</el-form-item>
+									
+									<el-form-item label="录取方式"  prop="admissionpolicy">
+										<el-select v-model="ruleForm.admissionpolicy" placeholder="请选择">
+									   <el-option
+									        v-for="item in Admissionpolicys"
+									        :key="item.admissionpolicyid"
+									        :label="item.admissionpolicy"
+									        :value="item.admissionpolicyid">
+									      </el-option>
+									    </el-select>
+									</el-form-item>
+									
+									<el-form-item label="信用分要求" prop="creditscorerequirement" >
+									  <el-input v-model.number.trim="ruleForm.creditscorerequirement" type="number"></el-input>
+									</el-form-item>
+									
+									<el-form-item label="是否允许请假" prop="leaveapproval" >
+									  <el-select v-model="ruleForm.leaveapproval" placeholder="请选择">
+									  <el-option
+									       v-for="item in leaveapprovals"
+									       :key="item.leaveapprovalid"
+									       :label="item.leaveapproval"
+									       :value="item.leaveapprovalid">
+									     </el-option>
+									   </el-select>
+									</el-form-item>
+									<!-- <p v-text="ruleForm.leaveapproval"></p> -->
+									
+									<el-form-item label="活动介绍"  prop="introduction">
+									  <el-input 
+									  type="textarea"
+									  placeholder="请输入10-300字活动介绍"
+									  v-model.trim="ruleForm.introduction" 
+									  minlength="50"
+									  maxlength="300"
+									  show-word-limit
+									  style="width:300px"></el-input>
+									</el-form-item>
+									
+									<el-form-item label="是否指定管理者" prop="havealeader" >
+									  <el-select v-model="ruleForm.havealeader" placeholder="请选择" @change="selectmembersByOID()">
+									  <el-option
+									       v-for="item in havealeaders"
+									       :key="item.havealeaderid"
+									       :label="item.havealeader"
+									       :value="item.havealeaderid">
+									     </el-option>
+									   </el-select>
+									</el-form-item>
+									
+									<p>{{ruleForm.havealeader}}</p>
+									<el-form-item label="管理者" prop="leader" v-if="ruleForm.havealeader==1">
+									  <el-select v-model="ruleForm.leader" placeholder="请选择" multiple>
+									  <el-option
+									       v-for="item in leaders"
+									       :key="item.volunteerid"
+									       :label="item.name"
+									       :value="item.volunteerid">
+									     </el-option>
+									   </el-select>
+									</el-form-item>
+									<p>{{ruleForm.leader}}</p>
+									<el-form-item>
+										<el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+										<el-button @click="resetForm('ruleForm')">重置</el-button>
+									</el-form-item>
+								</el-form>
+							</div>
+					      </el-col>
+					      </el-row>
+					    </div>
+					  </el-card>
+				  </div>
+				</el-col>
+			</el-row>
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created() {
+					this.selectAcstyles();
+					this.selectAdmissionpolicys();
+					this.ruleForm.organizationid = localStorage.getItem('oid')
+					this.ruleForm.oname = localStorage.getItem('oname')
+					this.selectmembersByOID();
+				},
+				data() {
+				    return {
+						// 地址选择
+						ads: regionData,
+						// 活动类别
+						Acstyles:[],
+						// 录取方式
+						Admissionpolicys:[],
+						maxhour:20,
+						// 是否允许请假
+						leaveapprovals:[
+							{
+								leaveapprovalid:'0',
+								leaveapproval:"否"
+							},
+							{
+								leaveapprovalid:'1',
+								leaveapproval:"是"
+							}
+						],
+						// 是否指定活动管理者
+						havealeaders:[
+							{
+								havealeaderid:'0',
+								havealeader:"否"
+							},
+							{
+								havealeaderid:'1',
+								havealeader:"是"
+							}
+						],
+						// 组织成员
+						leaders:[],
+						// 表单验证
+				      ruleForm: {
+						// 组织id
+						organizationid:'',
+						activityid:'',
+						oname:'',
+						title:'',
+						acstyle:'',
+						selectedAds:[],
+						place:'',
+						// 活动起止时间
+						actiontime:'',
+						starttime:'',
+						endtime:'',
+						numberofrequiredvolunteer:'',
+						// 招募起止时间
+						enrolmenttime:'',
+						enrolmentopeningtime:'',
+						enrolmentdeadline:'',
+				        volunteerhours: '',
+						admissionpolicy:'',
+						creditscorerequirement:'',
+						leaveapproval:'',
+						havealeader:'',
+						leader:'',
+						introduction:'',
+						province:'',
+						city:'',
+						district:''	
+				      },
+					  
+					  // 表单验证规则
+				      rules: {					
+						title:[
+							{required:true,message:'请输入活动名称', trigger:'blur'}
+						],
+						acstyle:[
+							{required:true,message:'请选择活动类别', trigger:'blur'}
+						],
+						selectedAds:[
+							{required:true,message:'请选择活动地点', trigger:'blur'}
+						],
+						place:[
+							{required:true,message:'请输入详细活动地点', trigger:'blur'}
+						],
+						actiontime:[
+							{required:true,message:'请选择活动时间', trigger:'change'},
+							{validator: this.ValidatorActiontime, trigger: 'blur' }
+						],
+						numberofrequiredvolunteer:[
+							{required:true,message:'请输入所需志愿者人数', trigger:'blur'},
+							{ pattern: /^[1-9]\d*$/,  message: '正数', trigger: 'blur' }
+						],
+						enrolmenttime:[
+							{required:true,message:'请选择志愿者招募时间', trigger:'blur'},
+							{validator: this.ValidatorEnrolmenttime, trigger: 'blur' }
+						],
+						volunteerhours: [
+							{required:true,message:'请输入志愿时长', trigger:'blur'}
+						],
+						admissionpolicy:[
+							{required:true,message:'请选择录取方式', trigger:'blur'}
+						],
+						creditscorerequirement:[
+							{required:true,message:'请输入信用分要求', trigger:'blur'},
+							{pattern: /^([0-9]|[1-9]\d|100)$/,message:'0-100之间的整数', trigger:'blur'}
+						],
+						leaveapproval:[
+							{required:true,message:'请选择是否允许请假', trigger:'blur'}
+						],
+						havealeader:[
+							{required:true,message:'请选择是否指定活动管理者', trigger:'blur'}
+						],
+						leader:[
+							{required:true,message:'请选择活动管理者', trigger:'blur'},
+							{validator: this.Validatorleader, trigger: 'blur' }
+						],
+						introduction:[
+							{required:true,message:'请输入活动介绍', trigger:'blur'},
+							{min:10,max:300, message: '活动介绍应在10-300字之间', trigger: 'blur'}
+						]
+				      },
+					  
+				    };
+				},
+				methods: {
+					// 活动时间自定义规则
+					ValidatorActiontime(rule, value, callback) {
+						let start =new Date(this.ruleForm.actiontime[0]) 
+						let end = new Date(this.ruleForm.actiontime[1])
+						let now = new Date()
+						console.log(end-start)    //30分钟   1800000毫秒
+						if(start - now < 3600000){
+							callback(new Error('活动开始时间应晚于当前时间60分钟'));
+							return
+						}else if (end-start < 1800000) {
+							callback(new Error('活动时间不得少于30分钟'));
+							return
+						} else {
+							this.ruleForm.starttime = this.ruleForm.actiontime[0]
+							this.ruleForm.endtime = this.ruleForm.actiontime[1]
+							let h = Math.floor((end-start)/1000/60/60) 
+							let m = Math.floor((end-start)/1000/60 % 60)
+							let decimal = m % 30 === 0 ? "" : ".5";
+							this.ruleForm.volunteerhours = h + decimal
+							this.maxhour = + (h + decimal)
+							callback();
+							}
+					},
+					
+					// 招募时间自定义规则
+					ValidatorEnrolmenttime(rule, value, callback) {
+						let astart =new Date(this.ruleForm.actiontime[0])
+						let aend = new Date(this.ruleForm.actiontime[1])
+						let start =new Date(this.ruleForm.enrolmenttime[0])
+						let end = new Date(this.ruleForm.enrolmenttime[1])
+						let now = new Date()
+						if(start < now){
+							callback(new Error('开始招募时间应不早于当前时间'));
+							return
+						}else if (end-start < 900000) {
+							callback(new Error('招募时间不得少于15分钟'));
+							return
+						}else if(end > astart){
+							callback(new Error('招募应在活动开始前结束'));
+							return
+						} else {
+							this.ruleForm.enrolmentopeningtime = this.ruleForm.enrolmenttime[0]
+							this.ruleForm.enrolmentdeadline = this.ruleForm.enrolmenttime[1]
+							callback();
+							}
+					},
+					// 限制管理者人数
+					Validatorleader(rule, value, callback){
+						let num = Math.ceil(this.ruleForm.numberofrequiredvolunteer / 10)
+						console.log(num)
+						if(this.ruleForm.leader.length > num){
+							callback(new Error('管理者人数请勿超过志愿者人数的十分之一'));
+						}else{callback();}
+					},
+					
+					// 提交按钮   promas方法
+					submitForm() {
+					  this.$refs.ruleForm
+					  .validate()
+					  // 验证通过
+					  .then(()=>{
+						  // alert('submit!');
+						  let nowday = new Date().getDate() >= 10 ? new Date().getDate() : '0' + new Date().getDate()
+						  let Month = new Date().getMonth() + 1 >=10 ? new Date().getMonth() + 1 : '0' + (new Date().getMonth() + 1)
+						  let timestamp = new Date().valueOf().toString().substr(-4)
+						  let random = Math.random().toString().substr(-2)
+						  // 生成活动id
+						  let activityid ="HD" + this.ruleForm.district + random + Month + nowday + timestamp
+						  this.ruleForm.activityid = activityid
+						  axios({
+						  	method:"post",
+						  	url:"http://localhost:8080/Yzhiyuan365/Activity/insert",
+						  	data:this.ruleForm
+						  }).then((resp)=>{
+						  	console.log(resp.data);
+							this.$message({
+							  message: '活动发布成功，请等待审核',
+							  type: 'success'
+							});
+						  }).catch((error)=>{
+						  	console.log(error.response);
+						  })  
+						  
+						  // 如果指定管理者
+						  if(this.ruleForm.havealeader == 1){
+							  console.log("我是if")
+							axios({
+							  method:"post",
+							  url:"http://localhost:8080/Yzhiyuan365/aleader/insert",
+							  data:this.ruleForm
+						  }).then((resp)=>{
+							  console.log(resp.data);
+						  }).catch((error)=>{
+							  console.log(error.response);
+						  })
+						}
+					  })
+					  .catch(()=>{
+						  console.log('error submit!!');
+					  })
+					},
+					// 重置按钮
+				    resetForm(formName) {
+				      this.$refs[formName].resetFields();
+				    },
+					
+					
+					
+					// 地址
+					handleChange (value) {
+						var a = this.ruleForm.selectedAds
+							this.ruleForm.province = a[0]
+							this.ruleForm.city = a[1]
+							this.ruleForm.district = a[2]
+							// console.log(this.ruleForm.province)
+							// console.log(this.ruleForm.city)
+							// console.log(this.ruleForm.district)
+						},
+						
+						
+					// 获取活动类型的下拉栏
+					selectAcstyles(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Acstyle/selectAll",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							}
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.Acstyles=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					// 录取方式
+					selectAdmissionpolicys(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Admissionpolicy/selectAll",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							}
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.Admissionpolicys=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					// 组织成员，活动管理员
+					selectmembersByOID(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/user/selectByVIDjoinOID",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.ruleForm.organizationid
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.leaders=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+				}
+			})
+		</script>
+	</body>
+</html>

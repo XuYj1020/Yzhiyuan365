@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace名称空间-->
+<!--<mapper namespace="test">-->
+<mapper namespace="com.XYJ.mapper.OrganizationMapper">
+    <resultMap id="organizationMapperMap" type="com.XYJ.pojo.Organization">
+        <id column="organizationid" property="organizationid" />
+        <result column="phone" property="phone" />
+        <result column="password" property="password"/>
+        <result column="otype" property="otype" />
+        <result column="registrationstatus" property="registrationstatus" />
+        <result column="unifiedcode" property="unifiedcode"/>
+        <result column="name" property="name"/>
+        <result column="idnumber" property="idnumber" />
+        <result column="oname" property="oname" />
+        <result column="province" property="province" />
+        <result column="city" property="city"/>
+        <result column="district" property="district" />
+        <result column="oaddress" property="oaddress" />
+        <result column="oemail" property="oemail" />
+        <result column="ointroduce" property="ointroduce" />
+        <result column="olevel" property="olevel" />
+        <result column="registrationtime" property="registrationtime" />
+        <result column="lastlogintime" property="lastlogintime" />
+        <result column="userstatusid" property="userstatusid" />
+        <!--配置一对多映射-->
+<!--        <collection property="pojo的集合属性" ofType="集合中的pojo对象">-->
+    </resultMap>
+    <insert id="insert">
+        insert into organization(
+                                organizationid,
+                                phone,
+                                password,
+                                otype,
+                                registrationstatus,
+                                unifiedcode,
+                                name,
+                                idnumber,
+                                oname,
+                                province,
+                                city,
+                                district,
+                                oaddress,
+                                oemail,
+                                ointroduce,
+                                olevel,
+                                registrationtime,
+                                lastlogintime,
+                                userstatusid
+        )  values (
+                    #{organizationid},
+                    #{phone},
+                    #{password},
+                    #{otype},
+                    #{registrationstatus},
+                    #{unifiedcode},
+                    #{name},
+                    #{idnumber},
+                    #{oname},
+                    #{province},
+                    #{city},
+                    #{district},
+                    #{oaddress},
+                    #{oemail},
+                    #{ointroduce},
+                    #{olevel},
+                    now(),
+                    #{lastlogintime},
+                    4
+                          )
+    </insert>
+    <select id="selectByPhonePass" resultType="com.XYJ.pojo.Organization">
+        select * from organization where phone =#{phone} and password = #{password};
+    </select>
+<!--
+    <select id="selectByOID" resultType="com.XYJ.pojo.Organization">
+        select * from organization where organizationid =#{organizationid} and userstatusid = 1;
+    </select>
+ -->
+
+    <resultMap id="rs1" type="com.XYJ.pojo.Organization">
+        <id column="organizationid"  property="organizationid" ></id>
+        <result column="phone"  property="phone" ></result>
+        <result column="password"  property="password" ></result>
+        <result column="otype"  property="otype" ></result>
+        <result column="registrationstatus"  property="registrationstatus" ></result>
+        <result column="unifiedcode"  property="unifiedcode" ></result>
+        <result column="name"  property="name" ></result>
+        <result column="idnumber"  property="idnumber" ></result>
+        <result column="oname"  property="oname" ></result>
+        <result column="province"  property="province" ></result>
+        <result column="city"  property="city" ></result>
+        <result column="district"  property="district" ></result>
+        <result column="oaddress"  property="oaddress" ></result>
+        <result column="oemail"  property="oemail" ></result>
+        <result column="ointroduce"  property="ointroduce" ></result>
+        <result column="olevel"  property="olevel" ></result>
+        <result column="registrationtime"  property="registrationtime" ></result>
+        <result column="lastlogintime"  property="lastlogintime" ></result>
+        <result column="pictureaddress"  property="pictureaddress" ></result>
+        <result column="userstatusid"  property="userstatusid" ></result>
+<!--        property="otypes" 跟实体类中的属性名一致-->
+        <association property="otypes" javaType="com.XYJ.pojo.Otype">
+            <id column="otypeid" property="otypeid"></id>
+            <result column="oo" property="otype"></result>
+        </association>
+        <association property="registrationstatuss" javaType="com.XYJ.pojo.Registrationstatus">
+            <id column="registrationstatusid" property="registrationstatusid"></id>
+            <result column="rr" property="registrationstatus"></result>
+        </association>
+    </resultMap>
+    <select id="selectByOID" resultMap="rs1">
+        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr from organization,otype,registrationstatus where organization.otype = otype.otypeid and organization.registrationstatus = registrationstatus.registrationstatusid  and  userstatusid = 1 and organizationid =#{organizationid};
+    </select>
+    <select id="selectOinfoByOID" resultType="com.XYJ.pojo.Organization">
+        select organizationid,phone,name,oname,userstatusid from organization where  organizationid =#{organizationid};
+    </select>
+</mapper>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<!--<form action="http://localhost:8080/Yzhiyuan365/AjacServlet" method="post">-->
+<!--    <input type="submit">-->
+<!--</form>-->
+<!-- <div id="app">
+    <template>
+        <el-table
+          :data="tableData"
+          style="width: 100%">
+          <el-table-column
+            prop="date"
+            label="日期"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="姓名"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="address"
+            label="地址">
+          </el-table-column>
+        </el-table>
+      </template>
+</div> -->
+
+<table id="brandTable">
+
+</table>
+<form id="form" action="" method="post">
+    <input id="i1" type="text">volunteerid
+    <input id="i2" type="text">phone
+    <input id="i3" type="text">password
+    <input id="i4" type="text">name
+    <input id="i5" type="text">idnumber
+    <input id="i6" type="text">gender
+    <input id="i7" type="text">birthday
+    <input id="i8" type="text">province
+    <input id="i9" type="text">city
+    <input id="i10" type="text">district
+    <input id="i11" type="text">address
+    <input id="i12" type="text">education
+    <input id="i13" type="text">occupation
+    <input id="i14" type="text">politicaliands
+    <input id="i15" type="text">email
+    <input id="i16" type="text">volunteerhours
+    <input id="i17" type="text">volunteercoins
+    <input id="i18" type="text">credit
+    <input id="i19" type="text">registrationti
+    <input id="i20" type="text">userstatusid
+    <input id="i21" type="text">lastlogintime
+    <input id="i22" type="text">pictureaddress
+    <button type="submit" class="dl">登 录</button>
+</form>
+
+    <script src="js/axios/dist/axios.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="element-ui/lib/index.js"></script>
+    <link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+
+
+<script>
+    //1. 创建核心对象
+// var xhttp;
+// if (window.XMLHttpRequest) {
+// xhttp = new XMLHttpRequest();
+// } else {
+// // code for IE6, IE5
+// xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+// }
+// //2. 发送请求
+// xhttp.open("GET", "http://localhost:8080/Yzhiyuan365/AjacServlet");
+// xhttp.send();
+// //3. 获取响应
+// xhttp.onreadystatechange = function() {
+// if (this.readyState == 4 && this.status == 200) {
+// alert(this.responseText);
+// }};
+
+    // var obj ={
+    //     username : "zhangsan",
+    //     users : "zhangsan",
+    //     user : "zhangsan",
+    //     name : "zhangsan"
+    // }
+    // console.log(obj)
+    axios({
+        method:"post",
+        url:"http://localhost:8080/Yzhiyuan365/AjacServlet",
+        data:"username=zhagnsan"
+    }).then(function (resp){
+        console.log(resp.data);
+        let brands = resp.data;
+        let tableData = " <tr>\n" +
+            " <th>序号</th>\n" +
+            " <th>品牌名称</th>\n" +
+            " <th>企业名称</th>\n" +
+            " </tr>";
+        for (let i = 0; i < brands.length ; i++) {
+            let brand = brands[i];
+            tableData += "\n" +
+                " <tr align=\"center\">\n" +
+                " <td>"+(i+1)+"</td>\n" +
+                " <td>"+brand.volunteerid+"</td>\n" +
+                " <td>"+brand.phone+"</td>\n" +
+                " </tr>";
+        }
+        // 设置表格数据
+        document.getElementById("brandTable").innerHTML = tableData;
+    });
+    // new Vue({
+    //     el:"#app",
+    //   data() {
+    //     return {
+    //       tableData: [{
+    //         date: '2016-05-02',
+    //         name: '王小虎',
+    //         address: '上海市普陀区金沙江路 1518 弄'
+    //       }, {
+    //         date: '2016-05-04',
+    //         name: '王小虎',
+    //         address: '上海市普陀区金沙江路 1517 弄'
+    //       }, {
+    //         date: '2016-05-01',
+    //         name: '王小虎',
+    //         address: '上海市普陀区金沙江路 1519 弄'
+    //       }, {
+    //         date: '2016-05-03',
+    //         name: '王小虎',
+    //         address: '上海市普陀区金沙江路 1516 弄'
+    //       }]
+    //     }
+    //   }
+    // }     
+    // )
+    
+        
+        </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+</body>
+</html>

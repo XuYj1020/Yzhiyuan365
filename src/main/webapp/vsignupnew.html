@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style>
+			.step1{
+				margin: 0 25%;
+				/* display:none; */
+			}
+/* 			.step2{
+				display:none;
+			} */
+		</style>
+	</head>
+	<body>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<div id="app">
+			<el-row type="flex" justify="center">
+			  <!-- justify 对齐方式 -->
+			  <!-- 第一行布局 -->
+			  <el-col :span="24">
+			    <div class="grid-content">YU志愿</div>
+			  </el-col>
+			</el-row>
+			<el-row type="flex" justify="center">
+			<!-- justify 对齐方式 居中 -->
+			<!-- 第二行布局 -->
+			    <el-col :span="18" >
+				  <!-- 卡片开始 显示阴影 -->
+			        <el-card shadow="always" >
+					  <el-page-header @back="" content="返回首页">
+					  </el-page-header>
+			          <h1 style="text-align: center;">欢迎注册</h1>
+			          <el-divider></el-divider>
+					<el-steps :active="active" finish-status="success">
+					  <el-step title="创建账号"></el-step>
+					  <el-step title="完善资料"></el-step>
+					  <el-step title="注册完成"></el-step>
+					</el-steps>
+					<div class="step1" v-show='step1'> 
+					<!-- 绑定的表单数据对象ruleForm   status-icon是否在输入框中显示校验结果反馈图标默认false rules表单验证规则为rules   -->
+					  <!-- ref要和 model一样,否则报错-->
+					  <el-form :model="step1Form" status-icon :rules="rules" ref="step1Form" label-width="100px" class="demo-ruleForm"> 
+					    <el-form-item label="手机号" prop="phone">
+					      <el-input v-model.trim="step1Form.phone" style="width:300px"></el-input>
+					    </el-form-item>
+						<!-- <p v-text="phonecount"></p> -->
+					    <!-- label标签文本   prop表单域 model 字段，传入model  人话:prop要验证的属性名,要和存在ruleForm中的属性名要一样 -->
+					  <el-form-item label="密码" prop="password">
+					    <!-- v-model双向绑定，把值绑定到step1Form.password 无验证作用-->
+					    <el-input type="password" v-model.trim="step1Form.password" autocomplete="off" style="width:300px"></el-input>
+					  </el-form-item>
+					  <el-form-item label="确认密码" prop="checkPassWord">
+					    <el-input type="password" v-model.trim="step1Form.checkPassWord" autocomplete="off" style="width:300px"></el-input>
+					  </el-form-item>
+					  <!-- <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm"> -->
+						  <!-- <el-form :model="ruleForm" status-icon  ref="ruleForm" label-width="100px" class="demo-ruleForm"> -->
+					    <el-form-item label="短信验证码"  >
+					    <el-input v-model.number.trim="step1Form.verifycode" style="width:300px"></el-input>
+					    <span><el-button type="primary" plain id="fsdx" @click="fsdxForm()" :disabled="false" size="small">发送验证码</el-button></span>
+					  </el-form-item>
+					  <el-form-item>
+					    <!-- 点击提交调用函数 submitForm('ruleForm') 把ruleForm传入-->
+					    <!-- <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button> -->
+					    <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
+						<!--submitNext('step1Form') step1Form 是表单ref后面的属性值  -->
+					    <!-- <el-button type="primary" @click="submitNext('step1Form')">下一步<i class="el-icon-arrow-right el-icon--right"></i></el-button> -->
+						<el-button type="primary" @click="submitNext">下一步<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+					  </el-form-item>
+					</el-form>
+				</div>
+				<div class="step2" v-show='step2'>
+					<!-- 表单开始 -->
+					<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm"> 
+					<!-- 在card里面嵌套一个一行两列的布局 -->
+					<el-row type="flex" justify="center">
+					  <!-- 第一列布局 -->
+					  <el-col :span="12">
+					    <div class="left">
+						<!-- <p v-text="ruleForm.password"></p> -->
+						<!-- <el-form :model="ruleForm" status-icon :rules="rules" ref="step2Form" label-width="100px" class="demo-ruleForm"> -->
+						      <el-form-item label="姓名" prop="name">
+						      <el-input v-model.trim="ruleForm.name" style="width:223px"></el-input>
+						    </el-form-item>
+						      <!-- label标签文本   prop表单域 model 字段，传入model -->
+						    <el-form-item label="身份证号" prop="idnumber" >
+						      <!-- v-model双向绑定，把值绑定到ruleForm.idnumber -->
+						      <el-input v-model.trim="ruleForm.idnumber" style="width:223px"></el-input>
+						    </el-form-item>
+							<!-- <p v-text="ruleForm.idnumber"></p> -->
+						    <el-form-item label="生日" prop="birthday">
+						      <el-date-picker
+						      v-model="ruleForm.birthday"
+						      type="date"
+							  value-format="yyyy.MM.dd"
+						      placeholder="选择日期">
+						    </el-date-picker>
+						</el-input>
+						<!-- <p v-text='ruleForm.birthday'></p>
+						<p>{{ruleForm.birthday.substr(0,4) + ruleForm.birthday.substr(5,2) + ruleForm.birthday.substr(8,2)}}</p>
+						<p>{{ruleForm.idnumber.substr(6,8)}}</p>
+						<p>{{ruleForm.idnumber.substr(6,8)===ruleForm.birthday.substr(0,4) + ruleForm.birthday.substr(5,2) + ruleForm.birthday.substr(8,2)}}</p>
+						<p>{{ruleForm.idnumber.substr(6,8)==ruleForm.birthday.substr(0,4) + ruleForm.birthday.substr(5,2) + ruleForm.birthday.substr(8,2)}}</p>
+						<p>{{ruleForm.birthday.length}}</p>
+						<p>ruleForm.test</p>
+						<p>{{ruleForm.test}}</p> -->
+						<!-- <p>{{ruleForm.birthday = ruleForm.idnumber.substr(6,4)+ '.' + ruleForm.idnumber.substr(10,2) + '.' + ruleForm.idnumber.substr(12,2)}}</p> -->
+						    </el-form-item>
+						    <!-- <el-form :model="ruleForm" status-icon :rules="rules" ref="step2Form" label-width="100px" class="demo-ruleForm"> -->
+						      <el-form-item label="性别" prop="gender" >
+								<el-select v-model="ruleForm.gender" placeholder="请选择">
+								    <el-option
+								      v-for="item in genders"
+								      :key="item.genderid"
+								      :label="item.gender"
+								      :value="item.genderid">
+								    </el-option>
+								  </el-select>
+						    </el-form-item>
+							<el-form-item label="地址" prop="selectedAds">
+								<el-cascader
+								    size="large"
+								    :options="ads"
+								    v-model="ruleForm.selectedAds"
+								    @change="handleChange">
+								  </el-cascader>
+								<!-- <p v-text="ruleForm.selectedAds"></p> -->
+							</el-form-item>
+							<el-form-item label="详细地址" prop="address">
+							  <!-- v-model双向绑定，把值绑定到ruleForm.address -->
+							  <el-input v-model.trim="ruleForm.address" style="width:223px"></el-input>
+							</el-form-item>
+						</div>
+					  </el-col>
+					  <!-- 第二列布局 -->
+					  <el-col :span="12">
+					    <div class="right">
+							<el-form-item label="学历" prop="education">
+							  <el-select v-model.trim="ruleForm.education" placeholder="请选择">
+							      <el-option
+							        v-for="item in educations"
+							        :key="item.educationid"
+							        :label="item.education"
+							        :value="item.educationid">
+							        <span style="float: left">{{ item.education }}</span>
+							        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.educationid }}</span>
+							      </el-option>
+							    </el-select>
+							    <!-- <p v-text="ruleForm.education"></p> -->
+							</el-form-item>
+							<el-form-item label="职业" prop="occupation">
+							  <el-select v-model="ruleForm.occupation" placeholder="请选择">
+							      <el-option
+							        v-for="item in occupations"
+							        :key="item.occupationid"
+							        :label="item.occupation"
+							        :value="item.occupationid">
+							        <span style="float: left">{{ item.occupation }}</span>
+							        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.occupationid }}</span>
+							      </el-option>
+							    </el-select>
+							  <!-- <p v-text="ruleForm.occupation"></p> -->
+							</el-form-item>
+							<!-- <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm"> -->
+							  <el-form-item label="政治面貌" prop="politicaliandscape" >
+							    <el-select v-model="ruleForm.politicaliandscape" placeholder="请选择">
+							        <el-option
+							          v-for="item in politicaliandscapes"
+							          :key="item.politicaliandscapeid"
+							          :label="item.politicaliandscape"
+							          :value="item.politicaliandscapeid">
+							          <span style="float: left">{{ item.politicaliandscape }}</span>
+							          <span style="float: right; color: #8492a6; font-size: 13px">{{ item.politicaliandscapeid }}</span>
+							        </el-option>
+							      </el-select>
+							    <!-- <p v-text="ruleForm.politicaliandscape"></p> -->
+							</el-form-item>
+							<!-- <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm"> -->
+							  <el-form-item label="电子邮箱" prop="email" >
+							    <el-input v-model.trim="ruleForm.email" style="width:223px"></el-input>
+							</el-form-item>
+							<el-form-item>
+							    <!-- 点击提交调用函数 submitForm('ruleForm') 把ruleForm传入-->
+							    <!-- <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button> -->
+							    <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
+							    <el-button type="primary" icon="el-icon-arrow-left" @click="goBack">上一页</el-button>
+							          <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+							    <!-- <el-button type="primary" @click="submitForm('ruleForm')">下一步<i class="el-icon-arrow-right el-icon--right"></i></el-button> -->
+							  </el-form-item>
+							</el-form>
+						</div>
+					  </el-col>
+					</el-row>
+				</div>	
+					<!-- </el-form> -->
+					
+				<div class='step3' v-show='step3'>
+					<!-- <p>恭喜注册成功</p> -->
+<!-- 					<p><i class="el-icon-success" style="color:#67C23A;font-size:60px;"></i></p>
+					<p style="font-size:20px;color: #303133;line-height: 1.3;font-family: Microsoft YaHei;">注册成功</p>
+					<el-button type="primary" size="medium">返回</el-button> -->
+					<el-row v-show='step3s'>
+					  <el-col>
+						  <!-- <p><i class="el-icon-success" style="color:#67C23A;font-size:60px;"></i></p>
+						  <p style="font-size:20px;color: #303133;line-height: 1.3;font-family: Microsoft YaHei;">注册成功</p>
+						  <el-button type="primary" size="medium">返回</el-button> -->
+					    <el-result icon="success" title="注册成功" subTitle="即将跳转登录">
+					      <template slot="extra">
+							  <p>{{num}}秒后跳转登录页面</p>
+					        <el-button type="primary" size="medium" @click="toIndex" >立即跳转</el-button>
+					      </template>
+					    </el-result>
+					  </el-col>
+					</el-row>
+					<el-row v-show='step3f'>
+					  <el-col>
+						  <!-- <p><i class="el-icon-success" style="color:#67C23A;font-size:60px;"></i></p>
+						  <p style="font-size:20px;color: #303133;line-height: 1.3;font-family: Microsoft YaHei;">注册成功</p>
+						  <el-button type="primary" size="medium">返回</el-button> -->
+					    <el-result icon="error" title="注册失败">
+							<template slot="subTitle">
+								<p>注册失败错误代码{{err}}，请返回重新注册</p>
+							</template>
+					      <template slot="extra">
+							  <!-- <p>注册失败错误代码，请返回重新注册</p> -->
+					        <el-button type="primary" size="medium" onclick="javascript:location.reload();">刷新页面</el-button>
+					      </template>
+					    </el-result>
+					  </el-col>
+					</el-row>
+				</div>
+		</div>
+
+		<script>
+			new Vue({
+				el:"#app",
+				// 获取下拉列表数据
+				mounted(){
+					// 教育
+					this.selectEdu();
+					// 职业
+					this.selectOccu();
+					// 政治面貌
+					this.selectPol();
+					this.vtoken = localStorage.getItem('vtoken');
+				},
+				data() {
+					// 设置验证规则
+					// 手机号
+					// var validatePhone = (rule, value, callback) => {
+					// let regphone = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
+					//   if (value === '') {
+					//     callback(new Error('请输入手机号'));
+					//   }else if(!regphone.test(value)){
+					//     callback(new Error('请输入正确的手机号'));
+					//   } else {
+					//     if (this.step1Form.checkPhone !== '') {
+					//       this.$refs.step1Form.validateField('checkPhone');
+					//     }
+					//     callback();
+					//   }
+					// };
+					// 验证码
+					// var validateVerifyCode = (rule, value, callback) => {
+					//   if (value === '') {
+					//     callback(new Error('请输入短信验证码'));
+					//   } else {
+					//     if (this.ruleForm.checkVerifyCode !== '') {
+					//       this.$refs.ruleForm.validateField('checkVerifyCode');
+					//     }
+					//     callback();
+					//   }
+					// };
+					// 密码
+					// var validatePassWord = (rule, value, callback) => {
+					//   if (value === '') {
+					//     callback(new Error('请输入密码'));
+					//   } else {
+					//     if (this.step1Form.checkPassWord !== '') {
+					//       this.$refs.step1Form.validateField('checkPassWord');
+					//     }
+					//     callback();
+					//   }
+					// };
+					// 确认密码
+					var validatePassWord2 = (rule, value, callback) => {
+						if (value !== this.step1Form.password) {
+					    callback(new Error('两次输入密码不一致!'));
+					  } else {
+					    callback();
+					  }
+					};
+					
+					// 姓名
+					// var validateName = (rule, value, callback) => {
+					//   if (value === '') {
+					//     callback(new Error('请输入姓名'));
+					//   } else {
+					//     if (this.ruleForm.checkName !== '') {
+					//       this.$refs.ruleForm.validateField('checkName');
+					//     }
+					//     callback();
+					//   }
+					// };
+					
+					// 身份证号码
+					// var validateIdnumber = (rule, value, callback) => {
+					// let IDRe18 = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+					// // let IDre15 =  /^([1-6][1-9]|50)\d{4}\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}$/
+					// // this.ruleForm.birthday.substr(0,3) + this.ruleForm.birthday.substr(5,6)+ this.ruleForm.birthday.substr(8,9)
+					// let idb = this.ruleForm.idnumber.substr(6,8)
+					// let bib = this.ruleForm.birthday.substr(0,4) + this.ruleForm.birthday.substr(5,2) + this.ruleForm.birthday.substr(8,2)
+					//   if (!IDRe18.test(value)) {
+					//     callback(new Error('请输入正确的身份证号码'));
+					//   }else if(idb !==bib){
+					// 	callback(new Error('身份证号与出生日期不匹配'));  
+					//   }else {
+					//     if (this.ruleForm.checkIdnumber !== '') {
+					//       this.$refs.ruleForm.validateField('checkIdnumber');
+					// 	  // this.setBirthday()
+					// 	  // this.ruleForm.birthday = this.ruleForm.idnumber.substr(6,4)+ '.' + this.ruleForm.idnumber.substr(10,2) + '.' + this.ruleForm.idnumber.substr(12,2)
+					//     }
+						
+					// 	// this.ruleForm.birthday = this.ruleForm.idnumber.substr(6,4)+ '.' + this.ruleForm.idnumber.substr(10,2) + '.' + this.ruleForm.idnumber.substr(12,2)
+					//     callback();
+					//   }
+					// };
+					// 生日
+					var validateBirthday = (rule, value, callback) => {
+					  if (value === '') {
+					    callback(new Error('请选择你的生日'));
+					  }else {
+					    if (this.ruleForm.checkBirthday !== '') {
+					      this.$refs.ruleForm.validateField('checkBirthday');
+					    }
+					    callback();
+					  }
+					};
+					// 详细地址
+					var validateAddress = (rule, value, callback) => {
+					  // if (value === '') {
+					  //   callback(new Error('请输详细地址'));
+					  // } else {
+					    if (this.ruleForm.checkAddress !== '') {
+					      this.$refs.ruleForm.validateField('checkAddress');
+					    }
+					    callback();
+					  // }
+					};
+					// 获取表单数据
+					return {
+						vtoken:'',
+						step1:true,
+						step2:false,
+						step3:false,
+						step3s:false,
+						step3f:false,
+						// 位置选择器数据
+						ads: regionData,
+						educations: [],
+						occupations: [],
+						politicaliandscapes: [],
+						genders: [{
+								genderid: '1',
+								gender: '男'
+						    }, {
+								genderid: '2',
+								gender: '女'
+						    }],
+						// 步骤条	
+						active: 0,	
+						phonecount:'false',
+						err:'',
+						num:'',
+						// 要验证的数据
+						step1Form:{
+							password: '',
+							checkPassWord: '',
+							phone: '',
+							verifyCode:'',
+						},
+						ruleForm: {
+							password: '',
+							checkPassWord: '',
+							phone: '',
+							verifyCode:'',
+							name:'',
+							idnumber:'',
+							birthday: '',
+							gender:'',
+							selectedAds: [],
+							province:'',
+							city:'',
+							district:'',
+							address:'',
+							education:'',
+							occupation:'',
+							politicaliandscape:'',
+							email:'',
+							test:''
+						},
+						// 验证规则  规则名称   调用时机
+						rules: {
+						  password: [
+							{required: true, message: '输入密码', trigger: 'blur'}
+							// { validator: validatePassWord, trigger: 'blur' }
+						  ],
+						  checkPassWord: [
+							{required: true, message: '请再次输入密码', trigger: 'blur'},
+						    { validator: validatePassWord2, trigger: 'blur' }
+						  ],
+						  phone: [
+							{required: true, message: '输入你的手机号', trigger: 'blur'},
+							{pattern:/^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/,message: '手机号格式错误', trigger: 'blur'},
+							{ validator: this.ValidatorPhone, trigger: 'blur' }
+						  ],
+						  // verifyCode: [
+						  //   { validator: validateVerifyCode, trigger: 'blur' }
+						  // ],
+						  name: [
+						    // { validator: validateName, trigger: 'blur' },
+							{required: true, message: '输入你的姓名', trigger: 'blur'}
+						  ],
+						  idnumber: [
+							{required: true, message: '请输入身份证号码', trigger: 'blur'},
+							{pattern:/^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,message: '身份证号格式错误', trigger: 'blur'},
+							{ validator: this.validateIdnumber, trigger: 'blur' }
+							// {min:15,max:18, message: '请输入正确的位数', trigger: 'blur'}
+						  ],
+						  birthday:[
+						    {validator: validateBirthday, trigger: 'blur'},
+							{required: true, message: '请选择你的生日', trigger: 'change'}
+						  ],
+						  gender:[
+							{required: true, message: '请选择你的性别', trigger: 'blur'}
+						  ],
+						  selectedAds: [
+							{required: true, message: '请选择你的所在地', trigger: 'blur'}
+						  ],
+						  address: [
+						    {validator: validateAddress, trigger: 'blur'}
+						  ],
+						  education: [
+							{required: true, message: '请选择你的最高学历', trigger: 'blur'}
+						  ],
+						  occupation: [
+							{required: true, message: '请选择你的职业', trigger: 'blur'}
+						  ],
+						  politicaliandscape: [
+							{required: true, message: '请选择你的政治面貌', trigger: 'blur'}
+						  ],
+						  email: [
+							 { type: 'email',  message: '请输入正确的邮箱', trigger: 'blur' }
+						  ],
+						},
+					};
+				},
+				methods: {
+					// 鼠标点击事件
+					// formName代表对应表单的ref
+					// submitNext(formName){
+					// 	//validate 任一表单项被校验后触发	被校验的表单项 prop 值，校验是否通过，错误消息（如果存在）
+					// 	  let step1 = document.querySelector(".step1")
+					// 	  // valid 表示接收到的二次验证结果 true/false   validate回调函数
+					// 	  this.$refs[formName].validate((valid) => {
+					// 		  console.log(valid)
+					// 	    if (valid) {
+					// 	      alert('submit!');
+					// 		  step1.style.display = 'none'
+					// 		  this.active++
+					// 		  console.log(this.active)
+					// 	    } else {
+					// 			alert('error submit!!');
+					// 	      // console.log('error submit!!');
+					// 	      return false;
+					// 	    }
+					// 	  })
+					// 	  // console.log(this.ruleForm)
+					// 	},
+					// 把手机号的验证规则写在methods中
+					// const fields = {
+					  // asyncField: {
+						  /*
+						  *尝试使用异步验证，官网案例改写   失败 https://github.com/yiminghe/async-validator#asyncvalidator
+					  //   asyncValidatorPhone(rule, value, callback) {
+							// console.log(this.step1Form.phone)
+					  //     axios({
+							// method:"post",
+					  //       url: 'http://localhost:8080/Yzhiyuan365/user/selectByPhone',
+					  //       value: this.step1Form.phone
+					  //     }).then((resq) =>{
+							//   console.log("这是外面的"+this.step1Form.phone)
+							//   if(!resq.data){
+							// 	  callback(new Error("手机号已被注册"));
+							// 	  console.log("这是里面的"+this.step1Form.phone)
+							//   }
+					  //       callback();
+					  //     }). catch ((error) =>{
+					  //       callback(new Error(error));
+					  //     });
+					  //   },
+					  */
+					  // },
+					  // promiseField: {
+					  //   asyncValidator(rule, value) {
+					  //     return ajax({
+					  //       url: 'xx',
+					  //       value: value,
+					  //     });
+					  //   }
+					  // },
+					  
+					// };
+					// 手机号是否已注册
+					ValidatorPhone(rule, value, callback) {
+						  headers = {
+						  	vtoken:localStorage.getItem('vtoken')
+						  },
+						axios({
+						    method:"post",
+							
+						    url:"http://localhost:8080/Yzhiyuan365/user/selectByPhone",
+							
+						    data:value,
+							headers:{
+								'vtoken':localStorage.getItem('vtoken')
+							  },
+						  }).then(resp =>{
+							  if(!resp.data){
+								  callback(new Error('手机号已注册'));
+							  }
+							  callback()
+						  }).catch(error =>{
+						    console.log(error.response);//可以拿到后端返回的信息
+							callback(new Error(error));
+						  });
+					},
+					/*
+					*1.0代码可以正确运行，需要调用this.selectPhone()方法  问题：校验信息有延迟，原因使用了一个中间变量
+					// ValidatorPhone(rule, value, callback) {
+					// let regphone = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/
+					//   if (value === '') {
+					//     callback(new Error('请输入手机号'));
+					//   }else if(!regphone.test(value)){
+					//     callback(new Error('请输入正确的手机号'));
+					//   } else {
+					// 	  this.selectPhone()
+					// 	  if(!this.phonecount){
+					// 		  callback(new Error('手机号已注册'));
+					// 	  }
+					// 	  callback();
+					*/	  
+				   
+				   
+						 //  axios({
+						 //      method:"post",
+						 //      url:"http://localhost:8080/Yzhiyuan365/user/selectByPhone",
+						 //      // params:"code=1234",
+						 //      data:this.step1Form.phone
+						 //    }).then(resp =>{
+							// 	console.log(resp.data)
+							// if(!resp.data){
+							// 	callback(new Error('手机号已注册'));
+							// }
+						 //    }).catch(error =>{
+							// callback(new Error('网络异常'));
+							// console.log(error.response.status);
+						 //      console.log(error.response);//可以拿到后端返回的信息
+						 //    });
+							
+							
+						//   console.log('this.phonecount111'+this.phonecount)
+						// this.selectPhone()
+						// console.log('this.phonecount222'+this.phonecount)
+						// if(this.phonecount !=='' && this.phonecount !=='true'){
+						// 	// console.log(resp.data)
+						//   // if(resp.data >0){
+						//   	callback(new Error('手机号已注册'));
+						//   // }
+						// }else if(this.phonecount !==''){
+						// 	callback(new Error('网络异常'));
+						// }
+					//     callback();
+					//   }
+					// },
+					// var _this = this
+					
+					// validateIdnumber (rule, value, callback){
+					// let IDRe18 = /^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+					// // let IDre15 =  /^([1-6][1-9]|50)\d{4}\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}$/
+					// // this.ruleForm.birthday.substr(0,3) + this.ruleForm.birthday.substr(5,6)+ this.ruleForm.birthday.substr(8,9)
+					// let idb = this.ruleForm.idnumber.substr(6,8)
+					// let bib = this.ruleForm.birthday.substr(0,4) + this.ruleForm.birthday.substr(5,2) + this.ruleForm.birthday.substr(8,2)
+					//   if (!IDRe18.test(value)) {
+					//     callback(new Error('请输入正确的身份证号码'));
+					//   }else {
+					//     if (this.ruleForm.checkIdnumber !== '') {
+					//       this.$refs.ruleForm.validateField('checkIdnumber');
+					//     }
+					// 	}
+					// 	this.ruleForm.test='23'
+					// 	this.ruleForm.birthday = this.ruleForm.idnumber.substr(6,4)+ '.' + this.ruleForm.idnumber.substr(10,2) + '.' + this.ruleForm.idnumber.substr(12,2)
+					// 	// this.ruleForm.birthday = this.ruleForm.idnumber.substr(6,4)+ '.' + this.ruleForm.idnumber.substr(10,2) + '.' + this.ruleForm.idnumber.substr(12,2)
+					//     callback();
+					//   },
+					  
+					  validateIdnumber (rule, value, callback){
+						  headers = {
+						  	vtoken:localStorage.getItem('vtoken')
+						  },
+						  axios({
+						      method:"post",
+							  
+						      url:"http://localhost:8080/Yzhiyuan365/user/selectByIdnumber",
+							  
+						      data:value,
+							  headers:{
+							  	'vtoken':localStorage.getItem('vtoken')
+							    },
+						    }).then(resp =>{
+						  	  if(!resp.data){
+						  		  callback(new Error('该身份证号已被绑定'));
+						  	  }else{
+								  this.ruleForm.birthday = this.ruleForm.idnumber.substr(6,4)+ '.' + this.ruleForm.idnumber.substr(10,2) + '.' + this.ruleForm.idnumber.substr(12,2)
+								  callback() 
+							  }
+						    }).catch(error =>{
+						      console.log(error.response);//可以拿到后端返回的信息
+						  	callback(new Error(error));
+						    });
+						},
+					  
+					  
+					  
+					  
+					  
+					submitNext(){
+						// 这是一种提交事件的书写方式,
+						// let step1 = document.querySelector(".step1")
+						// let step2 = document.querySelector(".step2")
+						//validate 任一表单项被校验后触发	被校验的表单项 prop 值，校验是否通过，错误消息（如果存在）
+						  // valid 表示接收到的二次验证结果 true/false   validate回调函数
+						  this.$refs.step1Form.validate((valid,err) => {
+							  console.log(err)
+						    if (valid) {
+						      // alert('submit!');
+							  // step1.style.display = 'none'
+							  // step2.style.display = 'inline'
+							  this.step1=false
+							  this.step2=true
+							  this.step3=false
+							  this.step3s=false
+							  this.step3f=false
+							  console.log(this.step1)
+							  console.log(this.step2)
+							  console.log(this.step3)
+							  this.active++
+							  console.log(this.active)
+							  // 教育
+							  this.selectEdu();
+							  // 职业
+							  this.selectOccu();
+							  // 政治面貌
+							  this.selectPol();
+						    } else {
+								// alert('error submit!!');
+						      // console.log('error submit!!');
+						      return false;
+						    }
+						  })
+						  // console.log(this.ruleForm)
+						},
+					// setBirthday:function(){
+					// 	console.log("this.ruleForm.birthday")
+					// 	console.log(this.ruleForm.birthday)
+					// 	console.log(this.ruleForm.idnumber)
+					// 	// this.$refs.step1Form
+					// 	// .validateField('idnumber',(errorMessage)=>{
+					// 	// 						  console.log(errorMessage)
+					// 	// 						  if(errorMessage){
+					// 	// 						  return
+					// 	// 						  }
+					// 	// this.ruleForm.birthday = this.ruleForm.idnumber.substr(6,4)+ '.' + this.ruleForm.idnumber.substr(10,2) + '.' + this.ruleForm.idnumber.substr(12,2)
+					// 	// })
+					// },
+					// 提交
+					submitForm(formName) {
+					  //validate 校验全部表单  回调函数	被校验的表单项 prop 值，校验是否通过，错误消息（如果存在）
+					  this.$refs[formName].validate((valid) => {
+						  headers = {
+						  	vtoken:localStorage.getItem('vtoken')
+						  }
+						  let step2 = document.querySelector('.step2')
+					    if (valid) {
+					      // alert('submit!');					  
+						  this.active++
+						  // console.log(this.active)
+						  this.ruleForm.password = this.step1Form.password
+						  this.ruleForm.phone = this.step1Form.phone
+
+						  axios({
+						      method:"post",
+							  
+						      url:"http://localhost:8080/Yzhiyuan365/user/Insert",
+							  
+						      // params:"code=1234",
+						      data:this.ruleForm,
+							  headers:headers,
+						    }).then((resp)=>{
+						      // console.log(resp)
+						  	console.log(resp.data)
+							// step2.style.display = 'none'
+							// let step3 = document.querySelector('.step3')
+							// step3.style.display = 'inline'
+							this.step1=false
+							this.step2=false
+							this.step3=true
+							this.step3s=true
+							this.step3f=false
+							this.num = 5
+							let time = setInterval(()=>{
+								  this.num--
+								  if(this.num <= 0){
+									  clearInterval(time)
+									  // console.log("倒计时结束")
+									  url = window.location.pathname
+									  url = url.substring(0,url.lastIndexOf('/')) + '/vlongin.html'
+									  window.location.replace(url)
+											}
+								},1000)
+						  	// console.log(resp.data.datalist)
+						  	// this.occupations=resp.data
+						    }).catch((error) =>{
+						      console.log(error.response);//可以拿到后端返回的信息
+							  this.err = error.response.status
+							  this.step1=false
+							  this.step2=false
+							  this.step3=true
+							  this.step3s=false
+							  this.step3f=true
+						    }); 
+					    } else {
+					      console.log('error submit!!');
+					      return false;
+					    }
+					  }),
+					  console.log(this.ruleForm)
+					},
+					// 返回上一页
+					goBack(){
+						// let step1 = document.querySelector(".step1")
+						// let step2 = document.querySelector(".step2")
+						// step2.style.display = 'none'
+						// step1.style.display = 'inline'
+						this.step1=true
+						this.step2=false
+						this.step3=false
+						this.step3s=false
+						this.step3f=false
+						this.active--
+					},
+					toIndex(){
+						// console.log(window.location.href)    	// 	http://127.0.0.1:8848/webapp/vsignupnew.html
+						// console.log(window.location.pathname)	// 	/webapp/vsignupnew.html
+						// console.log(window.location.hostname)	// 	127.0.0.1
+						// url = window.location.pathname
+						// url = url.substring(url.lastIndexOf('/') +1, url.length);   // vsignupnew.html
+						// alert(url);
+						// ur2 = window.location.pathname.substring(0,window.location.pathname.lastIndexOf('/')) // /webapp
+						// console.log(ur2)
+						url = window.location.pathname
+						url = url.substring(0,url.lastIndexOf('/')) + '/vlongin.html'
+						window.location.replace(url)
+					},
+					// 重置按钮
+					// resetForm(formName) {
+					//   this.$refs[formName].resetFields();
+					// },
+					// 发送短信验证码按钮,执行一次单体验证,验证手机号是否正确
+					fsdxForm(){
+					  let num = 60
+					  let dxyzm = document.querySelector("#fsdx")
+					  // 如果正确errorMessage错误信息为 空
+					  this.$refs.step1Form
+					  .validateField('phone',(errorMessage)=>{
+						  console.log(errorMessage)
+						  if(errorMessage){
+						  return
+						  }
+						  console.log('验证通过')
+						  dxyzm.style.pointerEvents = 'none'
+						  dxyzm.innerHTML = `60秒后重新发送`
+						  let time = setInterval(function(){ 
+						  	  num--
+						  	  // console.log('1')
+						  	  dxyzm.innerHTML = `${num}秒后重新发送`
+						  	  // 不能点击
+						  	  if(num <= 0){
+						  		  clearInterval(time)
+						  		  dxyzm.innerText = `重新发送`
+						  		  // 可以重新点击
+						  		  dxyzm.style.pointerEvents = 'auto'
+						  				}
+						  	},1000)
+					  })
+					},
+					// 步骤条
+					next() {
+						this.active++
+					        if (this.active++ > 2) this.active = 0;
+					      },
+					/*
+					*和前面1.0版配合使用
+					// 查验手机号是否已被注册
+					selectPhone(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/user/selectByPhone",
+						    // params:"code=1234",
+						    data:this.step1Form.phone
+						  }).then(resp =>{
+							  // if(!resp.data){
+								  console.log('resp.data'+resp.data)
+								  this.phonecount = resp.data
+								  console.log('this.phonecount'+this.phonecount)
+								  // return resp.data
+							  // }
+						    // console.log(resp)
+							// console.log(resp.data.datalist)
+						  }).catch(error =>{
+						    console.log(error.response);//可以拿到后端返回的信息
+							// return error.response
+						  });
+					},
+					*/
+					//地址选择 
+					handleChange (value) {
+						var a = this.ruleForm.selectedAds
+							this.ruleForm.province = a[0]
+							this.ruleForm.city = a[1]
+							this.ruleForm.district = a[2]
+							console.log(this.ruleForm.province)
+							console.log(this.ruleForm.city)
+							console.log(this.ruleForm.district)
+						},
+					// 获取教育信息
+					selectEdu(){
+						// 教育
+						headers = {
+							'vtoken':localStorage.getItem('vtoken')
+						},
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Education/SelectAll",
+							headers:{
+								'vtoken':localStorage.getItem('vtoken')
+							  },
+						    // params:"code=1234",
+						    // data:_this.obj
+						  }).then(resp =>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.educations=resp.data
+						  }).catch(error =>{
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					// 获取职业信息
+					selectOccu(){
+						// 职业
+						headers = {
+							vtoken:localStorage.getItem('vtoken')
+						},
+						axios({
+						    method:"post",
+							
+						    url:"http://localhost:8080/Yzhiyuan365/Occupation/SelectAll",
+							headers:{
+								'vtoken':localStorage.getItem('vtoken')
+							  },
+						    // params:"code=1234",
+						    // data:_this.obj
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.occupations=resp.data
+						  }).catch((error) =>{
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					// 获取政治面貌信息
+					selectPol(){
+						// 政治面貌
+						headers = {
+							vtoken:localStorage.getItem('vtoken')
+						},
+						axios({
+						    method:"post",
+							
+						    url:"http://localhost:8080/Yzhiyuan365/Politicaliandscape/SelectAll",
+							headers:headers,
+						    // params:"code=1234",
+						    // data:_this.obj
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.politicaliandscapes=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

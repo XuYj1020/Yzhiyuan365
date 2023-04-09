@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.XYJ.mapper.ActivityMapper">
+
+    <insert id="insert">
+        insert into activity(
+            activityid,
+            organizationid,
+            title,
+            introduction,
+            starttime,
+            endtime,
+            province,
+            city,
+            district,
+            place,
+            numberofrequiredvolunteer,
+            numberofenrolledvolunteer,
+            activestatusid,
+            creationtime,
+            enrolmentopeningtime,
+            enrolmentdeadline,
+            volunteerhours,
+            pictureaddress,
+            admissionpolicy,
+            creditscorerequirement,
+            leaveapproval,
+            acstyle,
+            havealeader
+        )values(
+                #{activityid},
+                #{organizationid},
+                #{title},
+                #{introduction},
+                #{starttime},
+                #{endtime},
+                #{province},
+                #{city},
+                #{district},
+                #{place},
+                #{numberofrequiredvolunteer},
+                #{numberofenrolledvolunteer},
+                6,
+                now(),
+                #{enrolmentopeningtime},
+                #{enrolmentdeadline},
+                #{volunteerhours},
+                #{pictureaddress},
+                #{admissionpolicy},
+                #{creditscorerequirement},
+                #{leaveapproval},
+                #{acstyle},
+                #{havealeader}
+                       );
+    </insert>
+    <select id="selectByAcstyleid" resultType="com.XYJ.pojo.Activity">
+        select * from activity where acstyle=#{acstyle} and activestatusid in (1,2,3) ORDER BY RAND() LIMIT 12;
+    </select>
+
+
+
+    <select id="selectByAcstyleidAll" resultType="com.XYJ.pojo.Activity">
+        select * from activity where activestatusid in (1,2,3) ORDER BY RAND() LIMIT 12;
+    </select>
+
+
+<!--    <resultMap id="rs2" type="com.XYJ.pojo.Activity">-->
+<!--        &lt;!&ndash;        先描述自己的信息&ndash;&gt;-->
+<!--        <id column="activityid" property="activityid"></id>-->
+<!--        <result column="organizationid" property="organizationid" ></result>-->
+<!--        <result column="title" property="title" ></result>-->
+<!--        <result column="introduction" property="introduction" ></result>-->
+<!--        <result column="starttime" property="starttime" ></result>-->
+<!--        <result column="endtime" property="endtime" ></result>-->
+<!--        <result column="province" property="province" ></result>-->
+<!--        <result column="city" property="city" ></result>-->
+<!--        <result column="district" property="district" ></result>-->
+<!--        <result column="place" property="place" ></result>-->
+<!--        <result column="numberofrequiredvolunteer" property="numberofrequiredvolunteer" ></result>-->
+<!--        <result column="numberofenrolledvolunteer" property="numberofenrolledvolunteer" ></result>-->
+<!--        <result column="activestatusid" property="activestatusid" ></result>-->
+<!--        <result column="creationtime" property="creationtime" ></result>-->
+<!--        <result column="enrolmentopeningtime" property="enrolmentopeningtime" ></result>-->
+<!--        <result column="enrolmentdeadline" property="enrolmentdeadline" ></result>-->
+<!--        <result column="volunteerhours" property="volunteerhours" ></result>-->
+<!--        <result column="pictureaddress" property="pictureaddress" ></result>-->
+<!--        <result column="admissionpolicy" property="admissionpolicy" ></result>-->
+<!--        <result column="creditscorerequirement" property="creditscorerequirement" ></result>-->
+<!--        <result column="leaveapproval" property="leaveapproval" ></result>-->
+<!--        <result column="aacstyle" property="acstyle" ></result>-->
+<!--    </resultMap>-->
+
+<!--    <select id="selectByAcstyleidjoin" resultType="com.XYJ.pojo.Activity">-->
+<!--        select acstyle.acstyle as aacstyle from activity , acstyle where activity.acstyle = acstyle.acstyleid and activity.activityid = #{activityid}-->
+<!--    </select>-->
+
+
+        <resultMap id="rs1" type="com.XYJ.pojo.Activity">
+<!--        先描述自己的信息-->
+        <id column="activityid" property="activityid"></id>
+        <result column="organizationid" property="organizationid" ></result>
+        <result column="title" property="title" ></result>
+        <result column="introduction" property="introduction" ></result>
+        <result column="starttime" property="starttime" ></result>
+        <result column="endtime" property="endtime" ></result>
+        <result column="province" property="province" ></result>
+        <result column="city" property="city" ></result>
+        <result column="district" property="district" ></result>
+        <result column="place" property="place" ></result>
+        <result column="numberofrequiredvolunteer" property="numberofrequiredvolunteer" ></result>
+        <result column="numberofenrolledvolunteer" property="numberofenrolledvolunteer" ></result>
+        <result column="activestatusid" property="activestatusid" ></result>
+        <result column="creationtime" property="creationtime" ></result>
+        <result column="enrolmentopeningtime" property="enrolmentopeningtime" ></result>
+        <result column="enrolmentdeadline" property="enrolmentdeadline" ></result>
+        <result column="volunteerhours" property="volunteerhours" ></result>
+        <result column="pictureaddress" property="pictureaddress" ></result>
+        <result column="admissionpolicy" property="admissionpolicy" ></result>
+        <result column="creditscorerequirement" property="creditscorerequirement" ></result>
+        <result column="leaveapproval" property="leaveapproval" ></result>
+        <result column="acstyle" property="acstyle" ></result>
+        <result column="havealeader" property="havealeader" ></result>
+        <association property="acstyles" javaType="com.XYJ.pojo.Acstyle">
+            <id column="acstyleid" property="acstyleid"></id>
+            <result column="aa" property="acstyle"></result>
+        </association>
+        <association property="admissionpolicys" javaType="com.XYJ.pojo.Admissionpolicy">
+            <id column="admissionpolicyid" property="admissionpolicyid"></id>
+            <result column="admissionpolicys" property="admissionpolicy"></result>
+        </association>
+
+    </resultMap>
+    <select id="selectByAcstyleidjoin" resultMap="rs1">
+        select *,acstyle.acstyle as aa,admissionpolicy.admissionpolicy as admissionpolicys   from activity , acstyle,admissionpolicy where activity.acstyle = acstyle.acstyleid and activity.admissionpolicy = admissionpolicy.admissionpolicyid  and activity.activityid = #{activityid}
+    </select>
+
+
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+<!--                连接信息-->
+<!--                <property name="driver" value="com.mysql.jdbc.Driver"/>-->
+<!--                <property name="url" value="jdbc:mysql://localhost:3306/volunteerdb?useSSL=false"/>-->
+<!--                新版本8.xx数据库驱动引用方式-->
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/volunteer?useSSL=false&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+<!--        加载sql的映射文件-->
+<!--        <mapper resource="com/XYJ/mapper/UserMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/AreaMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/EducationMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/OccupationMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/PoliticaliandscapeMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/AcstyleMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/OrganizationMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/OtypeMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/RegistrationstatusMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/AdmissionpolicyMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/ActivityMapper.xml"/>-->
+
+<!--        注解所在包-->
+        <package name="com.XYJ.mapper"></package>
+<!--        <mapper resource="com/XYJ/mapper/AleaderMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/OmembersMapper.xml"/>-->
+<!--        <mapper resource="com/XYJ/mapper/OjoinMapper.xml"/>-->
+    </mappers>
+</configuration>

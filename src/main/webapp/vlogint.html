@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form id="form" action="" method="post">
+  <input id="i1" type="text">volunteerid
+  <input id="i2" type="text">phone
+  <input id="i3" type="text">password
+  <input id="i4" type="text">name
+  <input id="i5" type="text">idnumber
+  <input id="i6" type="text">gender
+  <input id="i7" type="text">birthday
+  <input id="i8" type="text">province
+  <input id="i9" type="text">city
+  <input id="i10" type="text">district
+  <input id="i11" type="text">address
+  <input id="i12" type="text">education
+  <input id="i13" type="text">occupation
+  <input id="i14" type="text">politicaliands
+  <input id="i15" type="text">email
+  <input id="i16" type="text">volunteerhours
+  <input id="i17" type="text">volunteercoins
+  <input id="i18" type="text">credit
+  <input id="i19" type="text">registrationti
+  <input id="i20" type="text">userstatusid
+  <input id="i21" type="text">lastlogintime
+  <input id="i22" type="text">pictureaddress
+  <input id="i23" type="button">
+  <input name="checkCode" type="text" id="checkCode">
+  <img id="checkCodeImg" src="http://localhost:8080/Yzhiyuan365/CheckCodeServlet">
+  <a href="#" id="changeImg" >看不清？</a>
+</form>
+</body>
+<script src="js/axios/dist/axios.js"></script>
+<script>
+  let volunteerid = document.querySelector("#i1")
+  let phone       = document.querySelector("#i2")
+  let password    = document.querySelector("#i3")
+  let name        = document.querySelector("#i4")
+  let idnumber    = document.querySelector("#i5")
+  let gender      = document.querySelector("#i6")
+  let birthday    = document.querySelector("#i7")
+  let province    = document.querySelector("#i8")
+  let city        = document.querySelector("#i9")
+  let district    = document.querySelector("#i10")
+  let address     = document.querySelector("#i11")
+  let education   = document.querySelector("#i12")
+  let occupation  = document.querySelector("#i13")
+  let form = document.querySelector("#form")
+  let btn = document.querySelector("#i23")
+  let co = document.querySelector("#checkCode")
+
+  // window.onload = function (){
+  //   axios({
+  //     method:"post",
+  //     url:"http://localhost:8080/Yzhiyuan365/CheckCodeServlet",
+  //     // params: `ucheckCode : ${co.value}`
+  //     data:"1"
+  //   }).then(function (resp){
+  //     console.log(resp)
+  //   }).catch(function (error) {
+  //     console.log(error.response);//可以拿到后端返回的信息
+  //   });
+  // }
+
+
+
+  // co.addEventListener('change',function(){
+  //   axios({
+  //     method:"post",
+  //     url:"http://localhost:8080/Yzhiyuan365/user/Insert",
+  //     // data: `ucheckCode = ${co.value}`
+  //     data: `ucheckCode = 123`
+  //   }).then(function (resp){
+  //     console.log(resp)
+  //   }).catch(function (error) {
+  //     console.log(error.response);//可以拿到后端返回的信息
+  //   });
+  // })
+
+  btn.addEventListener('click', function () {
+
+    // var name= "${sessioScope.变量名}";
+      // e.preventDefault()
+      var obj = {
+        volunteerid         : volunteerid.value,
+        phone       : phone      .value,
+        password        : password   .value,
+        name        : name       .value,
+        idnumber       : idnumber   .value,
+        gender        : gender     .value,
+        birthday       : birthday   .value,
+        province        : province   .value,
+        city        : city       .value,
+        district       : district   .value,
+        address        : address    .value,
+        education       : education  .value,
+        occupation       : occupation .value
+      }
+    // var obj ={
+    // volunteerid         : 3000000,
+    //         phone       : 136859,
+    //         password        : 123,
+    //         name        : "zk",
+    //         idnumber       : 369856321,
+    //         gender        : "gender"     .value,
+    //         birthday       : "2022.12.3",
+    //         province        : 1,
+    //         city        :1,
+    //         district       : 1,
+    //         address        : 1,
+    //         education       : 1,
+    //         occupation       : 1
+    // }
+      console.log(obj)
+      axios({
+        method:"post",
+        url:"http://localhost:8080/Yzhiyuan365/user/Insert",
+        // params:"code=1234",
+        data:obj
+      }).then(function (resp){
+        console.log(resp)
+      }).catch(function (error) {
+        console.log(error.response);//可以拿到后端返回的信息
+      });
+      // localStorage.setItem('data', JSON.stringify(obj))
+      // location.href = 'http://localhost:8080/Yzhiyuan365/user/Insert'
+    })
+
+
+
+</script>
+</html>
