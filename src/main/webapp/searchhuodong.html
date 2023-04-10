@@ -75,7 +75,7 @@
 								</el-submenu>
 							</el-submenu>
 							<el-menu-item index="3">志愿组织</el-menu-item>
-							<el-menu-item index="4">活动招募</el-menu-item>
+							<el-menu-item index="4"><a :href="searchhuodong" target="_blank" style="text-decoration : none">活动招募</a></el-menu-item>
 							<el-menu-item index="5">志愿者培训</el-menu-item>
 							<el-menu-item index="6">志愿文化</el-menu-item>
 							<el-menu-item index="7">资料中心</el-menu-item>
@@ -91,12 +91,12 @@
 						<el-form ref="form" :model="form" label-width="80px">
 							<el-form-item label="活动类型:">	
 							<!-- {{AcstyleAll}} -->
-								<el-radio-group v-model="formInline.acstyle" v-for="Acstyls in AcstyleAll" :key="Acstyls.acstyleid" size="small" @change="selectActivity">
+								<el-radio-group v-model="formInline.acstyle" v-for="Acstyls in AcstyleAll" :key="Acstyls.acstyleid" size="small" @change="selectActivityFY">
 									<el-radio-button :label="Acstyls.acstyleid">{{Acstyls.acstyle}}</el-radio-button>
 								</el-radio-group>
 							</el-form-item>
 							<el-form-item label="项目状态:">
-								<el-radio-group v-model="formInline.activestatusid" v-for="Activestatuss in ActivestatusAll" :key="Activestatuss.activestatusid" size="small" @change="selectActivity">
+								<el-radio-group v-model="formInline.activestatusid" v-for="Activestatuss in ActivestatusAll" :key="Activestatuss.activestatusid" size="small" @change="selectActivityFY">
 									<el-radio-button :label="Activestatuss.activestatusid">{{Activestatuss.status}}</el-radio-button>
 								</el-radio-group>
 							</el-form-item>
@@ -139,7 +139,7 @@
 							    <el-input v-model="formInline.title" placeholder="活动名称" style="width: 150px;"></el-input>
 							  </el-form-item>
 						  <el-form-item>
-						    <el-button type="primary" @click="selectActivity">查询</el-button>
+						    <el-button type="primary" @click="selectActivityFY">查询</el-button>
 						  </el-form-item>
 						</el-form>
 					</div>
@@ -170,7 +170,8 @@
 								</el-col>
 								<!-- 描述信息 -->
 								<el-col :span="19" >
-									<el-descriptions :title="activitys.title">
+									
+									<el-descriptions :title="activitys.title" >
 									    <el-descriptions-item label="报名开始时间">{{activitys.enrolmentopeningtime}}</el-descriptions-item>
 									    <el-descriptions-item label="活动开始时间">{{activitys.starttime}}</el-descriptions-item>
 									    <el-descriptions-item label="活动区域">{{activitys.area.wholeName}}</el-descriptions-item>
@@ -180,13 +181,14 @@
 										<el-descriptions-item label="招募人数">{{activitys.numberofrequiredvolunteer}}</el-descriptions-item>
 									    <el-descriptions-item label="所属组织">{{activitys.organizations.oname}}</el-descriptions-item>
 									</el-descriptions>
+									
 									<!-- <a :href="acivexq + '?activityid=' + activitys.activityid"><el-button type="primary">我要报名</el-button></a> -->
 									<!-- 没有到报名时间 -->
-									<el-button type="primary" v-if="new Date(activitys.enrolmentopeningtime) > new Date()" :disabled="new Date(activitys.enrolmentopeningtime) > new Date()">报名时间未到</el-button>
+									<a :href="acivexq + '?activityid=' + activitys.activityid"><el-button type="primary" v-if="new Date(activitys.enrolmentopeningtime) > new Date()" :disabled="new Date(activitys.enrolmentopeningtime) > new Date()">报名时间未到</el-button></a>
 									<!-- 报名时间内 -->
 									<a :href="acivexq + '?activityid=' + activitys.activityid"><el-button type="primary" v-if="new Date(activitys.enrolmentopeningtime) < new Date() && new Date(activitys.enrolmentdeadline) > new Date()">我要报名</el-button></a>
 									<!-- 报名时间已过 -->
-									<el-button type="primary" v-if="new Date(activitys.enrolmentdeadline) < new Date()" :disabled="new Date(activitys.enrolmentdeadline) < new Date()">报名已截止</el-button>
+									<a :href="acivexq + '?activityid=' + activitys.activityid"><el-button type="primary" v-if="new Date(activitys.enrolmentdeadline) < new Date()" :disabled="new Date(activitys.enrolmentdeadline) < new Date()">报名已截止</el-button></a>
 								</el-col>
 							</el-row>
 							<!-- <el-image src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image"> -->
@@ -206,11 +208,25 @@
 			</el-row>
 			<!-- 分页条 -->
 			<el-row>
-				<el-pagination
+<!-- 				<el-pagination
 				  background
 				  layout="prev, pager, next"
 				  :total="1000">
-				</el-pagination>
+				</el-pagination> -->
+				
+				<!-- page-sizes 条目选择  page-size 条目数  current-page当前页数 size-change pageSize 改变时会触发  current-change	currentPage 改变时会触发-->
+				<!-- <p>{{currentPage}}</p> -->
+				<div class="block">
+				  <el-pagination
+				    @size-change="handleSizeChange"
+				    @current-change="handleCurrentChange"
+				    :current-page="currentPage"
+				    :page-sizes="[20, 50, 100]"
+				    :page-size="pageSize"
+				    layout="total, sizes, prev, pager, next, jumper"
+				    :total="total">
+				  </el-pagination>
+				</div>
 			</el-row>
 			<!-- 尾 -->
 			<el-row>
@@ -244,15 +260,22 @@
 					this.acivexq = this.local + '/acivexq.html'
 					this.vlongin = this.local + '/vlongin.html',
 					this.vsignupnew = this.local + '/vsignupnew.html'
+					this.searchhuodong = this.local + '/searchhuodong.html'
 					this.selectAcstyles();
 					this.selectActivestatus();
-					this.selectActivity();
+					// this.selectActivity();
+					this.selectActivityFY();
 				},
 				data(){
 					return{
+						activeIndex: '4',
+						currentPage:'1',
+						pageSize:'20',
+						total:'',
 						vname:'',
 						vlongin : '',
 						vsignupnew:'',
+						searchhuodong:'',
 						acivexq:'',
 						fit: 'contain',
 						// Acstyle:'0',
@@ -260,7 +283,7 @@
 						// Activestatus:'0',
 						ActivestatusAll:[],
 						Activitys:[],
-
+						// ActivitysFY:[],
 						formInline:{
 							acstyle:'0',
 							activestatusid:'0',
@@ -274,6 +297,38 @@
 				methods: {
 					select(){
 						console.log("woxiugail ")
+					},
+					
+					handleSizeChange(val) {
+					  // console.log(`每页 ${val} 条`);
+					  this.pageSize = val
+					  this.selectActivityFY()
+					},
+					
+					handleCurrentChange(val) {
+					  // console.log(`当前页: ${val}`);
+					  this.currentPage = val
+					  this.selectActivityFY()
+					},
+					
+					
+					selectActivityFY(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/Activity/selectActivityVFY?begin='+this.currentPage + '&size='+this.pageSize,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formInline
+						}).then((resp)=>{
+							console.log(resp.data)
+							console.log(resp.data['shuju'])
+							console.log(resp.data['total'])
+							this.total = resp.data['total']
+							this.Activitys=resp.data['shuju']
+						}).catch((error)=>{
+							console.log(error.resp)
+						})
 					},
 					
 					selectActivity(){

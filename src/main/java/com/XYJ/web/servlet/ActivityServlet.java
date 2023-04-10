@@ -1,6 +1,7 @@
 package com.XYJ.web.servlet;
 
 import com.XYJ.pojo.Activity;
+import com.XYJ.pojo.PageFY;
 import com.XYJ.pojo.User;
 import com.XYJ.service.ActivityService;
 import com.XYJ.util.IdAutoCreateUtils;
@@ -86,6 +87,21 @@ public class ActivityServlet extends BaseServlet{
         String params = us.readLine();
         Activity activity = JSON.parseObject(params,Activity.class);
         List<Activity> activities = activityservice.selectActivityV(activity);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(activities);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectActivityVFY(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        String begin = req.getParameter("begin");
+        int currentpage = Integer.parseInt(begin);
+        String size = req.getParameter("size");
+        int pagesize = Integer.parseInt(size);
+        Activity activity = JSON.parseObject(params,Activity.class);
+        PageFY<Activity> activities = activityservice.selectActivityVFY(currentpage,pagesize,activity);
         resp.setContentType("text/json;charset=utf-8");
         String jsonString = JSON.toJSONString(activities);
         resp.getWriter().write(jsonString);

@@ -1,6 +1,7 @@
 package com.XYJ.mapper;
 
 import com.XYJ.pojo.Activity;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,4 +15,9 @@ public interface ActivityMapper {
     List<Activity> selectByAcstyleidjoin(String activityid);
 
     List<Activity> selectActivityV(Activity activity);
+
+    int selectActivityVCount(Activity activity);
+
+    List<Activity> selectActivityVFY(@Param("begin") int begin, @Param("size") int size, @Param("activity") Activity activity);
+
 }

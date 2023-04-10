@@ -5,6 +5,7 @@ import com.XYJ.pojo.Acstyle;
 import com.XYJ.pojo.Activity;
 
 import com.XYJ.pojo.Applicationreview;
+import com.XYJ.pojo.PageFY;
 import com.alibaba.fastjson.JSON;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -41,10 +42,10 @@ public class ActivityService {
         return activity;
     }
 
-    public List<Activity> selectByAcstyleidjoin(String activityid){
+    public List<Activity> selectByAcstyleidjoin(String activityids){
         SqlSession sqlSession = factory.openSession();
         ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
-        List<Activity> activity = activitymapper.selectByAcstyleidjoin(activityid);
+        List<Activity> activity = activitymapper.selectByAcstyleidjoin(activityids);
         sqlSession.close();
         return activity;
     }
@@ -57,6 +58,23 @@ public class ActivityService {
         return activitys;
     }
 
+    public PageFY<Activity> selectActivityVFY(int begin,int size,Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+
+//        总记录数
+        int total = activitymapper.selectActivityVCount(activity);
+        System.out.println(total);
+        begin = (begin - 1) * size;
+        List<Activity> activitys = activitymapper.selectActivityVFY(begin,size,activity);
+
+        PageFY<Activity> page = new PageFY<>();
+        page.setTotal(total);
+        page.setShuju(activitys);
+        sqlSession.close();
+        return page;
+    }
+
     public static void main(String[] args) {
         ActivityService activityService = new ActivityService();
         List<Activity> ac =  activityService.selectByAcstyleidjoin("HD1101019803312778");
@@ -66,11 +84,16 @@ public class ActivityService {
             String a = activity.getAcstyles().getAcstyle();
         }
 
+
         Map<String,Object> ainfo = new HashMap<>();
 //        ainfo.put("activityid","130304");
         String jsonString = JSON.toJSONString(ainfo);
         Activity act = JSON.parseObject(jsonString,Activity.class);
         List<Activity> acts =  activityService.selectActivityV(act);
-        System.out.println(acts);
+//        System.out.println(acts);
+        System.out.println("---------------------");
+        System.out.println(activityService.selectByAcstyleidjoin("HD1101019303317360"));
+        System.out.println("---------------------");
+        System.out.println(activityService.selectActivityVFY(1,5,act));
     }
 }

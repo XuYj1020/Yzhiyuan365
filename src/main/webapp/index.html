@@ -129,7 +129,7 @@
 						    </el-submenu>
 						  </el-submenu>
 						  <el-menu-item index="3">志愿组织</el-menu-item>
-						  <el-menu-item index="4">活动招募</el-menu-item>
+						  <el-menu-item index="4"><a :href="searchhuodong" target="_blank" style="text-decoration : none">活动招募</a></el-menu-item>
 						  <el-menu-item index="5">志愿者培训</el-menu-item>
 						  <el-menu-item index="6">志愿文化</el-menu-item>
 						  <el-menu-item index="7">资料中心</el-menu-item>
@@ -298,6 +298,7 @@
 					this.vsignupnew = this.local + '/vsignupnew.html'
 					// 拼接url http://localhost:8080/Yzhiyuan365/acivexq.html
 					this.acivexq = this.local + '/acivexq.html'
+					this.searchhuodong = this.local + '/searchhuodong.html'
 					this.selectAcstyles();
 					this.selectByAcstyleidAll();
 					
@@ -309,10 +310,12 @@
 						 },{
 							img:'/upload/1623849564174.png' 
 						 }],
+						local:'',
 						vlongin : '',
 						vsignupnew:'',
 						acivexq:'',
-						local:'',
+						searchhuodong:'',
+						
 						 // 用户名
 						vname:'',
 						 // 导航栏当前选中
@@ -349,6 +352,7 @@
 					// 导航栏   
 				     handleSelect(key, keyPath) {
 				       console.log(key, keyPath);
+					   
 				     },
 					// 标签页 
 					handleClick(tab, event) {
