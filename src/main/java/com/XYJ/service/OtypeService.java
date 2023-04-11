@@ -21,4 +21,12 @@ public class OtypeService {
         sqlSession.close();
         return otype;
     }
+
+    public List<Otype> selectAll() {
+        SqlSession sqlSession = factory.openSession();
+        OtypeMapper otypemapper = sqlSession.getMapper(OtypeMapper.class);
+        List<Otype> otype = otypemapper.selectAll();
+        sqlSession.close();
+        return otype;
+    }
 }

@@ -110,11 +110,53 @@
             <id column="registrationstatusid" property="registrationstatusid"></id>
             <result column="rr" property="registrationstatus"></result>
         </association>
+        <association property="areas" javaType="com.XYJ.pojo.Area">
+            <result column="whole_name" property="wholeName"></result>
+            <result column="count" property="pinYin"></result>
+        </association>
     </resultMap>
+
     <select id="selectByOID" resultMap="rs1">
-        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr from organization,otype,registrationstatus where organization.otype = otype.otypeid and organization.registrationstatus = registrationstatus.registrationstatusid  and  userstatusid = 1 and organizationid =#{organizationid};
+        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr from organization,otype,registrationstatus where organization.otype = otype.otypeid and organization.registrationstatus = registrationstatus.registrationstatusid  and  userstatusid in (1,3) and organizationid =#{organizationid};
     </select>
+
     <select id="selectOinfoByOID" resultType="com.XYJ.pojo.Organization">
         select organizationid,phone,name,oname,userstatusid from organization where  organizationid =#{organizationid};
+    </select>
+
+    <select id="selectOraganizationVFY" resultMap="rs1">
+        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr,area.whole_name,(select count(*) from omembers where organization.organizationid = omembers.organizationid ) as count from organization,otype,registrationstatus,area
+        <where>
+            organization.otype = otype.otypeid and organization.registrationstatus = registrationstatus.registrationstatusid  and  userstatusid in (1,3) and organization.district = area.area_code and  area.`level` = 3
+             <if test="organization.otype != 0">
+                and organization.otype = #{organization.otype}
+             </if>
+            <if test="organization.organizationid != null and organization.organizationid != '' ">
+                and organization.organizationid like
+                concat('%',#{organization.organizationid},'%');
+            </if>
+            <if test="organization.oname != null and organization.oname != '' ">
+                and organization.oname like
+                concat('%',#{organization.oname},'%');
+            </if>
+        </where>
+        order by organization.registrationtime limit #{begin},#{size};
+    </select>
+    <select id="selectOraganizationVCount" resultType="java.lang.Integer">
+        select count(*) from organization,otype,registrationstatus,area
+        <where>
+            organization.otype = otype.otypeid and organization.registrationstatus = registrationstatus.registrationstatusid  and  userstatusid in (1,3) and organization.district = area.area_code and area.`level` = 3
+            <if test="otype != 0">
+                and organization.otype = #{otype}
+            </if>
+            <if test="organizationid != null and organizationid != '' ">
+                and organization.organizationid like
+                concat('%',#{organizationid},'%');
+            </if>
+            <if test="oname != null and oname != '' ">
+                and organization.oname like
+                concat('%',#{oname},'%');
+            </if>
+        </where>
     </select>
 </mapper>

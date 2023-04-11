@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style lang="less">
+			.bg-purple-dark {
+			  background: #99a9bf;
+			}
+			.bg-purple {
+			  background: #d3dce6;
+							
+			}
+			.bg-purple-light {
+			  background: #e5e9f2;
+			}
+			.grid-content {
+			  border-radius: 40px;
+			  min-height: 36px;
+			}
+			.el-pagination {
+			    text-align: center; 
+			}
+		</style>
+	</head>
+	<body>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<div id="app">
+			<el-row id="elrow1">
+				<el-col :span="4">
+					这里是logo
+				</el-col>
+				<el-col :span="18">
+					<div>
+						<el-row>
+							<el-col :span="3" :offset="16">
+								<!-- <span><el-link :underline="false" type="primary">您好，请登录</el-link></span> -->
+								<span v-if="!vname"><el-link :underline="false" type="primary" :href='vlongin'>您好，请登录</el-link></span>
+								<span v-if="vname"><el-link :underline="false" type="primary">您好，{{vname}}</el-link></span>
+								<p v-text="vlongin"></p>
+							</el-col>
+							<el-col :span="2">
+								<span v-if="!vname"><el-link :underline="false" type="primary" :href='vsignupnew'>个人注册</el-link></span>
+								<span v-if="vname" @click="tcdl">
+								<el-link :underline="false" type="primary" href='#'>退出登录</el-link></span>
+							</el-col>
+							<el-col :span="2">
+								<span><el-link :underline="false" type="primary">组织注册</el-link></span>
+							</el-col>
+<!-- 							<el-col :span="2">
+								<span><el-link :underline="false" type="primary">主要链接</el-link></span>
+							</el-col> --> 
+						</el-row>
+					</div>
+					<!-- 导航栏 -->
+					<div class="grid-content bg-purple daohang"> 
+					<!-- select	菜单激活回调	index: 选中菜单项的 index, indexPath: 选中菜单项的 index path -->
+						<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"  id="elmeun">
+							<el-menu-item index="1">首页</el-menu-item>
+							<el-submenu index="2">
+								<template slot="title">志愿者</template>
+								<el-menu-item index="2-1">选项1</el-menu-item>
+								<el-menu-item index="2-2">选项2</el-menu-item>
+								<el-menu-item index="2-3">选项3</el-menu-item>
+								<el-submenu index="2-4">
+									<template slot="title">选项4</template>
+										<el-menu-item index="2-4-1">选项1</el-menu-item>
+										<el-menu-item index="2-4-2">选项2</el-menu-item>
+										<el-menu-item index="2-4-3">选项3</el-menu-item>
+								</el-submenu>
+							</el-submenu>
+							<el-menu-item index="3"><a :href="searchzuzhi" target="_blank" style="text-decoration : none">志愿组织</a></el-menu-item>
+							<el-menu-item index="4"><a :href="searchhuodong" target="_blank" style="text-decoration : none">活动招募</a></el-menu-item>
+							<el-menu-item index="5">志愿者培训</el-menu-item>
+							<el-menu-item index="6">志愿文化</el-menu-item>
+							<el-menu-item index="7">资料中心</el-menu-item>
+							<el-menu-item index="8"><el-link :underline="false" type="primary">关于我们</el-link></el-menu-item>
+						</el-menu>
+					</div>
+				</el-col>
+			</el-row>
+			<!-- 活动类别 -->
+			<el-row type="flex" justify="center">
+				<el-col :span="20">
+				    <div>
+						<el-form ref="formInline" :model="formInline" label-width="80px">
+							<el-form-item label="组织类型:">	
+							<!-- {{AcstyleAll}} -->
+								<el-radio-group v-model="formInline.otype" v-for="Otypes in OtypesAll" :key="Otypes.otypeid" size="small" @change="selectOraganizationVFY">
+									<el-radio-button :label="Otypes.otypeid">{{Otypes.otype}}</el-radio-button>
+								</el-radio-group>
+							</el-form-item>
+					  </el-form>
+				    </div>
+				</el-col>
+			</el-row>
+			<!-- 表单位置 -->
+			<el-row type="flex" justify="center">
+				<el-col :span="20">
+					<div>
+						<el-form :inline="true" :model="formInline" class="demo-form-inline" size="mini">
+						    <el-form-item>
+						      <el-input v-model="formInline.organizationid" placeholder="组织编号" style="width: 150px;"></el-input>
+						    </el-form-item>
+							  <el-form-item>
+							    <el-input v-model="formInline.oname" placeholder="组织名称" style="width: 150px;"></el-input>
+							  </el-form-item>
+						  <el-form-item>
+						    <el-button type="primary" @click="selectOraganizationVFY">查询</el-button>
+						  </el-form-item>
+						</el-form>
+					</div>
+				</el-col>
+			</el-row>
+			<!-- 内容显示 -->
+			<el-row type="flex" justify="center" >
+				<!-- 大card -->
+				<el-col :span="20">
+					<el-card class="box-card" shadow="never">
+						<!-- 小card -->
+						<el-card class="box-card"  shadow="hover" :body-style="{padding: '10px'}" v-for="organizations in Organizations">
+							<el-row type="flex" justify="center" style="margin: 0px">
+								<!-- 图片 -->
+								<el-col :span="4" >
+									<div>
+									<el-avatar shape="square" :size="150" :fit="fit" src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"></el-avatar>
+									</div>
+								</el-col>
+								<!-- 描述信息 -->
+								<el-col :span="19" >
+									
+									<el-descriptions :title="organizations.oname" >
+										<el-descriptions-item label="组织编号">{{organizations.organizationid}}</el-descriptions-item>
+									    
+									    <el-descriptions-item label="是否登记">{{organizations.registrationstatuss.registrationstatus}}</el-descriptions-item>
+									    <el-descriptions-item label="所在区域">{{organizations.area.wholeName}}</el-descriptions-item>
+									    <el-descriptions-item label="入驻时间">{{organizations.registrationtime}}</el-descriptions-item>
+										<el-descriptions-item label="组织人数">{{organizations.area.pinYin}}人</el-descriptions-item>
+										<el-descriptions-item label="组织类型">
+											<el-tag size="small">{{organizations.otypes.otype}}</el-tag>
+										</el-descriptions-item>
+									</el-descriptions>
+									<a :href="oxq + '?organizationid=' + organizations.organizationid"><el-button type="primary">查看详情</el-button></a>
+								</el-col>
+							</el-row>
+						</el-card>
+					</el-card>
+				</el-col>
+			</el-row>
+			<!-- 分页条 -->
+			<el-row>
+				<!-- page-sizes 条目选择  page-size 条目数  current-page当前页数 size-change pageSize 改变时会触发  current-change	currentPage 改变时会触发-->
+				<!-- <p>{{currentPage}}</p> -->
+				<div class="block">
+				  <el-pagination
+				    @size-change="handleSizeChange"
+				    @current-change="handleCurrentChange"
+				    :current-page="currentPage"
+				    :page-sizes="[20, 50, 100]"
+				    :page-size="pageSize"
+				    layout="total, sizes, prev, pager, next, jumper"
+				    :total="total">
+				  </el-pagination>
+				</div>
+			</el-row>
+			<!-- 尾 -->
+			<el-row>
+				<el-col :span="24"><div class="grid-content bg-purple">这里是尾部</div></el-col>
+			</el-row>
+		</div>
+		<script>
+			new Vue({
+				el:'#app',
+				created() {
+					this.vname=localStorage.getItem('vname')
+					this.local = window.location.pathname.substring(0,window.location.pathname.lastIndexOf('/'))
+					this.oxq = this.local + '/oxq.html'
+					this.vlongin = this.local + '/vlongin.html',
+					this.vsignupnew = this.local + '/vsignupnew.html'
+					this.searchhuodong = this.local + '/searchhuodong.html'
+					this.searchzuzhi = this.local + '/searchzuzhi.html'
+					this.selectOtypes();
+					this.selectOraganizationVFY();
+					// this.selectActivity();
+					// this.selectActivityFY();
+				},
+				data(){
+					return{
+						activeIndex: '3',
+						currentPage:1,
+						pageSize:20,
+						total:null,
+						vname:'',
+						vlongin : '',
+						vsignupnew:'',
+						searchhuodong:'',
+						searchzuzhi:'',
+						acivexq:'',
+						fit: 'contain',
+						Organizations:[],
+						OtypesAll:[],
+						formInline:{
+							otype:'0',
+							organizationid:'',
+							oname:''
+						}
+					};
+				},
+				methods: {
+					handleSelect(key, keyPath) {
+					        console.log(key, keyPath);
+					      },
+					
+					handleSizeChange(val) {
+					  // console.log(`每页 ${val} 条`);
+					  this.pageSize = val
+					  this.selectOraganizationVFY()
+					},
+					
+					handleCurrentChange(val) {
+					  // console.log(`当前页: ${val}`);
+					  this.currentPage = val
+					  this.selectOraganizationVFY()
+					},
+					
+					
+					selectOraganizationVFY(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/organization/selectOraganizationVFY?currentPage='+this.currentPage + '&pageSize='+this.pageSize,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formInline
+						}).then((resp)=>{
+							console.log(resp.data)
+							console.log(resp.data['shuju'])
+							console.log(resp.data['total'])
+							this.total = resp.data['total']
+							this.Organizations=resp.data['shuju']
+						}).catch((error)=>{
+							console.log(error.resp)
+						})
+					},
+					
+
+					selectOtypes(){
+						axios({
+							method:"post",
+							url:"http://localhost:8080/Yzhiyuan365/otype/selectAll",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							}
+						}).then((resp)=>{
+						    // console.log(resp)
+						    console.log(resp.data)
+						    // console.log(resp.data.datalist)
+						    this.OtypesAll=resp.data
+						    this.OtypesAll.unshift({otypeid:0,otype:"全部"})
+						}).catch((error)=> {
+							console.log(error.resp);//可以拿到后端返回的信息
+						});
+					},
+					
+					
+					tcdl(){
+						localStorage.removeItem('vtoken')
+						localStorage.removeItem('vname')
+						localStorage.removeItem('vphone')
+						localStorage.removeItem('vid')
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -27,8 +27,16 @@ public class Organization {
     private Otype otypes;
     private Registrationstatus registrationstatuss;
 
+    private Area areas;
 
 
+    public Area getArea() {
+        return areas;
+    }
+
+    public void setAreas(Area areas) {
+        this.areas = areas;
+    }
 
     public String getOrganizationid() {
         return organizationid;
@@ -259,6 +267,7 @@ public class Organization {
                 ", userstatusid=" + userstatusid +
                 ", otypes=" + otypes +
                 ", registrationstatuss=" + registrationstatuss +
+                ", areas=" + areas +
                 '}';
     }
 }

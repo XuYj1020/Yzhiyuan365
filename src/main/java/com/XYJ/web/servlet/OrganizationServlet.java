@@ -1,6 +1,7 @@
 package com.XYJ.web.servlet;
 
 import com.XYJ.pojo.Organization;
+import com.XYJ.pojo.PageFY;
 import com.XYJ.pojo.User;
 import com.XYJ.service.OrganizationService;
 import com.XYJ.util.CCTokenUtil;
@@ -94,6 +95,21 @@ public class OrganizationServlet extends BaseServlet{
         String jsonString = JSON.toJSONString(organizations);
         resp.setContentType("text/json;charset=utf-8");
 //        传递组织信息
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectOraganizationVFY(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        String currentPage = req.getParameter("currentPage");
+        String pageSize = req.getParameter("pageSize");
+        int begin = Integer.parseInt(currentPage);
+        int size = Integer.parseInt(pageSize);
+        BufferedReader oinfo = req.getReader();
+        String param = oinfo.readLine();
+        Organization organization = JSON.parseObject(param,Organization.class);
+        PageFY<Organization> organizations = organizationservice.selectOraganizationVFY(begin,size,organization);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(organizations);
         resp.getWriter().write(jsonString);
     }
 }

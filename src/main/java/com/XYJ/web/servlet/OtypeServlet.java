@@ -35,4 +35,12 @@ public class OtypeServlet extends BaseServlet{
         String jsonString = JSON.toJSONString(otype);
         resp.getWriter().write(jsonString);
     }
+
+    public void selectAll(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        List<Otype> otype = otypeservice.selectAll();
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(otype);
+        resp.getWriter().write(jsonString);
+    }
 }

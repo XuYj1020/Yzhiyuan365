@@ -128,7 +128,7 @@
 						      <el-menu-item index="2-4-3">选项3</el-menu-item>
 						    </el-submenu>
 						  </el-submenu>
-						  <el-menu-item index="3">志愿组织</el-menu-item>
+						  <el-menu-item index="3"><a :href="searchzuzhi" target="_blank" style="text-decoration : none">志愿组织</a></el-menu-item>
 						  <el-menu-item index="4"><a :href="searchhuodong" target="_blank" style="text-decoration : none">活动招募</a></el-menu-item>
 						  <el-menu-item index="5">志愿者培训</el-menu-item>
 						  <el-menu-item index="6">志愿文化</el-menu-item>
@@ -299,6 +299,7 @@
 					// 拼接url http://localhost:8080/Yzhiyuan365/acivexq.html
 					this.acivexq = this.local + '/acivexq.html'
 					this.searchhuodong = this.local + '/searchhuodong.html'
+					this.searchzuzhi = this.local + '/searchzuzhi.html'
 					this.selectAcstyles();
 					this.selectByAcstyleidAll();
 					
@@ -315,7 +316,7 @@
 						vsignupnew:'',
 						acivexq:'',
 						searchhuodong:'',
-						
+						searchzuzhi:'',
 						 // 用户名
 						vname:'',
 						 // 导航栏当前选中
