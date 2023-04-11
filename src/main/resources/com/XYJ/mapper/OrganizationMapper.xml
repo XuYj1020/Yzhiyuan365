@@ -133,11 +133,11 @@
              </if>
             <if test="organization.organizationid != null and organization.organizationid != '' ">
                 and organization.organizationid like
-                concat('%',#{organization.organizationid},'%');
+                concat('%',#{organization.organizationid},'%')
             </if>
             <if test="organization.oname != null and organization.oname != '' ">
                 and organization.oname like
-                concat('%',#{organization.oname},'%');
+                concat('%',#{organization.oname},'%')
             </if>
         </where>
         order by organization.registrationtime limit #{begin},#{size};
@@ -151,11 +151,11 @@
             </if>
             <if test="organizationid != null and organizationid != '' ">
                 and organization.organizationid like
-                concat('%',#{organizationid},'%');
+                concat('%',#{organizationid},'%')
             </if>
             <if test="oname != null and oname != '' ">
                 and organization.oname like
-                concat('%',#{oname},'%');
+                concat('%',#{oname},'%')
             </if>
         </where>
     </select>

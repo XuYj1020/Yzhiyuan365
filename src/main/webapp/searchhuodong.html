@@ -331,7 +331,7 @@
 							this.total = resp.data['total']
 							this.Activitys=resp.data['shuju']
 						}).catch((error)=>{
-							console.log(error.resp)
+							console.log(error.response)
 						})
 					},
 					
@@ -347,7 +347,7 @@
 							console.log(resp.data)
 							this.Activitys=resp.data
 						}).catch((error)=>{
-							console.log(error.resp)
+							console.log(error.response)
 						})
 					},
 					
@@ -367,7 +367,7 @@
 						    this.AcstyleAll=resp.data
 						    this.AcstyleAll.unshift({acstyleid:0,acstyle:"全部"})
 						}).catch((error)=> {
-							console.log(error.resp);//可以拿到后端返回的信息
+							console.log(error.response);//可以拿到后端返回的信息
 						});
 					},
 					
