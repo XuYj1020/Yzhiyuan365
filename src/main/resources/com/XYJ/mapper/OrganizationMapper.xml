@@ -110,7 +110,7 @@
             <id column="registrationstatusid" property="registrationstatusid"></id>
             <result column="rr" property="registrationstatus"></result>
         </association>
-        <association property="areas" javaType="com.XYJ.pojo.Area">
+        <association property="areanews" javaType="com.XYJ.pojo.Areanew">
             <result column="whole_name" property="wholeName"></result>
             <result column="count" property="pinYin"></result>
         </association>
@@ -125,9 +125,9 @@
     </select>
 
     <select id="selectOraganizationVFY" resultMap="rs1">
-        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr,area.whole_name,(select count(*) from omembers where organization.organizationid = omembers.organizationid ) as count from organization,otype,registrationstatus,area
+        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr,areanew.whole_name,(select count(*) from omembers where organization.organizationid = omembers.organizationid ) as count from organization,otype,registrationstatus,areanew
         <where>
-            organization.otype = otype.otypeid and organization.registrationstatus = registrationstatus.registrationstatusid  and  userstatusid in (1,3) and organization.district = area.area_code and  area.`level` = 3
+            organization.otype = otype.otypeid and organization.registrationstatus = registrationstatus.registrationstatusid  and  userstatusid in (1,3) and organization.district = areanew.area_code and  areanew.`level` = 3
              <if test="organization.otype != 0">
                 and organization.otype = #{organization.otype}
              </if>
@@ -143,9 +143,9 @@
         order by organization.registrationtime limit #{begin},#{size};
     </select>
     <select id="selectOraganizationVCount" resultType="java.lang.Integer">
-        select count(*) from organization,otype,registrationstatus,area
+        select count(*) from organization,otype,registrationstatus,areanew
         <where>
-            organization.otype = otype.otypeid and organization.registrationstatus = registrationstatus.registrationstatusid  and  userstatusid in (1,3) and organization.district = area.area_code and area.`level` = 3
+            organization.otype = otype.otypeid and organization.registrationstatus = registrationstatus.registrationstatusid  and  userstatusid in (1,3) and organization.district = areanew.area_code and areanew.`level` = 3
             <if test="otype != 0">
                 and organization.otype = #{otype}
             </if>

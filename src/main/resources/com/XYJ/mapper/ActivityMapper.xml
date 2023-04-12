@@ -127,7 +127,7 @@
             <id column="acstyleid" property="acstyleid"></id>
             <result column="aa" property="acstyle"></result>
         </association>
-        <association property="area" javaType="com.XYJ.pojo.Area">
+        <association property="areanews" javaType="com.XYJ.pojo.Areanew">
             <result column="whole_name" property="wholeName"></result>
         </association>
         <association property="admissionpolicys" javaType="com.XYJ.pojo.Admissionpolicy">
@@ -142,9 +142,9 @@
         select *,acstyle.acstyle as aa,admissionpolicy.admissionpolicy as admissionpolicys   from activity , acstyle,admissionpolicy where activity.acstyle = acstyle.acstyleid and activity.admissionpolicy = admissionpolicy.admissionpolicyid  and activity.activityid = #{activityid}
     </select>
     <select id="selectActivityV" resultMap="rs1">
-        select  *,acstyle.acstyle as aa,area.whole_name,organization.oname from activity, acstyle,area,organization
+        select  *,acstyle.acstyle as aa,areanew.whole_name,organization.oname from activity, acstyle,areanew,organization
         <where>
-            activity.organizationid = organization.organizationid and activity.acstyle = acstyle.acstyleid and activity.district = area.area_code and area.level = 3
+            activity.organizationid = organization.organizationid and activity.acstyle = acstyle.acstyleid and activity.district = areanew.area_code and areanew.level = 3
             <if test="acstyle != 0">
                 and activity.acstyle = #{acstyle}
             </if>
@@ -171,9 +171,9 @@
         </where>
     </select>
     <select id="selectActivityVCount" resultType="java.lang.Integer">
-        select count(*) from activity, acstyle,area,organization
+        select count(*) from activity, acstyle,areanew,organization
         <where>
-            activity.organizationid = organization.organizationid and activity.acstyle = acstyle.acstyleid and activity.district = area.area_code and area.level = 3
+            activity.organizationid = organization.organizationid and activity.acstyle = acstyle.acstyleid and activity.district = areanew.area_code and areanew.level = 3
             <if test="acstyle != 0">
                 and activity.acstyle = #{acstyle}
             </if>
@@ -201,9 +201,9 @@
     </select>
 
     <select id="selectActivityVFY" resultMap="rs1">
-        select  *,acstyle.acstyle as aa,area.whole_name,organization.oname from activity, acstyle,area,organization
+        select  *,acstyle.acstyle as aa,areanew.whole_name,organization.oname from activity, acstyle,areanew,organization
         <where>
-            activity.organizationid = organization.organizationid and activity.acstyle = acstyle.acstyleid and activity.district = area.area_code and area.level = 3
+            activity.organizationid = organization.organizationid and activity.acstyle = acstyle.acstyleid and activity.district = areanew.area_code and areanew.level = 3
             <if test="activity.acstyle != 0">
                 and activity.acstyle = #{activity.acstyle}
             </if>

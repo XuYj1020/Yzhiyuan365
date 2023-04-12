@@ -28,7 +28,45 @@ public class User {
 
   private Aleader aleaders;
 
+  private Occupation occupations;
 
+  private Education educations;
+  private Politicaliandscape politicaliandscapes;
+
+//  private Area areas;
+
+    private Areanew areanews;
+    public Occupation getOccupations() {
+        return occupations;
+    }
+
+    public void setOccupations(Occupation occupations) {
+        this.occupations = occupations;
+    }
+
+    public Education getEducations() {
+        return educations;
+    }
+
+    public void setEducations(Education educations) {
+        this.educations = educations;
+    }
+
+    public Politicaliandscape getPoliticaliandscapes() {
+        return politicaliandscapes;
+    }
+
+    public void setPoliticaliandscapes(Politicaliandscape politicaliandscapes) {
+        this.politicaliandscapes = politicaliandscapes;
+    }
+
+    public Areanew getAreanews() {
+        return areanews;
+    }
+
+    public void setAreanews(Areanew areanews) {
+        this.areanews = areanews;
+    }
 
     public Aleader getAleaders() {
         return aleaders;
@@ -248,7 +286,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "  volunteerid='" + volunteerid + '\'' +
+                "volunteerid='" + volunteerid + '\'' +
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
@@ -271,6 +309,10 @@ public class User {
                 ", lastlogintime='" + lastlogintime + '\'' +
                 ", pictureaddress='" + pictureaddress + '\'' +
                 ", aleaders=" + aleaders +
+                ", occupations=" + occupations +
+                ", educations=" + educations +
+                ", politicaliandscapes=" + politicaliandscapes +
+                ", areanews=" + areanews +
                 '}';
     }
 }

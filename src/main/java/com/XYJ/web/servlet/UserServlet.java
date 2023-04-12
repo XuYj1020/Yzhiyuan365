@@ -245,6 +245,7 @@ public class UserServlet extends BaseServlet{
 //        传递token的代码
         if(!users.isEmpty()){
             String tokenstring = CCTokenUtil.CreateVToken(jsonString);
+            userservice.updateLastlogintime(user);
             System.out.println(tokenstring);
             resp.getWriter().write(tokenstring);
         }else{
@@ -279,5 +280,24 @@ public class UserServlet extends BaseServlet{
         resp.setContentType("text/json;charset=utf-8");
 //        传递组织信息
         resp.getWriter().write(jsonString);
+    }
+
+    public void selectByVid(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        String volunteerid = req.getParameter("vid");
+        List<User> users = userservice.selectByVid(volunteerid);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(users);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void updateVinfo(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String param = bufferedReader.readLine();
+        User user = JSON.parseObject(param,User.class);
+        userservice.updateVinfo(user);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
     }
 }

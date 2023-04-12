@@ -112,6 +112,13 @@ public class UserService {
         return users;
     }
 
+    public void updateLastlogintime(User user){
+        SqlSession sqlSession = factory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+        userMapper.updateLastlogintime(user);
+        sqlSession.close();
+    }
+
 //    活动管理员
     public List<User> selectByVIDjoinOID(String organizationid){
         SqlSession sqlSession = factory.openSession();
@@ -127,6 +134,21 @@ public class UserService {
         List<User> users = usermapper.selectByjoinAID(activityid);
         sqlSession.close();
         return users;
+    }
+
+    public List<User> selectByVid(String volunteerid){
+        SqlSession sqlSession = factory.openSession();
+        UserMapper usermapper = sqlSession.getMapper(UserMapper.class);
+        List<User> users = usermapper.selectByVid(volunteerid);
+        sqlSession.close();
+        return users;
+    }
+
+    public void updateVinfo(User user){
+        SqlSession sqlSession = factory.openSession();
+        UserMapper usermapper = sqlSession.getMapper(UserMapper.class);
+        usermapper.updateVinfo(user);
+        sqlSession.close();
     }
     //测试语句是否正确
     public static <Sting> void main(String[] args) throws IOException {
@@ -168,7 +190,8 @@ public class UserService {
 //        System.out.println(mapTypes.get("name") );
 
 //        System.out.println(s.selectByVIDjoinOID("1301040503284166"));
-        System.out.println(s.selectByjoinAID("HD330301810406"));
+//        System.out.println(s.selectByjoinAID("HD330301810406"));
+        System.out.println(s.selectByVid("330689230325018483"));
 
     }
 }

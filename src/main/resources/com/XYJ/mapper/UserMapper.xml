@@ -5,6 +5,7 @@
 <!--namespace名称空间-->
 <!--<mapper namespace="test">-->
 <mapper namespace="com.XYJ.mapper.UserMapper">
+
     <!--    resultType里面填类-->
     <select id="selectAll" resultType="com.XYJ.pojo.User">
             select * from volunteer;
@@ -100,9 +101,9 @@
         <result column="city" property="city" ></result>
         <result column="district" property="district" ></result>
         <result column="address" property="address" ></result>
-        <result column="education" property="education" ></result>
-        <result column="occupation" property="occupation" ></result>
-        <result column="politicaliandscape" property="politicaliandscape" ></result>
+<!--        <result column="education" property="education" ></result>-->
+<!--        <result column="occupation" property="occupation" ></result>-->
+<!--        <result column="politicaliandscape" property="politicaliandscape" ></result>-->
         <result column="email" property="email" ></result>
         <result column="volunteerhours" property="volunteerhours" ></result>
         <result column="volunteercoins" property="volunteercoins" ></result>
@@ -116,10 +117,97 @@
             <result column="activityid" property="activityid"></result>
             <result column="stafid" property="stafid"></result>
         </collection>
+        <collection property="occupations" ofType="com.XYJ.pojo.Occupation" >
+            <id column="occupationid" property="occupationid"></id>
+            <result column="occ" property="occupation"></result>
+        </collection>
+        <collection property="educations" ofType="com.XYJ.pojo.Education" >
+            <id column="educationid" property="educationid"></id>
+            <result column="edu" property="education"></result>
+        </collection>
+        <collection property="politicaliandscapes" ofType="com.XYJ.pojo.Politicaliandscape" >
+            <id column="politicaliandscapeid" property="politicaliandscapeid"></id>
+            <result column="pol" property="politicaliandscape"></result>
+        </collection>
+        <collection property="areanews" ofType="com.XYJ.pojo.Areanew" >
+            <result column="whole_name" property="wholeName"></result>
+        </collection>
     </resultMap>
 
 
     <select id="selectByjoinAID" resultMap="rs1">
         select volunteer.name,volunteer.phone,volunteer.volunteerid,aleader.leaderid from volunteer , aleader where volunteer.volunteerid = aleader.stafid and aleader.activityid = #{activityid};
     </select>
+    <select id="selectByVid" resultMap="rs1">
+        select *,occupation.occupation as occ,education.education as edu,politicaliandscape.politicaliandscape as pol from volunteer
+                          LEFT JOIN occupation on volunteer.occupation = occupation.occupationid
+                          LEFT JOIN education on volunteer.education = education.educationid
+                          LEFT JOIN politicaliandscape on volunteer.politicaliandscape = politicaliandscape.politicaliandscapeid
+                          LEFT JOIN areanew on volunteer.district = areanew.area_code
+        where volunteer.volunteerid = #{volunteerid} and areanew.`level`=3
+    </select>
+
+    <update id="updateVinfo">
+        update volunteer
+            <set>
+                <if test="phone != null and phone != '' ">
+                    phone = #{phone},
+                </if>
+                <if test="password != null and password != '' ">
+                    password = #{password},
+                </if>
+                <if test="name != null and name != '' ">
+                    name = #{name},
+                </if>
+                <if test="idnumber != null and idnumber != '' ">
+                    idnumber = #{idnumber},
+                </if>
+                <if test="gender != null and gender != '' ">
+                    gender = #{gender},
+                </if>
+                <if test="birthday != null and birthday != '' ">
+                    birthday = #{birthday},
+                </if>
+                <if test="province != null and province != '' ">
+                    province = #{province},
+                </if>
+                <if test="city != null and city != '' ">
+                    city = #{city},
+                </if>
+                <if test="district != null and district != '' ">
+                    district = #{district},
+                </if>
+                <if test="address != null and address != '' ">
+                    address = #{address},
+                </if>
+                <if test="education != null and education != '' ">
+                    education = #{education},
+                </if>
+                <if test="occupation != null and occupation != '' ">
+                    occupation = #{occupation},
+                </if>
+                <if test="politicaliandscape != null and politicaliandscape != '' ">
+                    politicaliandscape = #{politicaliandscape},
+                </if>
+                <if test="email != null and email != '' ">
+                    email = #{email},
+                </if>
+                <if test="volunteerhours != null and volunteerhours != '' ">
+                    volunteerhours = #{volunteerhours},
+                </if>
+                <if test="volunteercoins != null and volunteercoins != '' ">
+                    volunteercoins = #{volunteercoins},
+                </if>
+                <if test="credit != null and credit != '' ">
+                    credit = #{credit},
+                </if>
+                <if test="userstatusid != null and userstatusid != '' ">
+                    userstatusid = #{userstatusid},
+                </if>
+                <if test="pictureaddress != null and pictureaddress != '' ">
+                    pictureaddress = #{pictureaddress},
+                </if>
+            </set>
+            where volunteerid = #{volunteerid}
+    </update>
 </mapper>

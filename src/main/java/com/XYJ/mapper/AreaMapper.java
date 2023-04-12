@@ -15,5 +15,9 @@ public interface AreaMapper {
     /*
     新表sql语句，area表， 码云下载，数据较全
      */
+//    String SelectadressByAreaID(String area_code);
+
+//    自建数据
     String SelectadressByAreaID(String area_code);
+
 }

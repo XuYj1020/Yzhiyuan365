@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<style>
+			 .bg-purple-dark {
+			    background: #99a9bf;
+			  }
+			  .bg-purple {
+			    background: #d3dce6;
+			  }
+			  .bg-purple-light {
+			    background: #e5e9f2;
+			  }
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-row type="flex" justify="center">
+			  <el-col :span="22">
+				  <div>
+					  <el-card class="box-card" shadow="never">
+					    <div class="text item">
+					      <el-row>
+					        <el-col :span="24">
+								<div>
+									<el-descriptions title="个人信息" :column="2" border>
+										    <template slot="extra">
+										      <el-button type="primary" size="small" @click="dialogFormVisible = true">修改个人信息</el-button>
+										    </template>
+									  <el-descriptions-item label="志愿者id" >{{vinfos.volunteerid}}</el-descriptions-item>
+									  <el-descriptions-item label="姓名">{{vinfos.name}}</el-descriptions-item>
+									  <el-descriptions-item label="手机号">
+										  <el-row>
+										    <el-col :span="18"><div>{{vinfos.phone}}</div></el-col>
+											<el-col :span="6">
+												<div>
+													<el-link type="primary" :underline="false">修改手机号</el-link>
+												</div>
+											</el-col>
+										  </el-row>
+									  </el-descriptions-item>
+									  <el-descriptions-item label="身份证号">
+									    {{vinfos.idnumber}}
+									  </el-descriptions-item>
+									  <el-descriptions-item label="所在地区">{{vinfos.areanews.wholeName}}</el-descriptions-item>
+									  <el-descriptions-item label="生日">{{vinfos.birthday}}</el-descriptions-item>
+									  <el-descriptions-item label="性别">{{vinfos.gender == 1 ? '男': '女'}}</el-descriptions-item>
+									  <el-descriptions-item label="职业">{{vinfos.occupations.occupation}}</el-descriptions-item>
+									  <el-descriptions-item label="教育程度">{{vinfos.educations.education}}</el-descriptions-item>
+									  <el-descriptions-item label="政治面貌">{{vinfos.politicaliandscapes.politicaliandscape}}</el-descriptions-item>
+									  <el-descriptions-item label="邮箱地址">{{vinfos.email}}</el-descriptions-item>
+									  <el-descriptions-item label="志愿时长">{{vinfos.volunteerhours}}小时</el-descriptions-item>
+									  <el-descriptions-item label="志愿币">{{vinfos.volunteercoins}}个</el-descriptions-item>
+									  <el-descriptions-item label="信用分">{{vinfos.credit}}</el-descriptions-item>
+									  <el-descriptions-item label="注册时间">{{vinfos.registrationtime}}</el-descriptions-item>
+									  <el-descriptions-item label="详细地址">{{vinfos.address}}</el-descriptions-item>
+									</el-descriptions>
+								</div>
+							</el-col>
+					      </el-row>
+					    </div>
+					  </el-card>
+				  </div>
+			  </el-col>
+			</el-row>
+			
+			
+			<el-dialog title="修改个人信息" :visible.sync="dialogFormVisible">
+			  <el-form :model="form" :rules="rules" ref="form">
+			    <el-form-item label="职业" :label-width="formLabelWidth">
+			      <el-select v-model="form.occupation" :placeholder="vinfos.occupations.occupation">
+			          <el-option
+			            v-for="item in occupations"
+			            :key="item.occupationid"
+			            :label="item.occupation"
+			            :value="item.occupationid">
+			            <span style="float: left">{{ item.occupation }}</span>
+			            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.occupationid }}</span>
+			          </el-option>
+			        </el-select>
+			    </el-form-item>
+			    <el-form-item label="教育程度" :label-width="formLabelWidth">
+			      <el-select v-model.trim="form.education" :placeholder="vinfos.educations.education">
+			          <el-option
+			            v-for="item in educations"
+			            :key="item.educationid"
+			            :label="item.education"
+			            :value="item.educationid">
+			            <span style="float: left">{{ item.education }}</span>
+			            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.educationid }}</span>
+			          </el-option>
+			      </el-select>
+			    </el-form-item>
+				<el-form-item label="政治面貌" :label-width="formLabelWidth">
+				  <el-select v-model="form.politicaliandscape" :placeholder="vinfos.politicaliandscapes.politicaliandscape">
+				      <el-option
+				        v-for="item in politicaliandscapes"
+				        :key="item.politicaliandscapeid"
+				        :label="item.politicaliandscape"
+				        :value="item.politicaliandscapeid">
+				        <span style="float: left">{{ item.politicaliandscape }}</span>
+				        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.politicaliandscapeid }}</span>
+				      </el-option>
+				    </el-select>
+				</el-form-item>
+				<el-form-item label="所在地区" :label-width="formLabelWidth">
+				  	<el-cascader
+				  	    size="large"
+				  	    :options="ads"
+				  	    v-model="form.selectedAds"
+				  	    @change="handleChange">
+				  	  </el-cascader>
+				</el-form-item>
+				<el-form-item label="邮箱地址" :label-width="formLabelWidth" prop='email'>
+				  <el-input v-model.trim="form.email" autocomplete="off" :placeholder="vinfos.email"></el-input>
+				</el-form-item>
+				<el-form-item label="详细地址" :label-width="formLabelWidth">
+				  <el-input v-model="form.address" autocomplete="off" :placeholder="vinfos.address"></el-input>
+				</el-form-item>
+			  </el-form>
+			  <div slot="footer" class="dialog-footer">
+			    <el-button @click="dialogFormVisible = false">取 消</el-button>
+			    <el-button type="primary" @click="upVinfo">确 定</el-button>
+			  </div>
+			</el-dialog>
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created(){
+					this.vid = localStorage.getItem('vid')
+					this.form.volunteerid = localStorage.getItem('vid')
+					this.selectByVid()
+					this.selectEdu()
+					this.selectOccu()
+					this.selectPol()
+				},
+				
+				data(){
+					return{
+						vid:'',
+						vinfos:'',
+						dialogFormVisible: false,
+						formLabelWidth: '120px',
+						ads: regionData,
+						educations: [],
+						occupations: [],
+						politicaliandscapes: [],
+						form:{
+							volunteerid:'', 
+							occupation:'',
+							education:'',
+							politicaliandscape:'',
+							selectedAds:[],
+							province:'',
+							city:'',
+							district:'',
+							email:'',
+							address:''
+						},
+						rules:{
+							email: [
+								{ type: 'email',  message: '请输入正确的邮箱', trigger: 'blur' }
+							]
+						}
+					}
+				},
+				
+				methods:{
+					selectByVid(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/user/selectByVid?vid='+this.vid,
+							Headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+						}).then((resp)=>{
+							console.log(resp.data)
+							this.vinfos = resp.data[0]
+						}).catch((error)=>{
+							console.log(error.resp)
+						})
+					},
+					
+					upVinfo(){
+						this.$refs.form
+						.validate()
+						.then(()=>{
+							axios({
+							method:'post',
+							url:'http://localhost:8080/Yzhiyuan365/user/updateVinfo',
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+								data:this.form
+							}).then((resp)=>{
+								if(resp.data == "success"){
+									this.dialogFormVisible = false
+									this.selectByVid()
+								}
+							}).catch((error)=>{
+								console.log(error.response)
+							})
+						})
+						.catch(()=>{
+							console.log('error submit!!');
+						})
+					},
+					
+					selectEdu(){
+						// 教育
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Education/SelectAll",
+							headers:{
+								'vtoken':localStorage.getItem('vtoken')
+							  },
+						  }).then(resp =>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.educations=resp.data
+						  }).catch(error =>{
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					// 获取职业信息
+					selectOccu(){
+						// 职业
+						headers = {
+							vtoken:localStorage.getItem('vtoken')
+						},
+						axios({
+						    method:"post",
+							
+						    url:"http://localhost:8080/Yzhiyuan365/Occupation/SelectAll",
+							headers:{
+								'vtoken':localStorage.getItem('vtoken')
+							  },
+						    // params:"code=1234",
+						    // data:_this.obj
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.occupations=resp.data
+						  }).catch((error) =>{
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					// 获取政治面貌信息
+					selectPol(){
+						// 政治面貌
+						headers = {
+							vtoken:localStorage.getItem('vtoken')
+						},
+						axios({
+						    method:"post",
+							
+						    url:"http://localhost:8080/Yzhiyuan365/Politicaliandscape/SelectAll",
+							headers:headers,
+						    // params:"code=1234",
+						    // data:_this.obj
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.politicaliandscapes=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					//地址选择
+					handleChange (value) {
+						var a = this.form.selectedAds
+							this.form.province = a[0]
+							this.form.city = a[1]
+							this.form.district = a[2]
+							console.log(this.form.province)
+							console.log(this.form.city)
+							console.log(this.form.district)
+						},
+				}
+			})
+		</script>
+	</body>
+</html>

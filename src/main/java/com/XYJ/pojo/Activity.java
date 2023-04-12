@@ -33,8 +33,9 @@ public class Activity {
 
   private Organization organizations;
 
-  private Area area;
+//  private Area area;
 
+  private Areanew areanews;
 
 //  录取方式
   private Admissionpolicy admissionpolicys;
@@ -59,12 +60,12 @@ public class Activity {
     this.organizations = organizations;
   }
 
-  public Area getArea() {
-    return area;
+  public Areanew getAreanews() {
+    return areanews;
   }
 
-  public void setArea(Area area) {
-    this.area = area;
+  public void setAreanews(Areanew areanews) {
+    this.areanews = areanews;
   }
 
   public Admissionpolicy getAdmissionpolicys() {
@@ -338,7 +339,7 @@ public class Activity {
             ", havealeader=" + havealeader +
             ", acstyles=" + acstyles +
             ", organizations=" + organizations +
-            ", area=" + area +
+            ", areanews=" + areanews +
             ", admissionpolicys=" + admissionpolicys +
             '}';
   }
