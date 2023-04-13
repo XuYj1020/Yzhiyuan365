@@ -136,6 +136,15 @@
         </association>
         <association property="organizations" javaType="com.XYJ.pojo.Organization">
             <result column="oname" property="oname"></result>
+            <result column="name" property="name"></result>
+            <result column="phone" property="phone"></result>
+        </association>
+        <association property="aapplications" javaType="com.XYJ.pojo.Aapplication">
+            <id column="applicationid" property="applicationid"></id>
+            <result column="atime" property="atime"></result>
+        </association>
+        <association property="activestatus" javaType="com.XYJ.pojo.Activestatus">
+            <result column="status" property="status"></result>
         </association>
     </resultMap>
     <select id="selectByAcstyleidjoin" resultMap="rs1">
@@ -229,6 +238,52 @@
             </if>
         </where>
         order by activity.starttime limit #{begin},#{size};
+    </select>
+
+
+    <select id="selectActivityByVIDFY" resultMap="rs1">
+        select *,areanew.whole_name,organization.oname,activestatus.`status` from activity, organization,areanew,aapplication,activestatus
+        where activity.activityid = aapplication.activityid AND
+            activity.organizationid = organization.organizationid AND
+            activity.activestatusid = activestatus.activestatusid
+       <if test="activity.activestatusid == 1">
+           and activity.activestatusid in (1,2)
+       </if>
+        <if test="activity.activestatusid == 3">
+            and activity.activestatusid = 3
+        </if>
+        <if test="activity.activestatusid == 4">
+            and activity.activestatusid = 4
+        </if>
+          and activity.district = areanew.area_code and areanew.`level` = 3 and aapplication.applicationstatusid = #{activity.applicationstatusid}
+          and aapplication.volunteerid = #{activity.volunteerid}
+        order by activity.starttime limit #{begin},#{size};
+    </select>
+
+    <select id="selectActivityByVIDCount" resultType="java.lang.Integer">
+        select count(*) from activity, organization,areanew,aapplication,activestatus
+        where activity.activityid = aapplication.activityid AND
+        activity.organizationid = organization.organizationid AND
+        activity.activestatusid = activestatus.activestatusid
+        <if test="activestatusid == 1">
+            and activity.activestatusid in (1,2)
+        </if>
+        <if test="activestatusid == 3">
+            and activity.activestatusid = 3
+        </if>
+        <if test="activestatusid == 4">
+            and activity.activestatusid = 4
+        </if>
+        and activity.district = areanew.area_code and areanew.`level` = 3 and aapplication.applicationstatusid = #{applicationstatusid}
+        and aapplication.volunteerid = #{volunteerid}
+    </select>
+
+    <select id="selectActivityAID" resultMap="rs1">
+        select *,ac.acstyle as aa from activity a
+            LEFT JOIN organization o on a.organizationid = o.organizationid
+            left join acstyle ac on a.acstyle = ac.acstyleid
+            left join areanew ar on a.district = ar.area_code and ar.`level` = 3
+        where a.activityid = #{activityid}
     </select>
 
 

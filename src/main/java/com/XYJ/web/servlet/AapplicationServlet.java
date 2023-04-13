@@ -46,5 +46,12 @@ public class AapplicationServlet extends BaseServlet{
        resp.getWriter().write(jsonString);
    }
 
+   public void updateApplicationstatusid(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+       req.setCharacterEncoding("UTF-8");
+       String applicationid = req.getParameter("applicationid");
+       aapplicationservice.updateApplicationstatusid(applicationid);
+       resp.setContentType("text/json;charset=utf-8");
+       resp.getWriter().write("success");
+   }
 
 }

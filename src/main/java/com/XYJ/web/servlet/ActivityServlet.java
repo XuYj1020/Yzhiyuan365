@@ -106,4 +106,34 @@ public class ActivityServlet extends BaseServlet{
         String jsonString = JSON.toJSONString(activities);
         resp.getWriter().write(jsonString);
     }
+
+    public void selectActivityBYVIDFY(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        String begin = req.getParameter("begin");
+        int currentpage = Integer.parseInt(begin);
+        System.out.println(currentpage);
+        String size = req.getParameter("size");
+        int pagesize = Integer.parseInt(size);
+        System.out.println(pagesize);
+        Activity activity = JSON.parseObject(params,Activity.class);
+        System.out.println(activity);
+        PageFY<Activity> activities = activityservice.selectActivityBYVIDFY(currentpage,pagesize,activity);
+        System.out.println(activities);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(activities);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectActivityAID(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        String activityid = req.getParameter("activityid");
+//        调用方法
+        List<Activity> activitys = activityservice.selectActivityAID(activityid);
+//        返回数据
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(activitys);
+        resp.getWriter().write(jsonString);
+    }
 }

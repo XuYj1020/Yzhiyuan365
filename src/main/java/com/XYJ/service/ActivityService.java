@@ -75,6 +75,31 @@ public class ActivityService {
         return page;
     }
 
+    public PageFY<Activity> selectActivityBYVIDFY(int begin,int size,Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+
+//        总记录数
+        int total = activitymapper.selectActivityByVIDCount(activity);
+        System.out.println(total);
+        begin = (begin - 1) * size;
+        List<Activity> activitys = activitymapper.selectActivityByVIDFY(begin,size,activity);
+
+        PageFY<Activity> page = new PageFY<>();
+        page.setTotal(total);
+        page.setShuju(activitys);
+        sqlSession.close();
+        return page;
+    }
+
+    public List<Activity> selectActivityAID(String activityid){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        List<Activity> activitys = activitymapper.selectActivityAID(activityid);
+        sqlSession.close();
+        return activitys;
+    }
+
     public static void main(String[] args) {
         ActivityService activityService = new ActivityService();
         List<Activity> ac =  activityService.selectByAcstyleidjoin("HD1101019803312778");
@@ -92,8 +117,10 @@ public class ActivityService {
         List<Activity> acts =  activityService.selectActivityV(act);
 //        System.out.println(acts);
         System.out.println("---------------------");
-        System.out.println(activityService.selectByAcstyleidjoin("HD1101019303317360"));
+//        System.out.println(activityService.selectByAcstyleidjoin("HD1101019303317360"));
         System.out.println("---------------------");
-        System.out.println(activityService.selectActivityVFY(1,5,act));
+        System.out.println(activityService.selectActivityBYVIDFY(1,5,act));
+        System.out.println("---------------------");
+        System.out.println(activityService.selectActivityAID("HD1402136804081804"));
     }
 }

@@ -3,6 +3,7 @@ package com.XYJ.mapper;
 import com.XYJ.pojo.Aapplication;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -17,4 +18,7 @@ public interface AapplicationMapper {
 //    通过活动ID和志愿者ID搜索志愿者是否已报名该活动以及报名详情  最新一条记录
     @Select("select * from aapplication where volunteerid = #{volunteerid} and activityid = #{activityid} order by atime desc limit 1")
     List<Aapplication> selectByVAID(Aapplication aapplication);
+
+    @Update("update aapplication set applicationstatusid = 2 where applicationid = #{applicationid}")
+    void updateApplicationstatusid(String applicationid);
 }

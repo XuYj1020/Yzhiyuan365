@@ -37,6 +37,13 @@ public class AapplicationService {
         sqlSession.close();
         return application;
     }
+
+    public void updateApplicationstatusid(String applicationid){
+        SqlSession sqlSession = factory.openSession();
+        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+        aapplicationemapper.updateApplicationstatusid(applicationid);
+        sqlSession.close();
+    }
     public static void main(String[] args) {
         AapplicationService app = new AapplicationService();
         System.out.println(app.applicationid("HD1302032503304169"));

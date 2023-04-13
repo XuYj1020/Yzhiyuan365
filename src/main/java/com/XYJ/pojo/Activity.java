@@ -40,9 +40,43 @@ public class Activity {
 //  录取方式
   private Admissionpolicy admissionpolicys;
 
+  private Aapplication aapplications;
+  private Activestatus activestatus;
 
+  private String volunteerid;
+  private String applicationstatusid;
 
+  public String getVolunteerid() {
+    return volunteerid;
+  }
 
+  public void setVolunteerid(String volunteerid) {
+    this.volunteerid = volunteerid;
+  }
+
+  public String getApplicationstatusid() {
+    return applicationstatusid;
+  }
+
+  public void setApplicationstatusid(String applicationstatusid) {
+    this.applicationstatusid = applicationstatusid;
+  }
+
+  public Aapplication getAapplications() {
+    return aapplications;
+  }
+
+  public void setAapplications(Aapplication aapplications) {
+    this.aapplications = aapplications;
+  }
+
+  public Activestatus getActivestatus() {
+    return activestatus;
+  }
+
+  public void setActivestatus(Activestatus activestatus) {
+    this.activestatus = activestatus;
+  }
 
   public int getHavealeader() {
     return havealeader;
@@ -341,6 +375,10 @@ public class Activity {
             ", organizations=" + organizations +
             ", areanews=" + areanews +
             ", admissionpolicys=" + admissionpolicys +
+            ", aapplications=" + aapplications +
+            ", activestatus=" + activestatus +
+            ", volunteerid='" + volunteerid + '\'' +
+            ", applicationstatusid='" + applicationstatusid + '\'' +
             '}';
   }
 }
