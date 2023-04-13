@@ -1,6 +1,7 @@
 package com.XYJ.service;
 
 import com.XYJ.mapper.OrganizationMapper;
+import com.XYJ.mapper.UserMapper;
 import com.XYJ.pojo.Organization;
 import com.XYJ.pojo.PageFY;
 import com.alibaba.fastjson.JSON;
@@ -23,6 +24,14 @@ public class OrganizationService {
         sqlSession.commit();
         sqlSession.close();
 
+    }
+
+    public Integer selectByPhone(String phone){
+        SqlSession sqlSession = factory.openSession();
+        OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
+        Integer organizatios =organizationmapper.selectByPhone(phone);
+        sqlSession.close();
+        return organizatios;
     }
 
     public List<Organization> selectByPhonePass(Organization organization){
@@ -70,6 +79,7 @@ public class OrganizationService {
         String jsonString = JSON.toJSONString(ainfo);
         Organization act = JSON.parseObject(jsonString,Organization.class);
         System.out.println(o.selectOraganizationVFY(1,50,act));
+        System.out.println(o.selectByPhone("13698563255"));
 
     }
 

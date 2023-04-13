@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<el-row type="flex" justify="center">
+			  <el-col :span="22">
+				  <div>
+					  <el-card class="box-card" shadow="never">
+					      <el-row>
+					        <el-col :span="24">
+								<el-card class="box-card" shadow="never">
+								  <div slot="header" class="clearfix">
+								    <span>修改密码</span>
+								  </div>
+								  <div class="text item">
+								    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+										<el-form-item label="原始密码" prop="oldpass">
+										  <el-input type="password" v-model="ruleForm.oldpass" autocomplete="off"></el-input>
+										</el-form-item>
+								      <el-form-item label="新密码" prop="password">
+								        <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+								      </el-form-item>
+								      <el-form-item label="确认密码" prop="checkPass">
+								        <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+								      </el-form-item>
+								      <el-form-item>
+								        <el-button type="primary" @click="upVinfo">提交</el-button>
+								        <el-button @click="resetForm('ruleForm')">重置</el-button>
+								      </el-form-item>
+								    </el-form>
+								  </div>
+								</el-card>
+							</el-col>
+					      </el-row>
+					  </el-card>
+				  </div>
+			  </el-col>
+			</el-row>
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created(){
+					this.ruleForm.volunteerid = this.vid = localStorage.getItem('vid')
+					this.selectByVid()
+				},
+				data(){
+					return{
+						vid:'',
+						pass1:'',
+						ruleForm:{
+							volunteerid:'',
+							oldpass:'',
+							password:'',
+							checkPass:''
+						},
+						rules:{
+							oldpass: [
+								{required: true, message: '请输入原始密码', trigger: 'blur'},
+								{ validator: this.validateOldPass, trigger: 'blur' }
+							],
+							password: [
+								{required: true, message: '请输入新密码', trigger: 'blur'},
+							],
+							checkPass: [
+								{required: true, message: '请输入确认密码', trigger: 'blur'},
+								{ validator: this.validatePass2, trigger: 'blur' }
+							],
+						}
+					}
+				},
+				
+				methods:{
+					// 原密码
+					validateOldPass(rule, value, callback){
+						
+						this.selectByVid()
+						console.log(this.pass1)
+						if (value !== this.pass1) {
+						  callback(new Error('原始密码错误!'));
+						} else {
+						  callback();
+						}
+					},
+
+					// 确认密码的校验
+					validatePass2(rule, value, callback) {
+						if (value !== this.ruleForm.password) {
+					    callback(new Error('两次输入密码不一致!'));
+					  } else {
+					    callback();
+					  }
+					},
+					
+					selectByVid(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/user/selectByVid?vid='+this.vid,
+							Headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+						}).then((resp)=>{
+							console.log(resp.data[0].password)
+							this.pass1 = resp.data[0].password
+							console.log(this.pass1)
+						}).catch((error)=>{
+							console.log(error.resp)
+						})
+					},
+					
+					upVinfo(){
+						this.$refs.ruleForm
+						.validate()
+						.then(()=>{
+							axios({
+							method:'post',
+							url:'http://localhost:8080/Yzhiyuan365/user/updateVinfo',
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+								data:this.ruleForm
+							}).then((resp)=>{
+								if(resp.data == "success"){
+									this.$message({
+									  message: '密码修改成功',
+									  type: 'success'
+									});
+									this.resetForm('ruleForm')
+								}
+							}).catch((error)=>{
+								console.log(error.response)
+								this.$message.error('密码修改失败');
+							})
+						})
+						.catch(()=>{
+							console.log('error submit!!');
+						})
+					},
+					resetForm(formName) {
+					        this.$refs[formName].resetFields();
+					      }
+				}
+			})
+		</script>
+	</body>
+</html>

@@ -42,7 +42,7 @@
 										    <el-col :span="18"><div>{{vinfos.phone}}</div></el-col>
 											<el-col :span="6">
 												<div>
-													<el-link type="primary" :underline="false">修改手机号</el-link>
+													<el-link type="primary" :underline="false" @click="dialogFormVisible1 = true">修改手机号</el-link>
 												</div>
 											</el-col>
 										  </el-row>
@@ -131,6 +131,29 @@
 			    <el-button type="primary" @click="upVinfo">确 定</el-button>
 			  </div>
 			</el-dialog>
+			
+			<el-dialog title="修改手机号" :visible.sync="dialogFormVisible1">
+				<el-form :model="form1" status-icon :rules="rules" ref="form1">
+				  <el-form-item label="当前手机号">
+				    {{vinfos.phone}}
+				  </el-form-item>
+				  <el-form-item label="发送验证码" prop="verifycode1">
+				    <el-input v-model.number.trim="form1.verifycode1" style="width:300px"></el-input>
+				    <span><el-button type="primary" @click="fsdxForm1()" :disabled="checkstate1" size="small" v-text="fsdx1">发送验证码</el-button></span>
+				  </el-form-item>
+				  <el-form-item label="新手机号" prop="phone">
+				    <el-input v-model.number="form1.phone"></el-input>
+				  </el-form-item>
+				  <el-form-item label="发送验证码" prop="verifycode2">
+				    <el-input v-model.number.trim="form1.verifycode2" style="width:300px"></el-input>
+				    <span><el-button type="primary" @click="fsdxForm2()" :disabled="checkstate2" size="small" v-text="fsdx2">发送验证码</el-button></span>
+				  </el-form-item>
+				</el-form>
+				<div slot="footer" class="dialog-footer">
+				  <el-button @click="qx">取 消</el-button>
+				  <el-button type="primary" @click="upVinfo2">确 定</el-button>
+				</div>
+			</el-dialog>	
 		</div>
 		
 		<script>
@@ -138,7 +161,7 @@
 				el:"#app",
 				created(){
 					this.vid = localStorage.getItem('vid')
-					this.form.volunteerid = localStorage.getItem('vid')
+					this.form1.volunteerid = this.form.volunteerid = localStorage.getItem('vid')
 					this.selectByVid()
 					this.selectEdu()
 					this.selectOccu()
@@ -150,11 +173,18 @@
 						vid:'',
 						vinfos:'',
 						dialogFormVisible: false,
+						dialogFormVisible1:false,
 						formLabelWidth: '120px',
 						ads: regionData,
 						educations: [],
 						occupations: [],
 						politicaliandscapes: [],
+						checkstate1:false,
+						fsdx1:'发送验证码',
+						num1:'60',
+						checkstate2:false,
+						fsdx2:'发送验证码',
+						num2:'60',
 						form:{
 							volunteerid:'', 
 							occupation:'',
@@ -167,10 +197,22 @@
 							email:'',
 							address:''
 						},
+						form1:{
+							volunteerid:'',
+							phone:'',
+							verifycode1:'',
+							verifycode2:''
+						},
 						rules:{
 							email: [
 								{ type: 'email',  message: '请输入正确的邮箱', trigger: 'blur' }
+							],
+							phone:[
+								{required: true, message: '请输入手机号', trigger: 'blur'},
+								{pattern:/^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/,message: '手机号格式错误', trigger: 'blur'},
+								{ validator: this.ValidatorPhone, trigger: 'blur' }
 							]
+							
 						}
 					}
 				},
@@ -215,6 +257,34 @@
 							console.log('error submit!!');
 						})
 					},
+					
+					upVinfo2(){
+						this.$refs.form1
+						.validate()
+						.then(()=>{
+							axios({
+							method:'post',
+							url:'http://localhost:8080/Yzhiyuan365/user/updateVinfo',
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+								data:this.form1
+							}).then((resp)=>{
+								console.log(resp.data)
+								if(resp.data == "success"){
+									this.dialogFormVisible1 = false
+									this.selectByVid()
+								}
+							}).catch((error)=>{
+								console.log(error.response)
+							})
+						})
+						.catch(()=>{
+							console.log('error submit!!');
+						})
+					},
+					
+					
 					
 					selectEdu(){
 						// 教育
@@ -290,6 +360,76 @@
 							console.log(this.form.city)
 							console.log(this.form.district)
 						},
+						
+					fsdxForm1(){
+						  this.checkstate1 = true
+						  this.fsdx1 = `60秒后重新发送`
+						  let time = setInterval(()=>{ 
+						  	  this.num1--
+						  	  console.log(this.num1)
+						  	  this.fsdx1 = `${this.num1}秒后重新发送`
+						  	  // 不能点击
+						  	  if(this.num1 <= 0){
+						  		  clearInterval(time)
+						  		  this.fsdx1 = `重新发送`
+						  		  // 可以重新点击
+						  		  this.checkstate1 = false
+						  				}
+						  	},1000)
+					},
+					
+					fsdxForm2(){
+					  this.$refs.form1
+					  .validateField('phone',(errorMessage)=>{
+						  console.log(errorMessage)
+						  if(errorMessage){
+						  return
+						  }
+						  console.log('验证通过')
+						  this.checkstate2 = true
+						  this.fsdx2 = `60秒后重新发送`
+						  
+						  let time = setInterval(()=>{ 
+						  	  this.num2--
+						  	  console.log(this.num2)
+						  	  this.fsdx2 = `${this.num2}秒后重新发送`
+						  	  // 不能点击
+						  	  if(this.num2 <= 0){
+						  		  clearInterval(time)
+						  		  this.fsdx2 = `重新发送`
+						  		  // 可以重新点击
+						  		  this.checkstate2 = false
+						  				}
+						  	},1000)
+					  })
+					},
+					
+					// 手机号是否已注册
+					ValidatorPhone(rule, value, callback) {
+						axios({
+						    method:"post",
+							
+						    url:"http://localhost:8080/Yzhiyuan365/user/selectByPhone",
+							
+						    data:value,
+							headers:{
+								'vtoken':localStorage.getItem('vtoken')
+							  },
+						  }).then(resp =>{
+							  if(!resp.data){
+								  callback(new Error('手机号已注册'));
+							  }
+							  callback()
+						  }).catch(error =>{
+						    console.log(error.response);//可以拿到后端返回的信息
+							callback(new Error(error));
+						  });
+					},
+					
+					qx(){
+						this.dialogFormVisible1 = false
+						location.reload()
+					}    
 				}
 			})
 		</script>

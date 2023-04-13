@@ -38,6 +38,27 @@ public class OrganizationServlet extends BaseServlet{
 
     }
 
+    public void selectByPhone(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+//        接收账号密码
+        BufferedReader us = req.getReader();
+        String params = us.readLine();//获取json字符串
+//        转换格式
+        String phone = JSON.parseObject(params, String.class);
+//        调用方法
+        Integer a = organizationservice.selectByPhone(phone);
+//        返回数据
+        resp.setContentType("text/json;charset=utf-8");
+//        resp.getWriter().write("false");
+        if(a==0){
+            resp.getWriter().write("true");
+            System.out.println("true");
+        }else{
+            resp.getWriter().write("false");
+            System.out.println("false");
+        }
+    }
+
     public void selectByPhonePass(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
         req.setCharacterEncoding("UTF-8");
 

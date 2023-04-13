@@ -296,6 +296,7 @@ public class UserServlet extends BaseServlet{
         BufferedReader bufferedReader = req.getReader();
         String param = bufferedReader.readLine();
         User user = JSON.parseObject(param,User.class);
+        System.out.println(param);
         userservice.updateVinfo(user);
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write("success");
