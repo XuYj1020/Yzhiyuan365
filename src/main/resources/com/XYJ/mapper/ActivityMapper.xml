@@ -129,6 +129,9 @@
         </association>
         <association property="areanews" javaType="com.XYJ.pojo.Areanew">
             <result column="whole_name" property="wholeName"></result>
+            <result column="lon1" property="lon"></result>
+            <result column="lat1" property="lat"></result>
+            <result column="cc" property="cityCode"></result>
         </association>
         <association property="admissionpolicys" javaType="com.XYJ.pojo.Admissionpolicy">
             <id column="admissionpolicyid" property="admissionpolicyid"></id>
@@ -242,7 +245,7 @@
 
 
     <select id="selectActivityByVIDFY" resultMap="rs1">
-        select *,areanew.whole_name,organization.oname,activestatus.`status` from activity, organization,areanew,aapplication,activestatus
+        select *,areanew.whole_name,organization.oname,activestatus.`status`,(select count(*) from signcode where activity.activityid = signcode.activityid ) as lon1 ,(select signinid from signcode where activity.activityid = signcode.activityid ) as lat1,(select count(*) from signrecord where aapplication.applicationid = signrecord.applicationid ) as cc from activity, organization,areanew,aapplication,activestatus
         where activity.activityid = aapplication.activityid AND
             activity.organizationid = organization.organizationid AND
             activity.activestatusid = activestatus.activestatusid
