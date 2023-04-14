@@ -155,4 +155,42 @@ public class ActivityServlet extends BaseServlet{
         String jsonString = JSON.toJSONString(activities);
         resp.getWriter().write(jsonString);
     }
+
+    public void selectActivityBYOIDFYSQ(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        String begin = req.getParameter("begin");
+        int currentpage = Integer.parseInt(begin);
+        System.out.println(currentpage);
+        String size = req.getParameter("size");
+        int pagesize = Integer.parseInt(size);
+        System.out.println(pagesize);
+        Activity activity = JSON.parseObject(params,Activity.class);
+        System.out.println(activity);
+        PageFY<Activity> activities = activityservice.selectActivityBYOIDFYSQ(currentpage,pagesize,activity);
+        System.out.println(activities);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(activities);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void updateActivityActivestatusid(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        String activityid = req.getParameter("activityid");
+        activityservice.updateActivityActivestatusid(activityid);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
+    }
+
+    public void updateAinfo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String params = bufferedReader.readLine();
+        Activity activity = JSON.parseObject(params,Activity.class);
+        System.out.println(activity);
+        activityservice.updateAinfo(activity);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
+    }
 }

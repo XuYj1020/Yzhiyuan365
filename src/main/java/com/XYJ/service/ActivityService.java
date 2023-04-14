@@ -109,12 +109,43 @@ public class ActivityService {
         return page;
     }
 
+    public PageFY<Activity> selectActivityBYOIDFYSQ(int begin,int size,Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+
+//        总记录数
+        int total = activitymapper.selectActivityByOIDCountSQ(activity);
+        System.out.println(total);
+        begin = (begin - 1) * size;
+        List<Activity> activitys = activitymapper.selectActivityByOIDFYSQ(begin,size,activity);
+
+        PageFY<Activity> page = new PageFY<>();
+        page.setTotal(total);
+        page.setShuju(activitys);
+        sqlSession.close();
+        return page;
+    }
+
     public List<Activity> selectActivityAID(String activityid){
         SqlSession sqlSession = factory.openSession();
         ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
         List<Activity> activitys = activitymapper.selectActivityAID(activityid);
         sqlSession.close();
         return activitys;
+    }
+
+    public void updateActivityActivestatusid(String activityid){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        activitymapper.updateActivityActivestatusid(activityid);
+        sqlSession.close();
+    }
+
+    public void updateAinfo(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        activitymapper.updateAinfo(activity);
+        sqlSession.close();
     }
 
     public static void main(String[] args) {

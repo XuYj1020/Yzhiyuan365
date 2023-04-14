@@ -2,6 +2,7 @@ package com.XYJ.mapper;
 
 import com.XYJ.pojo.Activity;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -28,4 +29,13 @@ public interface ActivityMapper {
     List<Activity> selectActivityByVIDFYSQ(@Param("begin") int begin, @Param("size") int size, @Param("activity") Activity activity);
 
     int selectActivityByVIDCountSQ(Activity activity);
+
+    List<Activity> selectActivityByOIDFYSQ(@Param("begin") int begin, @Param("size") int size, @Param("activity") Activity activity);
+
+    int selectActivityByOIDCountSQ(Activity activity);
+
+    @Update("update activity set activestatusid = 5 where activityid=#{activityid}")
+    void updateActivityActivestatusid(String activityid);
+
+    void updateAinfo(Activity activity);
 }

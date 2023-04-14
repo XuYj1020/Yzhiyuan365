@@ -56,6 +56,7 @@
                 #{havealeader}
                        );
     </insert>
+
     <select id="selectByAcstyleid" resultType="com.XYJ.pojo.Activity">
         select * from activity where acstyle=#{acstyle} and activestatusid in (1,2,3) ORDER BY RAND() LIMIT 12;
     </select>
@@ -168,6 +169,13 @@
             <result column="etd" property="etd"></result>
             <result column="eta" property="eta"></result>
             <result column="feedback" property="feedback"></result>
+        </association>
+        <association property="activityreview" javaType="com.XYJ.pojo.Activityreview">
+            <id column="acreviewsauditid" property="auditid"></id>
+            <result column="id" property="id"></result>
+            <result column="acreviewsauditstatusid" property="auditstatusid"></result>
+            <result column="acreviewseta" property="eta"></result>
+            <result column="acreviewsfeedback" property="feedback"></result>
         </association>
     </resultMap>
     <select id="selectByAcstyleidjoin" resultMap="rs1">
@@ -308,10 +316,11 @@
     </select>
 
     <select id="selectActivityAID" resultMap="rs1">
-        select *,ac.acstyle as aa from activity a
+        select *,ac.acstyle as aa, ad.admissionpolicy as admissionpolicys  from activity a
             LEFT JOIN organization o on a.organizationid = o.organizationid
             left join acstyle ac on a.acstyle = ac.acstyleid
             left join areanew ar on a.district = ar.area_code and ar.`level` = 3
+            left join admissionpolicy ad on a.admissionpolicy = ad.admissionpolicyid
         where a.activityid = #{activityid}
     </select>
 
@@ -356,5 +365,93 @@
         and applicationreview.volunteerid = #{volunteerid}
     </select>
 
+    <select id="selectActivityByOIDFYSQ" resultMap="rs1">
+        select *,areanew.whole_name,auditstatus.`status`  as lon1 ,activestatus.`status` as acstatus,activityreview.auditid as acreviewsauditid from activity,activityreview,areanew,acstyle,admissionpolicy,auditstatus,activestatus
+        where activity.activityid = activityreview.activityid AND
+        areanew.area_code = activity.district and areanew.`level` = 3 and
+        activity.acstyle = acstyle.acstyleid and
+        activity.admissionpolicy = admissionpolicy.admissionpolicyid and
+        activityreview.auditstatusid = auditstatus.auditstatusid and
+        activity.activestatusid = activestatus.activestatusid
+        <if test="activity.activestatusid == 16">
+            and activityreview.auditstatusid = 1 and activity.activestatusid = 6
+        </if>
+        and activity.organizationid = #{activity.organizationid}
+    </select>
+    <select id="selectActivityByOIDCountSQ" resultType="java.lang.Integer">
+        select count(*) from activity,activityreview,areanew,acstyle,admissionpolicy,auditstatus,activestatus
+        where activity.activityid = activityreview.activityid AND
+            areanew.area_code = activity.district and areanew.`level` = 3 and
+            activity.acstyle = acstyle.acstyleid and
+            activity.admissionpolicy = admissionpolicy.admissionpolicyid and
+            activityreview.auditstatusid = auditstatus.auditstatusid and
+            activity.activestatusid = activestatus.activestatusid
+          <if test="activestatusid == 16">
+              and activityreview.auditstatusid = 1 and activity.activestatusid = 6
+          </if>
+          and activity.organizationid = #{organizationid}
+    </select>
 
+
+    <update id="updateAinfo">
+        update activity
+       <set>
+           <if test="title != null and title != ''">
+               title =  #{title},
+           </if>
+           <if test="introduction != null and introduction != ''">
+               introduction =  #{introduction},
+           </if>
+           <if test="  starttime != null and starttime != ''">
+               starttime =  #{starttime},
+           </if>
+           <if test="endtime != null and endtime != '' ">
+               endtime =  #{endtime},
+           </if>
+           <if test="province != null and province != ''">
+               province = #{province},
+           </if>
+           <if test="city != null and city != '' ">
+               city =  #{city},
+           </if>
+           <if test="district != null and district != ''">
+               district = #{district},
+           </if>
+           <if test="place != null and place != ''">
+               place =  #{place},
+           </if>
+           <if test="numberofrequiredvolunteer != null and numberofrequiredvolunteer != ''">
+               numberofrequiredvolunteer =  #{numberofrequiredvolunteer},
+           </if>
+           <if test="numberofenrolledvolunteer != null and numberofenrolledvolunteer != ''">
+               numberofenrolledvolunteer = #{numberofenrolledvolunteer},
+           </if>
+           activestatusid = 6,
+           <if test="enrolmentopeningtime != null and enrolmentopeningtime != ''">
+               enrolmentopeningtime = #{enrolmentopeningtime},
+           </if>
+           <if test="enrolmentdeadline != null and enrolmentdeadline != ''">
+               enrolmentdeadline = #{enrolmentdeadline},
+           </if>
+           <if test="volunteerhours != null and volunteerhours !=''">
+               volunteerhours = #{volunteerhours},
+           </if>
+           <if test="pictureaddress != null and pictureaddress != ''">
+               pictureaddress =   #{pictureaddress},
+           </if>
+           <if test="admissionpolicy != null and admissionpolicy != ''">
+               admissionpolicy = #{admissionpolicy},
+           </if>
+           <if test="creditscorerequirement != null and creditscorerequirement != ''">
+               creditscorerequirement =  #{creditscorerequirement},
+           </if>
+           <if test="leaveapproval != null and leaveapproval != ''">
+               leaveapproval =  #{leaveapproval},
+           </if>
+           <if test="acstyle != null and acstyle != ''">
+               acstyle =  #{acstyle},
+           </if>
+       </set>
+            where activityid = #{activityid}
+    </update>
 </mapper>

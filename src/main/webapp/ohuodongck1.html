@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<style>
+			 .bg-purple-dark {
+			    background: #99a9bf;
+			  }
+			  .bg-purple {
+			    background: #d3dce6;
+			  }
+			  .bg-purple-light {
+			    background: #e5e9f2;
+			  }
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-row type="flex" justify="center">
+				<!--  activity, organization,areanew,aapplication,activestatus-->
+			  <el-col :span="22">
+				  <div class="grid-content bg-purple-dark">
+					  <el-table
+					      :data="tableData"
+					      border
+					      style="width: 100%">
+						  <el-table-column
+						    prop="activityreview.auditid"
+						    label="审核ID"
+						    align="center">
+						  </el-table-column>
+					      <el-table-column
+					        fixed
+					        prop="activityid"
+					        label="活动ID"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="title"
+					        label="活动名称"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="starttime"
+					        label="活动开始时间"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="endtime"
+					        label="活动结束时间"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="areanews.wholeName"
+					        label="活动区域"
+					        align="center">
+					      </el-table-column>
+						  <el-table-column
+						    prop="place"
+						    label="详细地址"
+						    align="center">
+						  </el-table-column>
+					      <el-table-column
+					        prop="activestatus.status"
+					        label="活动状态"
+					        align="center">
+					      </el-table-column>
+						  <el-table-column
+						    prop="creationtime"
+						    label="发布时间"
+						    align="center">
+						  </el-table-column>
+						  <el-table-column
+						    prop="areanews.lon"
+						    label="审核状态"
+						    align="center">
+						  </el-table-column>
+					      <el-table-column
+					        fixed="right"
+					        label="操作"
+					        align="center">
+					        <template slot-scope="scope">
+					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+					          <el-button type="text" size="small" @click="xghd(scope.row)">修改活动</el-button>
+							  <el-popconfirm
+							    title="取消发布后需要重新发布,是否确认取消发布？"
+								@confirm="qxfb(scope.row)"
+								>
+							    <el-button type="text" size="small" slot="reference">取消发布</el-button>
+							  </el-popconfirm>
+					        </template>
+					      </el-table-column>
+					    </el-table>
+				  </div>
+				  
+				  <div class="block">
+				    <el-pagination
+				      @size-change="handleSizeChange"
+				      @current-change="handleCurrentChange"
+				      :current-page="currentPage"
+				      :page-sizes="[20, 50, 100]"
+				      :page-size="pageSize"
+				      layout="total, sizes, prev, pager, next, jumper"
+				      :total="total">
+				    </el-pagination>
+				  </div>
+			  </el-col>
+			</el-row>
+			
+			<el-dialog title="查看详情" :visible.sync="dialogVisible">
+			  <div>
+				  <!--activity organization acstyles areanew -->
+				  <el-descriptions  direction="vertical" :column="2" border>
+				    <el-descriptions-item label="活动ID">{{Activitys.activityid}}</el-descriptions-item>
+				    <el-descriptions-item label="活动标题">{{Activitys.title}}</el-descriptions-item>
+					<el-descriptions-item label="活动类别" v-if="Activitys.acstyles">{{Activitys.acstyles.acstyle}}</el-descriptions-item>
+				    <el-descriptions-item label="所属组织" v-if="Activitys.organizations">{{Activitys.organizations.oname}}</el-descriptions-item>
+				    <el-descriptions-item label="所属区域" v-if="Activitys.areanews">{{Activitys.areanews.wholeName}}</el-descriptions-item>
+				    <el-descriptions-item label="详细地址">{{Activitys.place}}</el-descriptions-item>
+				    <el-descriptions-item label="报名截止时间">{{Activitys.enrolmentdeadline}}</el-descriptions-item>
+				    <el-descriptions-item label="活动开始时间">{{Activitys.starttime}}</el-descriptions-item>
+				    <el-descriptions-item label="活动结束时间">{{Activitys.endtime}}</el-descriptions-item>
+				    <el-descriptions-item label="招募人数">{{Activitys.numberofrequiredvolunteer}}</el-descriptions-item>
+				    <el-descriptions-item label="已报名人数">{{Activitys.numberofenrolledvolunteer}}</el-descriptions-item>
+				    <el-descriptions-item label="是否允许请假">
+						<div class="text item" v-if="Activitys.leaveapproval == 0">
+						  不允许请假
+						</div>
+						<div class="text item" v-if="Activitys.leaveapproval == 1">
+						  允许请假
+						</div>
+					</el-descriptions-item>
+				    <el-descriptions-item label="联系方式">
+						<div  class="text item" v-if="(Activitys.havealeader == 0 && Activitys.organizations) || (!leaders && Activitys.organizations)">
+						  {{Activitys.organizations.name}}{{Activitys.organizations.phone}}
+						</div>
+						<div v-for="(o,index) in leaders" :key="index" class="text item" v-if="Activitys.havealeader == 1">
+						  {{o.name + o.phone}}
+						</div>
+					</el-descriptions-item>
+				    <el-descriptions-item label="活动细则">
+						{{Activitys.introduction}}
+					</el-descriptions-item>
+				  </el-descriptions>
+			  </div>
+			  <div slot="footer" class="dialog-footer">
+			    <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->
+			    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+			  </div>
+			</el-dialog>
+			
+			<el-dialog title="修改活动信息" :visible.sync="dialogFormVisibleXG">
+			  <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
+				  <el-form-item label="活动标题" prop="title">
+				       <el-input v-model="ruleForm.title" :placeholder="Activitys.title"></el-input>
+				  </el-form-item>
+				  <el-form-item label="活动类别" prop="acstyle">
+				      <el-select v-model="ruleForm.acstyle" :placeholder="acstyle">
+				        <el-option 
+				  	  v-for="items in Acstyles"
+				  	  :key="items.acstyleid"
+				  	  :label="items.acstyle" 
+				  	  :value="items.acstyleid"> 
+				  	  </el-option>
+				      </el-select>
+				  </el-form-item>
+				  <el-form-item label="地址" prop="selectedAds">
+				  	<el-cascader
+				  	    size="large"
+				  	    :options="ads"
+				  	    v-model="ruleForm.selectedAds"
+				  	    @change="handleChange">
+				  	  </el-cascader>
+				  </el-form-item>
+				  <el-form-item label="详细地址" prop="place">
+				    <el-input v-model.trim="ruleForm.place" :placeholder="Activitys.place"></el-input>
+				  </el-form-item>
+				 <!-- 时间要大于当前时间 -->
+				 <el-form-item label="活动时间" prop="actiontime" >
+				   <div class="block">
+				     <el-date-picker
+				       v-model="ruleForm.actiontime"
+				       type="datetimerange"
+				 	  value-format="yyyy.MM.dd HH:mm:ss"
+				       range-separator="至"
+				       :start-placeholder="Activitys.starttime"
+				       :end-placeholder="Activitys.endtime">
+				     </el-date-picker>
+				   </div>
+				 </el-form-item>
+				 <p v-text="ruleForm.actiontime"></p>
+				 <el-form-item label="志愿时长" prop="volunteerhours">
+				 	<el-input-number v-model="ruleForm.volunteerhours" :precision="1" :step="0.5" :max="maxhour" :placeholder="Activitys.volunteerhours"></el-input-number>
+				 </el-form-item>
+				 <el-form-item label="所需志愿者" prop="numberofrequiredvolunteer" >
+				   <el-input v-model.number.trim="ruleForm.numberofrequiredvolunteer" :placeholder="Activitys.numberofrequiredvolunteer"></el-input>
+				 </el-form-item>
+				 <el-form-item label="志愿者招募时间" prop="enrolmenttime" >
+				   <div class="block">
+				     <el-date-picker
+				       v-model="ruleForm.enrolmenttime"
+				       type="datetimerange"
+				 	  value-format="yyyy.MM.dd HH:mm:ss"
+				       range-separator="至"
+				       :start-placeholder="Activitys.enrolmentopeningtime"
+				       :end-placeholder="Activitys.enrolmentdeadline">
+				     </el-date-picker>
+				   </div>
+				 </el-form-item>
+				 
+				 <el-form-item label="录取方式"  prop="admissionpolicy">
+				 	<el-select v-model="ruleForm.admissionpolicy" :placeholder="admissionpolicys">
+				    <el-option
+				         v-for="item in Admissionpolicys"
+				         :key="item.admissionpolicyid"
+				         :label="item.admissionpolicy"
+				         :value="item.admissionpolicyid">
+				       </el-option>
+				     </el-select>
+				 </el-form-item>
+				 
+				 <el-form-item label="信用分要求" prop="creditscorerequirement" >
+				   <el-input v-model.number.trim="ruleForm.creditscorerequirement" type="number" :placeholder="Activitys.creditscorerequirement"></el-input>
+				 </el-form-item>
+				 
+				 <el-form-item label="是否允许请假" prop="leaveapproval" >
+				   <el-select v-model="ruleForm.leaveapproval" :placeholder="Activitys.leaveapproval  ==0 ? '不允许请假' : '允许请假'">
+				   <el-option
+				        v-for="item in leaveapprovals"
+				        :key="item.leaveapprovalid"
+				        :label="item.leaveapproval"
+				        :value="item.leaveapprovalid">
+				      </el-option>
+				    </el-select>
+				 </el-form-item>
+				 <!-- <p v-text="ruleForm.leaveapproval"></p> -->
+				 
+				 <el-form-item label="活动介绍"  prop="introduction">
+				   <el-input 
+				   type="textarea"
+				   :placeholder="Activitys.introduction"
+				   v-model.trim="ruleForm.introduction" 
+				   minlength="50"
+				   maxlength="300"
+				   show-word-limit
+				   style="width:300px"></el-input>
+				 </el-form-item>
+			  </el-form>
+			  <div slot="footer" class="dialog-footer">
+			    <el-button @click="dialogFormVisibleXG = false">取 消</el-button>
+			    <el-button type="primary" @click="upAinfo">确 定</el-button>
+			  </div>
+			</el-dialog>
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created() {
+					this.formInline.organizationid = localStorage.getItem('oid')
+					this.selectAcstyles();
+					this.selectAdmissionpolicys();
+
+					this.selectActivityBYOIDFYSQ()
+					// this.selectActivityAID()
+				},
+				data(){
+					return{
+						currentPage:1,
+						pageSize:20,
+						total:null,
+						tableData:[],
+						dialogVisible:false,
+						dialogFormVisibleXG:false,
+						activityid:'',
+						auditid:'',
+						Activitys:[],
+						leaders:'',
+						applicationid:'',
+						formInline:{
+							organizationid:'',
+							activestatusid:'16'
+						},
+						// 地址选择
+						ads: regionData,
+						// 活动类别
+						Acstyles:[],
+						// 录取方式
+						Admissionpolicys:[],
+						maxhour:20,
+						acstyle:'',
+						admissionpolicys:'',
+						// 是否允许请假
+						leaveapprovals:[
+							{
+								leaveapprovalid:'0',
+								leaveapproval:"否"
+							},
+							{
+								leaveapprovalid:'1',
+								leaveapproval:"是"
+							}
+						],
+							// 表单验证
+						ruleForm: {
+							activityid:'',
+							title:'',
+							acstyle:'',
+							selectedAds:[],
+							place:'',
+							// 活动起止时间
+							actiontime:'',
+							starttime:'',
+							endtime:'',
+							numberofrequiredvolunteer:'',
+							// 招募起止时间
+							enrolmenttime:'',
+							enrolmentopeningtime:'',
+							enrolmentdeadline:'',
+						    volunteerhours:null,
+							admissionpolicy:'',
+							creditscorerequirement:'',
+							leaveapproval:'',
+							introduction:'',
+							province:'',
+							city:'',
+							district:''	
+						 },
+						  
+						  // 表单验证规则
+						rules: {
+							actiontime:[
+								{validator: this.ValidatorActiontime, trigger: 'blur' }
+							],
+							numberofrequiredvolunteer:[
+								{ pattern: /^[1-9]\d*$/,  message: '正数', trigger: 'blur' }
+							],
+							enrolmenttime:[
+								{validator: this.ValidatorEnrolmenttime, trigger: 'blur' }
+							],
+							creditscorerequirement:[
+								{pattern: /^([0-9]|[1-9]\d|100)$/,message:'0-100之间的整数', trigger:'blur'}
+							],
+							leader:[
+								{validator: this.Validatorleader, trigger: 'blur' }
+							],
+							introduction:[
+								{min:10,max:300, message: '活动介绍应在10-300字之间', trigger: 'blur'}
+							]
+						},
+						  
+					}
+				},
+				methods:{
+					handleSizeChange(val) {
+					  // console.log(`每页 ${val} 条`);
+					  this.pageSize = val
+					},
+					handleCurrentChange(val) {
+					  // console.log(`当前页: ${val}`);
+					  this.currentPage = val
+					  // this.selectActivityBYOIDFYSQ()
+					},
+					
+					selectActivityBYOIDFYSQ(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/Activity/selectActivityBYOIDFYSQ?begin='+this.currentPage + '&size='+this.pageSize,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formInline
+						}).then((resp)=>{
+							console.log(resp.data)
+							console.log(resp.data['shuju'])
+							console.log(resp.data['total'])
+							this.total = resp.data['total']
+							this.tableData=resp.data['shuju']
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					},
+					
+					// 联合查询，通过活动id找到活动管理员信息
+					selectByjoinAID(){
+						console.log(this.Activitys.activityid)
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/user/selectByjoinAID?activityid="+this.activityid,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// 得到类别中文
+							// console.log(resp.data[0].acstyles.acstyle)
+							// console.log(resp.data.datalist)
+							this.leaders=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					selectActivityAID(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Activity/selectActivityAID?activityid=" + this.activityid,
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+						  }).then((resp)=>{
+							console.log(resp.data)
+							// 得到类别中文
+							console.log(resp.data[0].acstyles.acstyle)
+							console.log(resp.data[0].havealeader)
+							this.Activitys=resp.data[0]
+							this.acstyle = resp.data[0].acstyles.acstyle
+							this.admissionpolicys = resp.data[0].admissionpolicys.admissionpolicy
+							// 如果有活动管理员就去活动管理员表搜索管理员的信息
+							if(resp.data[0].havealeader == 1){
+								this.selectByjoinAID()
+							}
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					updateActivityActivestatusid(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid?activityid=" + this.activityid,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+						  }).then((resp)=>{
+							  
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					updateActivityreviewAuditstatusid(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/activityreview/updateActivityreviewAuditstatusid?auditid=" + this.auditid,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+						  }).then((resp)=>{
+							  
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					
+					handleClick(row) {
+					        // console.log(row);
+							// console.log(row.activityid);
+							this.activityid = row.activityid
+							this.dialogVisible=true
+							this.selectActivityAID()
+					      },
+					qxfb(row){
+						this.auditid = row.activityreview.auditid
+						this.activityid = row.activityid
+						this.updateActivityActivestatusid()
+						this.updateActivityreviewAuditstatusid()
+						this.$message.success('取消成功');
+						location.reload()	
+					},
+					
+					xghd(row){
+						this.activityid = this.ruleForm.activityid = row.activityid
+						this.selectActivityAID()
+						this.dialogFormVisibleXG = true
+					},
+					
+					// 活动时间自定义规则
+					ValidatorActiontime(rule, value, callback) {
+						if(value != null && value != ''){
+							let start =new Date(this.ruleForm.actiontime[0])
+							let end = new Date(this.ruleForm.actiontime[1])
+							let now = new Date()
+							console.log(end-start)    //30分钟   1800000毫秒
+							if(start - now < 3600000){
+								callback(new Error('活动开始时间应晚于当前时间60分钟'));
+								return
+							}else if (end-start < 1800000) {
+								callback(new Error('活动时间不得少于30分钟'));
+								return
+							} else {
+								this.ruleForm.starttime = this.ruleForm.actiontime[0]
+								this.ruleForm.endtime = this.ruleForm.actiontime[1]
+								let h = Math.floor((end-start)/1000/60/60) 
+								let m = Math.floor((end-start)/1000/60 % 60)
+								let decimal = m % 30 === 0 ? "" : ".5";
+								this.ruleForm.volunteerhours = h + decimal
+								this.maxhour = + (h + decimal)
+								callback();
+								}
+						}else if((this.ruleForm.actiontime != null || this.ruleForm.actiontime != '') && (value == null || value == '')){
+							callback(new Error('请选择活动时间'));
+						}else{
+							callback();
+						}
+						
+					},
+					
+					// 招募时间自定义规则
+					ValidatorEnrolmenttime(rule, value, callback) {
+						if(value != null && value != ''){
+							let astart =new Date(this.ruleForm.actiontime[0])
+							let aend = new Date(this.ruleForm.actiontime[1])
+							let start =new Date(this.ruleForm.enrolmenttime[0])
+							let end = new Date(this.ruleForm.enrolmenttime[1])
+							let now = new Date()
+							if(start < now){
+								callback(new Error('开始招募时间应不早于当前时间'));
+								return
+							}else if (end-start < 900000) {
+								callback(new Error('招募时间不得少于15分钟'));
+								return
+							}else if(end > astart){
+								callback(new Error('招募应在活动开始前结束'));
+								return
+							} else {
+								this.ruleForm.enrolmentopeningtime = this.ruleForm.enrolmenttime[0]
+								this.ruleForm.enrolmentdeadline = this.ruleForm.enrolmenttime[1]
+								callback();
+								}
+						}else if((this.ruleForm.enrolmenttime != null || this.ruleForm.enrolmenttime != '') && (value == null || value == '')){
+							callback(new Error('请选择招募时间'));
+						}
+						else{
+							callback();
+						}
+						
+					},
+					
+					// 地址
+					handleChange (value) {
+						var a = this.ruleForm.selectedAds
+							this.ruleForm.province = a[0]
+							this.ruleForm.city = a[1]
+							this.ruleForm.district = a[2]
+							// console.log(this.ruleForm.province)
+							// console.log(this.ruleForm.city)
+							// console.log(this.ruleForm.district)
+						},
+						
+						
+					// 获取活动类型的下拉栏
+					selectAcstyles(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Acstyle/selectAll",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							}
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.Acstyles=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					// 录取方式
+					selectAdmissionpolicys(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Admissionpolicy/selectAll",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							}
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.Admissionpolicys=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					// 提交按钮   promas方法
+					upAinfo() {
+					  this.$refs.ruleForm
+					  .validate()
+					  // 验证通过
+					  .then(()=>{
+						  // alert('submit!');
+						  axios({
+						  	method:"post",
+						  	url:"http://localhost:8080/Yzhiyuan365/Activity/updateAinfo",
+						  	data:this.ruleForm
+						  }).then((resp)=>{
+						  	console.log(resp.data);
+							if(resp.data == "success"){
+								this.$message.success('修改成功，请等待审核')
+								location.reload()
+							}
+						  }).catch((error)=>{
+						  	console.log(error.response);
+						  })  
+					})
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

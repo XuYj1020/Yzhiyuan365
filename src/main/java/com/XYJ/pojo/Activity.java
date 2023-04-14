@@ -21,7 +21,7 @@ public class Activity {
   private String creationtime;
   private String enrolmentopeningtime;
   private String enrolmentdeadline;
-  private double volunteerhours;
+  private String volunteerhours;
   private String pictureaddress;
   private int admissionpolicy;
   private int creditscorerequirement;
@@ -49,6 +49,12 @@ public class Activity {
   private int auditstatusid;
   private int isaleava;
 
+  private String volunteerid;
+  private String applicationstatusid;
+
+  private Applicationreview applicationreviews;
+
+  private Activityreview activityreview;
 
   public int getAuditstatusid() {
     return auditstatusid;
@@ -82,10 +88,15 @@ public class Activity {
     this.signrecords = signrecords;
   }
 
-  private String volunteerid;
-  private String applicationstatusid;
 
-  private Applicationreview applicationreviews;
+
+  public Activityreview getActivityreview() {
+    return activityreview;
+  }
+
+  public void setActivityreview(Activityreview activityreview) {
+    this.activityreview = activityreview;
+  }
 
   public Applicationreview getApplicationreviews() {
     return applicationreviews;
@@ -93,6 +104,10 @@ public class Activity {
 
   public void setApplicationreviews(Applicationreview applicationreviews) {
     this.applicationreviews = applicationreviews;
+  }
+
+  public void setVolunteerhours(String volunteerhours) {
+    this.volunteerhours = volunteerhours;
   }
 
   public String getVolunteerid() {
@@ -310,15 +325,9 @@ public class Activity {
     this.enrolmentdeadline = enrolmentdeadline;
   }
 
-
-  public double getVolunteerhours() {
+  public String getVolunteerhours() {
     return volunteerhours;
   }
-
-  public void setVolunteerhours(double volunteerhours) {
-    this.volunteerhours = volunteerhours;
-  }
-
 
   public String getPictureaddress() {
     return pictureaddress;
@@ -413,7 +422,7 @@ public class Activity {
             ", creationtime='" + creationtime + '\'' +
             ", enrolmentopeningtime='" + enrolmentopeningtime + '\'' +
             ", enrolmentdeadline='" + enrolmentdeadline + '\'' +
-            ", volunteerhours=" + volunteerhours +
+            ", volunteerhours='" + volunteerhours + '\'' +
             ", pictureaddress='" + pictureaddress + '\'' +
             ", admissionpolicy=" + admissionpolicy +
             ", creditscorerequirement=" + creditscorerequirement +
@@ -433,6 +442,7 @@ public class Activity {
             ", volunteerid='" + volunteerid + '\'' +
             ", applicationstatusid='" + applicationstatusid + '\'' +
             ", applicationreviews=" + applicationreviews +
+            ", activityreview=" + activityreview +
             '}';
   }
 }
