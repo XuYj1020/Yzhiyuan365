@@ -26,6 +26,13 @@ public class ApplicationreviewService {
         return auditid;
     }
 
+    public void updateAuditstatusid(String auditid){
+        SqlSession sqlSession = factory.openSession();
+        ApplicationreviewMapper applicationreviewMapper = sqlSession.getMapper(ApplicationreviewMapper.class);
+        applicationreviewMapper.updateAuditstatusid(auditid);
+        sqlSession.close();
+    }
+
     public static void main(String[] args) {
         ApplicationreviewService a = new ApplicationreviewService();
         System.out.println(a.auditid("HD1101017903314795"));

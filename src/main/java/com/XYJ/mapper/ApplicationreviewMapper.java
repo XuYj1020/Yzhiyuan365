@@ -3,6 +3,7 @@ package com.XYJ.mapper;
 import com.XYJ.pojo.Applicationreview;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 public interface ApplicationreviewMapper {
 
@@ -11,4 +12,8 @@ public interface ApplicationreviewMapper {
 
     @Select("SELECT IFNULL(( select auditid  from applicationreview where activityid = #{activityid} order by auditid desc limit 1),'0001')")
     String auditid(String activityid);
+
+    @Update("update applicationreview set auditstatusid = 4 where auditid = #{auditid}")
+    void updateAuditstatusid(String auditid);
+
 }

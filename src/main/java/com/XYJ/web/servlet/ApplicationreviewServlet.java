@@ -30,4 +30,12 @@ public class ApplicationreviewServlet extends BaseServlet{
         resp.getWriter().write("success");
         System.out.println("我回来了3333");
     }
+
+    public void updateAuditstatusid(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        String auditid = req.getParameter("auditid");
+        applicationreviewservice.updateAuditstatusid(auditid);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
+    }
 }

@@ -25,7 +25,7 @@ public interface ActivityMapper {
 
     List<Activity> selectActivityAID(String activityid);
 
-    List<Activity> selectActivityByVIDFYLeava(@Param("begin") int begin, @Param("size") int size, @Param("activity") Activity activity);
+    List<Activity> selectActivityByVIDFYSQ(@Param("begin") int begin, @Param("size") int size, @Param("activity") Activity activity);
 
-    int selectActivityByVIDCountLeave(Activity activity);
+    int selectActivityByVIDCountSQ(Activity activity);
 }

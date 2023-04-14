@@ -137,7 +137,7 @@ public class ActivityServlet extends BaseServlet{
         resp.getWriter().write(jsonString);
     }
 
-    public void selectActivityBYVIDFYLeave(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void selectActivityBYVIDFYSQ(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
         BufferedReader us = req.getReader();
         String params = us.readLine();
@@ -149,7 +149,7 @@ public class ActivityServlet extends BaseServlet{
         System.out.println(pagesize);
         Activity activity = JSON.parseObject(params,Activity.class);
         System.out.println(activity);
-        PageFY<Activity> activities = activityservice.selectActivityBYVIDFYLeava(currentpage,pagesize,activity);
+        PageFY<Activity> activities = activityservice.selectActivityBYVIDFYSQ(currentpage,pagesize,activity);
         System.out.println(activities);
         resp.setContentType("text/json;charset=utf-8");
         String jsonString = JSON.toJSONString(activities);

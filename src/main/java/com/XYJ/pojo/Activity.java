@@ -46,7 +46,17 @@ public class Activity {
 
   private Signrecord signrecords;
 
+  private int auditstatusid;
   private int isaleava;
+
+
+  public int getAuditstatusid() {
+    return auditstatusid;
+  }
+
+  public void setAuditstatusid(int auditstatusid) {
+    this.auditstatusid = auditstatusid;
+  }
 
   public Aleave getAleaves() {
     return aleaves;
@@ -74,6 +84,16 @@ public class Activity {
 
   private String volunteerid;
   private String applicationstatusid;
+
+  private Applicationreview applicationreviews;
+
+  public Applicationreview getApplicationreviews() {
+    return applicationreviews;
+  }
+
+  public void setApplicationreviews(Applicationreview applicationreviews) {
+    this.applicationreviews = applicationreviews;
+  }
 
   public String getVolunteerid() {
     return volunteerid;
@@ -408,9 +428,11 @@ public class Activity {
             ", aapplications=" + aapplications +
             ", activestatus=" + activestatus +
             ", signrecords=" + signrecords +
+            ", auditstatusid=" + auditstatusid +
             ", isaleava=" + isaleava +
             ", volunteerid='" + volunteerid + '\'' +
             ", applicationstatusid='" + applicationstatusid + '\'' +
+            ", applicationreviews=" + applicationreviews +
             '}';
   }
 }
