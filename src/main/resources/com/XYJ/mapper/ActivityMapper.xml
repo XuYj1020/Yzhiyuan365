@@ -379,6 +379,9 @@
         <if test="activity.activestatusid == 21">
             and activityreview.auditstatusid = 2 and activity.activestatusid = 1
         </if>
+        <if test="activity.activestatusid == 22">
+            and activityreview.auditstatusid = 2 and activity.activestatusid = 2
+        </if>
         and activity.organizationid = #{activity.organizationid}
     </select>
     <select id="selectActivityByOIDCountSQ" resultType="java.lang.Integer">
@@ -394,6 +397,9 @@
           </if>
         <if test="activestatusid == 21">
             and activityreview.auditstatusid = 2 and activity.activestatusid = 1
+        </if>
+        <if test="activestatusid == 22">
+            and activityreview.auditstatusid = 2 and activity.activestatusid = 2
         </if>
           and activity.organizationid = #{organizationid}
     </select>
