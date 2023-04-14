@@ -92,6 +92,23 @@ public class ActivityService {
         return page;
     }
 
+    public PageFY<Activity> selectActivityBYVIDFYLeava(int begin,int size,Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+
+//        总记录数
+        int total = activitymapper.selectActivityByVIDCountLeave(activity);
+        System.out.println(total);
+        begin = (begin - 1) * size;
+        List<Activity> activitys = activitymapper.selectActivityByVIDFYLeava(begin,size,activity);
+
+        PageFY<Activity> page = new PageFY<>();
+        page.setTotal(total);
+        page.setShuju(activitys);
+        sqlSession.close();
+        return page;
+    }
+
     public List<Activity> selectActivityAID(String activityid){
         SqlSession sqlSession = factory.openSession();
         ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);

@@ -123,6 +123,7 @@
         <result column="leaveapproval" property="leaveapproval" ></result>
         <result column="acstyle" property="acstyle" ></result>
         <result column="havealeader" property="havealeader" ></result>
+        <result column="isaleava" property="isaleava" ></result>
         <association property="acstyles" javaType="com.XYJ.pojo.Acstyle">
             <id column="acstyleid" property="acstyleid"></id>
             <result column="aa" property="acstyle"></result>
@@ -154,6 +155,11 @@
         <association property="signrecords" javaType="com.XYJ.pojo.Signrecord">
             <id column="recordid" property="recordid"></id>
             <result column="signintime" property="signintime"></result>
+        </association>
+        <association property="aleaves" javaType="com.XYJ.pojo.Aleave">
+            <id column="leaveapplicationid" property="leaveapplicationid"></id>
+            <result column="applicationtime" property="applicationtime"></result>
+            <result column="reason" property="reason"></result>
         </association>
     </resultMap>
     <select id="selectByAcstyleidjoin" resultMap="rs1">
@@ -251,7 +257,7 @@
 
 
     <select id="selectActivityByVIDFY" resultMap="rs1">
-        select *,areanew.whole_name,organization.oname,activestatus.`status`,(select count(*) from signcode where activity.activityid = signcode.activityid ) as lon1 ,(select signinid from signcode where activity.activityid = signcode.activityid ) as lat1,(select count(*) from signrecord where aapplication.applicationid = signrecord.applicationid ) as cc ,(select count(*) from aleave where aapplication.applicationid = aleave.applicationid and statusid = 1 ) as zip,(select signintime from signrecord where signrecord.applicationid = aapplication.applicationid) as signintime ,(select count(*) from evaluation where evaluation.activityid = aapplication.activityid and evaluation.volunteerid = aapplication.volunteerid) as pp from activity, organization,areanew,aapplication,activestatus
+        select *,areanew.whole_name,organization.oname,activestatus.`status`,(select count(*) from signcode where activity.activityid = signcode.activityid ) as lon1 ,(select signinid from signcode where activity.activityid = signcode.activityid ) as lat1,(select count(*) from signrecord where aapplication.applicationid = signrecord.applicationid ) as cc ,(select count(*) from aleave where aapplication.applicationid = aleave.applicationid and statusid = 1 ) as zip,(select signintime from signrecord where signrecord.applicationid = aapplication.applicationid) as signintime ,(select count(*) from evaluation where evaluation.activityid = aapplication.activityid and evaluation.volunteerid = aapplication.volunteerid) as pp,(select leaveapplicationid from aleave where aleave.applicationid = aapplication.applicationid) as leaveapplicationid,(select aleave.applicationtime from aleave where aleave.applicationid = aapplication.applicationid) as applicationtime from activity, organization,areanew,aapplication,activestatus
         where activity.activityid = aapplication.activityid AND
             activity.organizationid = organization.organizationid AND
             activity.activestatusid = activestatus.activestatusid
@@ -263,6 +269,9 @@
         </if>
         <if test="activity.activestatusid == 4">
             and activity.activestatusid = 4
+        </if>
+        <if test="activestatusid == 44">
+            and activity.activestatusid in (1,2,3,4)
         </if>
           and activity.district = areanew.area_code and areanew.`level` = 3 and aapplication.applicationstatusid = #{activity.applicationstatusid}
           and aapplication.volunteerid = #{activity.volunteerid}
@@ -283,6 +292,9 @@
         <if test="activestatusid == 4">
             and activity.activestatusid = 4
         </if>
+        <if test="activestatusid == 44">
+            and activity.activestatusid in (1,2,3,4)
+        </if>
         and activity.district = areanew.area_code and areanew.`level` = 3 and aapplication.applicationstatusid = #{applicationstatusid}
         and aapplication.volunteerid = #{volunteerid}
     </select>
@@ -293,6 +305,45 @@
             left join acstyle ac on a.acstyle = ac.acstyleid
             left join areanew ar on a.district = ar.area_code and ar.`level` = 3
         where a.activityid = #{activityid}
+    </select>
+
+    <select id="selectActivityByVIDFYLeava" resultMap="rs1">
+        select *,areanew.whole_name,organization.oname,activestatus.`status` from activity, organization,areanew,aapplication,activestatus,aleave
+        where activity.activityid = aapplication.activityid AND
+        activity.organizationid = organization.organizationid AND
+        activity.activestatusid = activestatus.activestatusid and
+        aapplication.applicationid = aleave.applicationid and aleave.statusid = 2
+        <if test="activity.activestatusid == 1">
+            and activity.activestatusid in (1,2)
+        </if>
+        <if test="activity.activestatusid == 3">
+            and activity.activestatusid = 3
+        </if>
+        <if test="activity.activestatusid == 4">
+            and activity.activestatusid = 4
+        </if>
+        and activity.district = areanew.area_code and areanew.`level` = 3 and aapplication.applicationstatusid = #{activity.applicationstatusid}
+        and aapplication.volunteerid = #{activity.volunteerid}
+        order by activity.starttime limit #{begin},#{size};
+    </select>
+
+    <select id="selectActivityByVIDCountLeave" resultType="java.lang.Integer">
+        select count(*) from activity, organization,areanew,aapplication,activestatus,aleave
+        where activity.activityid = aapplication.activityid AND
+        activity.organizationid = organization.organizationid AND
+        activity.activestatusid = activestatus.activestatusid and
+        aapplication.applicationid = aleave.applicationid and aleave.statusid = 2
+        <if test="activestatusid == 1">
+            and activity.activestatusid in (1,2)
+        </if>
+        <if test="activestatusid == 3">
+            and activity.activestatusid = 3
+        </if>
+        <if test="activestatusid == 4">
+            and activity.activestatusid = 4
+        </if>
+        and activity.district = areanew.area_code and areanew.`level` = 3 and aapplication.applicationstatusid = #{applicationstatusid}
+        and aapplication.volunteerid = #{volunteerid}
     </select>
 
 

@@ -31,6 +31,7 @@ public class Activity {
   private int havealeader;
   private Acstyle acstyles;
 
+  private Aleave aleaves;
   private Organization organizations;
 
 //  private Area area;
@@ -44,6 +45,24 @@ public class Activity {
   private Activestatus activestatus;
 
   private Signrecord signrecords;
+
+  private int isaleava;
+
+  public Aleave getAleaves() {
+    return aleaves;
+  }
+
+  public void setAleaves(Aleave aleaves) {
+    this.aleaves = aleaves;
+  }
+
+  public int getIsaleava() {
+    return isaleava;
+  }
+
+  public void setIsaleava(int isaleava) {
+    this.isaleava = isaleava;
+  }
 
   public Signrecord getSignrecords() {
     return signrecords;
@@ -382,12 +401,14 @@ public class Activity {
             ", acstyle=" + acstyle +
             ", havealeader=" + havealeader +
             ", acstyles=" + acstyles +
+            ", aleaves=" + aleaves +
             ", organizations=" + organizations +
             ", areanews=" + areanews +
             ", admissionpolicys=" + admissionpolicys +
             ", aapplications=" + aapplications +
             ", activestatus=" + activestatus +
             ", signrecords=" + signrecords +
+            ", isaleava=" + isaleava +
             ", volunteerid='" + volunteerid + '\'' +
             ", applicationstatusid='" + applicationstatusid + '\'' +
             '}';
