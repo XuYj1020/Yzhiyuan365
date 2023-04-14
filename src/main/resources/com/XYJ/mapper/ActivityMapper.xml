@@ -133,6 +133,7 @@
             <result column="lat1" property="lat"></result>
             <result column="cc" property="cityCode"></result>
             <result column="zip" property="zipCode"></result>
+            <result column="pp" property="pinYin"></result>
         </association>
         <association property="admissionpolicys" javaType="com.XYJ.pojo.Admissionpolicy">
             <id column="admissionpolicyid" property="admissionpolicyid"></id>
@@ -250,7 +251,7 @@
 
 
     <select id="selectActivityByVIDFY" resultMap="rs1">
-        select *,areanew.whole_name,organization.oname,activestatus.`status`,(select count(*) from signcode where activity.activityid = signcode.activityid ) as lon1 ,(select signinid from signcode where activity.activityid = signcode.activityid ) as lat1,(select count(*) from signrecord where aapplication.applicationid = signrecord.applicationid ) as cc ,(select count(*) from aleave where aapplication.applicationid = aleave.applicationid and statusid = 1 ) as zip,(select signintime from signrecord where signrecord.applicationid = aapplication.applicationid) as signintime  from activity, organization,areanew,aapplication,activestatus
+        select *,areanew.whole_name,organization.oname,activestatus.`status`,(select count(*) from signcode where activity.activityid = signcode.activityid ) as lon1 ,(select signinid from signcode where activity.activityid = signcode.activityid ) as lat1,(select count(*) from signrecord where aapplication.applicationid = signrecord.applicationid ) as cc ,(select count(*) from aleave where aapplication.applicationid = aleave.applicationid and statusid = 1 ) as zip,(select signintime from signrecord where signrecord.applicationid = aapplication.applicationid) as signintime ,(select count(*) from evaluation where evaluation.activityid = aapplication.activityid and evaluation.volunteerid = aapplication.volunteerid) as pp from activity, organization,areanew,aapplication,activestatus
         where activity.activityid = aapplication.activityid AND
             activity.organizationid = organization.organizationid AND
             activity.activestatusid = activestatus.activestatusid

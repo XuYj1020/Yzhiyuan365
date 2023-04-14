@@ -8,6 +8,7 @@ public class Evaluation {
   private String activityid;
   private String evaluationtime;
   private String content;
+  private int score;
 
 
   public String getEvaluationid() {
@@ -54,6 +55,15 @@ public class Evaluation {
     this.content = content;
   }
 
+
+  public int getScore() {
+    return score;
+  }
+
+  public void setScore(int score) {
+    this.score = score;
+  }
+
   @Override
   public String toString() {
     return "Evaluation{" +
@@ -62,6 +72,7 @@ public class Evaluation {
             ", activityid='" + activityid + '\'' +
             ", evaluationtime='" + evaluationtime + '\'' +
             ", content='" + content + '\'' +
+            ", score=" + score +
             '}';
   }
 }

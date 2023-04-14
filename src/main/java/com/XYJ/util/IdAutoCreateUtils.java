@@ -1,10 +1,7 @@
 package com.XYJ.util;
 
 import com.XYJ.pojo.*;
-import com.XYJ.service.AapplicationService;
-import com.XYJ.service.AleaveService;
-import com.XYJ.service.ApplicationreviewService;
-import com.XYJ.service.SignrecordService;
+import com.XYJ.service.*;
 import com.alibaba.fastjson.JSON;
 
 import java.text.SimpleDateFormat;
@@ -299,5 +296,37 @@ public static Applicationreview auditid(String params){
         String jsonString = JSON.toJSONString(mapTypes);
        Aleave aleave = JSON.parseObject(jsonString,Aleave.class);
         return aleave;
+    }
+
+    public static Evaluation evaluationid(String params){
+//        把数据转成map类型
+        Map mapTypes = JSON.parseObject(params);
+        String activityid = (String) mapTypes.get("activityid");
+//        判断原先是否有人报名，该活动下是否有审核id，如果没有则返回0001，如果有则返回最新的审核编号
+        EvaluationService eva = new EvaluationService();
+        String evas = eva.selectByAID(activityid);
+        String evaluationid;
+//        审核ID规则  原始活动ID + 0001 编号
+        if(evas.equals("0001")){
+            activityid = activityid.replaceFirst("HD","HDPJ");
+            evaluationid = activityid + evas;
+            System.out.println(evaluationid);
+        }else{
+//            先把前面的BMPJ去掉
+            String a = evas.substring(4);
+//            把去掉后的数字转成long类型  只取后面15位，因为long最多只支持19位   int溢出，  转换完成后+1
+            long num =Long.parseLong(a.substring(a.length()-15))+1;
+//            把前面被截掉的拿回来
+            String str = a.substring(0,a.length()-15);
+//            字符串重新拼接
+            evaluationid =  "HDPJ" + str + num;
+        }
+//        把生成的auditid封装进map集合中，然后再传出去
+        mapTypes.put("evaluationid", evaluationid);
+        System.out.println(evaluationid);
+        System.out.println(mapTypes);
+        String jsonString = JSON.toJSONString(mapTypes);
+        Evaluation evaluation = JSON.parseObject(jsonString,Evaluation.class);
+        return evaluation;
     }
 }

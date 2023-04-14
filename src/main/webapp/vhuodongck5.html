@@ -94,7 +94,7 @@
 					        <template slot-scope="scope">
 					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
 <!-- 					          <el-button type="text" size="small" @click="qd(scope.row)">签到</el-button>-->
-							  <el-button type="text" size="small" >评价</el-button> 
+							  <el-button type="text" size="small" @click="pj(scope.row)" >评价</el-button> 
 							  
 					        </template>
 					      </el-table-column>
@@ -157,13 +157,36 @@
 			  </div>
 			</el-dialog>
 			
+			
+			<el-dialog title="活动评价" :visible.sync="dialogFormVisiblePJ">
+			  <el-form :model="form1" ref="form1" >
+				    <el-rate
+				      v-model="form1.score"
+				      :colors="colors">
+				    </el-rate>
+			    <el-form-item label="评价">
+				  <el-input
+				  type="textarea"
+				  placeholder="请输入评价"
+				  v-model.trim="form1.content"
+				  maxlength="300"
+				  show-word-limit
+				  autocomplete="off"></el-input>
+			    </el-form-item>
+			  </el-form>
+			  <div slot="footer" class="dialog-footer">
+			    <el-button @click="dialogFormVisiblePJ = false">取 消</el-button>
+			    <el-button type="primary" @click="tjPJ()">确 定</el-button>
+			  </div>
+			</el-dialog>
+			
 		</div>
 		
 		<script>
 			new Vue({
 				el:"#app",
 				created() {
-					this.formInline.volunteerid = localStorage.getItem('vid')
+					this.form1.volunteerid = this.formInline.volunteerid = localStorage.getItem('vid')
 					this.selectActivityBYVIDFY()
 					// this.selectActivityAID()
 				},
@@ -176,6 +199,7 @@
 						dialogVisible:false,
 						dialogFormVisibleQD:false,
 						dialogFormVisibleQJ:false,
+						dialogFormVisiblePJ:false,
 						activityid:'',
 						Activitys:[],
 						leaders:'',
@@ -183,10 +207,17 @@
 						applicationid:'',
 						signcode:'',
 						lat:'',
+						colors: ['#99A9BF', '#F7BA2A', '#FF9900'],
 						formInline:{
 							volunteerid:'',
 							activestatusid:'4',
 							applicationstatusid:'4'
+						},
+						form1:{
+							volunteerid:'',
+							activityid:'',
+							score:5,
+							content:''
 						}
 					}
 				},
@@ -272,8 +303,40 @@
 							this.dialogVisible=true
 							this.selectActivityAID()
 					      },
+					pj(row){
+							console.log(row.areanews.lon)
+							this.selectActivityBYVIDFY()
+							this.form1.activityid= row.activityid
+							console.log(row.areanews.pinYin)
+							if(row.areanews.pinYin != 0){
+								this.$message({
+						          message: '你已经评价过了',
+						          type: 'warning'
+								});
+							}else{
+								this.lat = row.areanews.lat
+								this.dialogFormVisiblePJ=true
+							}
+						},
+					
+					tjPJ(){
+						axios({
+							method:"post",
+							url:"http://localhost:8080/Yzhiyuan365/evaluation/insert",
+							data:this.form1
+						}).then((resp)=>{
+							console.log(resp.data);
+							this.dialogFormVisiblePJ = false
+							this.$message.success('评价成功');
+							location.reload()
+						}).catch((error)=>{
+							console.log(error.response);
+						})
+					}
+						  
 				},
-
+				
+				
 			})
 		</script>
 	</body>
