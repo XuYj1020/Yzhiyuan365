@@ -43,6 +43,16 @@ public class Activity {
   private Aapplication aapplications;
   private Activestatus activestatus;
 
+  private Signrecord signrecords;
+
+  public Signrecord getSignrecords() {
+    return signrecords;
+  }
+
+  public void setSignrecords(Signrecord signrecords) {
+    this.signrecords = signrecords;
+  }
+
   private String volunteerid;
   private String applicationstatusid;
 
@@ -377,6 +387,7 @@ public class Activity {
             ", admissionpolicys=" + admissionpolicys +
             ", aapplications=" + aapplications +
             ", activestatus=" + activestatus +
+            ", signrecords=" + signrecords +
             ", volunteerid='" + volunteerid + '\'' +
             ", applicationstatusid='" + applicationstatusid + '\'' +
             '}';

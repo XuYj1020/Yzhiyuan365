@@ -2,6 +2,7 @@ package com.XYJ.util;
 
 import com.XYJ.pojo.*;
 import com.XYJ.service.AapplicationService;
+import com.XYJ.service.AleaveService;
 import com.XYJ.service.ApplicationreviewService;
 import com.XYJ.service.SignrecordService;
 import com.alibaba.fastjson.JSON;
@@ -269,5 +270,34 @@ public static Applicationreview auditid(String params){
         String jsonString = JSON.toJSONString(mapTypes);
         Signrecord signrecord = JSON.parseObject(jsonString,Signrecord.class);
         return signrecord;
+    }
+
+    public static Aleave leaveapplicationid(String params){
+//        把数据转成map类型
+        Map mapTypes = JSON.parseObject(params);
+        String applicationid = (String) mapTypes.get("applicationid");
+//        判断原先是否有人报名，该活动下是否有报名id，如果没有则返回0001，如果有则返回最新的报名编号
+        AleaveService ale = new AleaveService();
+        String sigs = ale.selectByAID(applicationid);
+        String leaveapplicationid;
+//        报名ID规则  原始活动ID + 0001 编号
+        if(sigs.equals("0001")){
+            applicationid = applicationid.replaceFirst("HDBM","HDQJ");
+            leaveapplicationid = applicationid + sigs;
+        }else{
+//            先把前面的hdqd去掉
+            String a = sigs.substring(4);
+//            把去掉后的数字转成long类型  只取后面15位，因为long最多只支持19位   int溢出，  转换完成后+1
+            long num =Long.parseLong(a.substring(a.length()-15))+1;
+//            把前面被截掉的拿回来
+            String str = a.substring(0,a.length()-15);
+//            字符串重新拼接
+            leaveapplicationid =  "HDQJ" + str + num;
+        }
+//        把生成的applicationid封装进map集合中，然后再传出去
+        mapTypes.put("leaveapplicationid", leaveapplicationid);
+        String jsonString = JSON.toJSONString(mapTypes);
+       Aleave aleave = JSON.parseObject(jsonString,Aleave.class);
+        return aleave;
     }
 }

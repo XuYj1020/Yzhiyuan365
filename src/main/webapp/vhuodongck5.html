@@ -83,8 +83,8 @@
 						    align="center">
 						  </el-table-column>
 						  <el-table-column
-						    prop="areanews.lon"
-						    label="签到码"
+						    prop="signrecords.signintime"
+						    label="签到时间"
 						    align="center">
 						  </el-table-column>
 					      <el-table-column
@@ -93,8 +93,8 @@
 					        align="center">
 					        <template slot-scope="scope">
 					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-					          <el-button type="text" size="small" @click="qd(scope.row)">签到</el-button>
-							  <el-button type="text" size="small" @click="qj(scope.row)">请假</el-button>
+<!-- 					          <el-button type="text" size="small" @click="qd(scope.row)">签到</el-button>-->
+							  <el-button type="text" size="small" >评价</el-button> 
 							  
 					        </template>
 					      </el-table-column>
@@ -157,36 +157,6 @@
 			  </div>
 			</el-dialog>
 			
-			<el-dialog title="签到" :visible.sync="dialogFormVisibleQD">
-			  <el-form :model="form" :rules="rules" ref="form" >
-			    <el-form-item label="签到码" prop='signinid'>
-			      <el-input v-model.trim="form.signinid" autocomplete="off"></el-input>
-			    </el-form-item>
-			  </el-form>
-			  <div slot="footer" class="dialog-footer">
-			    <el-button @click="dialogFormVisibleQD = false">取 消</el-button>
-			    <el-button type="primary" @click="tijiaoQD()">确 定</el-button>
-			  </div>
-			</el-dialog>
-			
-			<el-dialog title="请假申请" :visible.sync="dialogFormVisibleQJ">
-			  <el-form :model="form1" :rules="rules" ref="form1" >
-			    <el-form-item label="请假理由" prop='reason'>
-				  <el-input
-				  type="textarea"
-				  placeholder="请输入请假理由"
-				  v-model.trim="form1.reason"
-				  maxlength="300"
-				  show-word-limit
-				  autocomplete="off"></el-input>
-			    </el-form-item>
-			  </el-form>
-			  <div slot="footer" class="dialog-footer">
-			    <el-button @click="dialogFormVisibleQJ = false">取 消</el-button>
-			    <el-button type="primary" @click="tijiaoQJ()">确 定</el-button>
-			  </div>
-			</el-dialog>
-			
 		</div>
 		
 		<script>
@@ -215,25 +185,8 @@
 						lat:'',
 						formInline:{
 							volunteerid:'',
-							activestatusid:'3',
-							applicationstatusid:'5'
-						},
-						form:{
-							signinid:'',
-							applicationid:''
-						},
-						form1:{
-							reason:'',
-							applicationid:''
-						},
-						rules:{
-							signinid:[
-								{required: true, message: '请输入签到码', trigger: 'blur'},
-								{ validator: this.ValidatorSigninid, trigger: 'blur' }
-							],
-							reason:[
-								{required: true, message: '请输入请假理由', trigger: 'blur'},
-							]
+							activestatusid:'4',
+							applicationstatusid:'4'
 						}
 					}
 				},
@@ -319,89 +272,6 @@
 							this.dialogVisible=true
 							this.selectActivityAID()
 					      },
-					qd(row){
-						console.log(row.areanews.lon)
-						this.selectActivityBYVIDFY()
-						this.form.applicationid =this.applicationid= row.aapplications.applicationid
-						this.signcode = row.areanews.lon
-						if(row.areanews.lon == 0){
-							this.$message({
-							          message: '管理员还没开始签到',
-							          type: 'warning'
-							});
-						}else if(row.areanews.cityCode != 0 ){
-							this.$message.error('你已签到');
-						}else if(row.areanews.zipCode != 0){
-							this.$message.error('请假申请中，不允许签到');
-						}else{
-							this.lat = row.areanews.lat
-							this.dialogFormVisibleQD=true
-							}
-						},
-						ValidatorSigninid(rule, value, callback) {
-							if (value !== this.lat) {
-						    callback(new Error('签到码错误'));
-						  } else {
-						    callback();
-						  }
-						},
-						tijiaoQD(){
-							this.$refs.form
-							.validate()
-							// 验证通过
-							.then(()=>{
-								axios({
-									method:"post",
-									url:"http://localhost:8080/Yzhiyuan365/signrecord/insert",
-									data:this.form
-								}).then((resp)=>{
-									console.log(resp.data);
-									this.dialogFormVisibleQD = false
-									this.$message.success('签到成功');
-									location.reload()
-								}).catch((error)=>{
-									console.log(error.response);
-								})
-							})
-							.catch(()=>{
-								console.log('error submit!!');
-							})
-						},
-						qj(row){
-							this.form1.applicationid=row.aapplications.applicationid
-							console.log(row.leaveapproval)
-							if(row.leaveapproval == 0){
-								this.$message.warning('该活动不允许请假');
-							}else if(row.areanews.cityCode != 0){
-								this.$message.warning('签到后不允许请假');
-							}else if(row.areanews.zipCode != 0){
-								this.$message.warning('已提交请假申请，请等待审核');
-							}else{
-								this.dialogFormVisibleQJ=true
-							}
-						},
-						tijiaoQJ(){
-							this.$refs.form1
-							.validate()
-							// 验证通过
-							.then(()=>{
-								axios({
-									method:"post",
-									url:"http://localhost:8080/Yzhiyuan365/aleave/insert",
-									data:this.form1
-								}).then((resp)=>{
-									console.log(resp.data);
-									this.dialogFormVisibleQJ = false
-									this.$message.success('请假申请提交成功');
-									location.reload()
-								}).catch((error)=>{
-									console.log(error.response);
-								})
-							})
-							.catch(()=>{
-								console.log('error submit!!');
-							})
-						}
 				},
 
 			})
