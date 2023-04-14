@@ -366,7 +366,7 @@
     </select>
 
     <select id="selectActivityByOIDFYSQ" resultMap="rs1">
-        select *,areanew.whole_name,auditstatus.`status`  as lon1 ,activestatus.`status` as acstatus,activityreview.auditid as acreviewsauditid from activity,activityreview,areanew,acstyle,admissionpolicy,auditstatus,activestatus
+        select *,areanew.whole_name,auditstatus.`status`  as lon1 ,activestatus.`status` as acstatus,activityreview.auditid as acreviewsauditid,activityreview.eta as acreviewseta,activityreview.feedback as acreviewsfeedback from activity,activityreview,areanew,acstyle,admissionpolicy,auditstatus,activestatus
         where activity.activityid = activityreview.activityid AND
         areanew.area_code = activity.district and areanew.`level` = 3 and
         activity.acstyle = acstyle.acstyleid and
@@ -375,6 +375,9 @@
         activity.activestatusid = activestatus.activestatusid
         <if test="activity.activestatusid == 16">
             and activityreview.auditstatusid = 1 and activity.activestatusid = 6
+        </if>
+        <if test="activity.activestatusid == 21">
+            and activityreview.auditstatusid = 2 and activity.activestatusid = 1
         </if>
         and activity.organizationid = #{activity.organizationid}
     </select>
@@ -389,6 +392,9 @@
           <if test="activestatusid == 16">
               and activityreview.auditstatusid = 1 and activity.activestatusid = 6
           </if>
+        <if test="activestatusid == 21">
+            and activityreview.auditstatusid = 2 and activity.activestatusid = 1
+        </if>
           and activity.organizationid = #{organizationid}
     </select>
 

@@ -149,6 +149,34 @@ public class IdAutoCreateUtils {
     }
 
 
+    //    自动生成活动审核ID
+//    HDFB+ 发布时间4位 + 时间戳后4位 + 随机数2位 18位
+    public static Activityreview activityreviewauditid(String params){
+//          获取传入的json数据，转成map
+        Map mapTypes = JSON.parseObject(params);
+//        获取当前年月日
+        SimpleDateFormat yyyyMMdd = new SimpleDateFormat(YYYY_MM_DD);
+        String date = yyyyMMdd.format(new Date());
+
+        //获取时间戳后4位
+        String timeMillis = String.valueOf(System.currentTimeMillis());
+        String fiveNumber = timeMillis.substring(timeMillis.length() - 4);
+
+        //获取随机数后2位
+        String tempRandom = String.valueOf(Math.random());
+        String suiji = tempRandom.substring(tempRandom.length() - 2);
+
+        String auditid ="HDFB" +date  + fiveNumber  + suiji;
+//        把拼接后的organizationid存到map
+        mapTypes.put("auditid", auditid);
+
+        String jsonString = JSON.toJSONString(mapTypes);
+
+        Activityreview activityreview = JSON.parseObject(jsonString, Activityreview.class);
+
+        return activityreview;
+    }
+
 //    申请加入组织自动生成申请id
     public static Ojoin ojoinid(String params){
 //          获取传入的json数据，转成map
@@ -329,4 +357,6 @@ public static Applicationreview auditid(String params){
         Evaluation evaluation = JSON.parseObject(jsonString,Evaluation.class);
         return evaluation;
     }
+
+
 }

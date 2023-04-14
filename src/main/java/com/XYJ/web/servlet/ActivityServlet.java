@@ -1,9 +1,11 @@
 package com.XYJ.web.servlet;
 
 import com.XYJ.pojo.Activity;
+import com.XYJ.pojo.Activityreview;
 import com.XYJ.pojo.PageFY;
 import com.XYJ.pojo.User;
 import com.XYJ.service.ActivityService;
+import com.XYJ.service.ActivityreviewService;
 import com.XYJ.util.IdAutoCreateUtils;
 import com.alibaba.fastjson.JSON;
 
@@ -188,6 +190,9 @@ public class ActivityServlet extends BaseServlet{
         BufferedReader bufferedReader = req.getReader();
         String params = bufferedReader.readLine();
         Activity activity = JSON.parseObject(params,Activity.class);
+        Activityreview activityreview = IdAutoCreateUtils.activityreviewauditid(params);
+        ActivityreviewService activityreviewService = new ActivityreviewService();
+        activityreviewService.insert(activityreview);
         System.out.println(activity);
         activityservice.updateAinfo(activity);
         resp.setContentType("text/json;charset=utf-8");

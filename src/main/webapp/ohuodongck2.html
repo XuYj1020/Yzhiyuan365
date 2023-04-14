@@ -82,6 +82,16 @@
 						    label="审核状态"
 						    align="center">
 						  </el-table-column>
+						  <el-table-column
+						    prop="activityreview.eta"
+						    label="审核时间"
+						    align="center">
+						  </el-table-column>
+						  <el-table-column
+						    prop="activityreview.feedback"
+						    label="审核意见"
+						    align="center">
+						  </el-table-column>
 					      <el-table-column
 					        fixed="right"
 					        label="操作"
@@ -286,7 +296,7 @@
 						applicationid:'',
 						formInline:{
 							organizationid:'',
-							activestatusid:'16'
+							activestatusid:'21'
 						},
 						// 地址选择
 						ads: regionData,
@@ -473,7 +483,7 @@
 						this.auditid = row.activityreview.auditid
 						this.activityid = row.activityid
 						this.updateActivityActivestatusid()
-						this.updateActivityreviewAuditstatusid()
+						// this.updateActivityreviewAuditstatusid()
 						this.$message.success('取消成功');
 						location.reload()	
 					},
@@ -517,6 +527,11 @@
 					
 					// 招募时间自定义规则
 					ValidatorEnrolmenttime(rule, value, callback) {
+						console.log(value != null)  //true  空   //true  空   //true  填
+						console.log(value != '')  //false   空  //false  空   //true  填
+						console.log(this.ruleForm.actiontime != null)  //true 空  //true  填   //true 空
+						console.log(this.ruleForm.actiontime != '')   //false 空  //true  填   //false 空
+						// 未选择招募时间
 						if(value != ''){
 							let astart =new Date(this.ruleForm.actiontime[0])
 							let aend = new Date(this.ruleForm.actiontime[1])
@@ -594,6 +609,25 @@
 						    console.log(error.response);//可以拿到后端返回的信息
 						  });
 					},
+					
+					// huodongshenh(){
+					// 	axios({
+					// 	    method:"post",
+					// 	    url:"http://localhost:8080/Yzhiyuan365/activityreview/insert",
+					// 		// headers:headers,
+					// 		headers:{
+					// 			vtoken:localStorage.getItem('vtoken')
+					// 		},
+					// 		data:this.activityid
+					// 	  }).then((resp)=>{
+					// 	    // console.log(resp)
+					// 		console.log(resp.data)
+					// 		// console.log(resp.data.datalist)
+					// 		this.Admissionpolicys=resp.data
+					// 	  }).catch((error)=> {
+					// 	    console.log(error.response);//可以拿到后端返回的信息
+					// 	  });
+					// },
 					
 					// 提交按钮   promas方法
 					upAinfo() {
