@@ -3,6 +3,7 @@ package com.XYJ.mapper;
 import com.XYJ.pojo.Aleave;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -16,5 +17,8 @@ public interface AleaveMapper {
 
     @Select("SELECT * FROM ALEAVE where applicationid =#{applicationid} and statusid = 1 order by leaveapplicationid desc limit 1 ")
     List<Aleave> selectONEByAID(String applicationid);
+
+    @Update("update aleave set statusid = #{statusid} where leaveapplicationid = #{leaveapplicationid}")
+    void update(Aleave aleave);
 
 }

@@ -27,4 +27,10 @@ public interface AapplicationMapper {
 
     List<Aapplication> selectVinfoByAIDFY(@Param("begin") int begin, @Param("size") int size, @Param("aapplication") Aapplication aapplication);
     int selectVinfoByAIDCount(Aapplication aapplication);
+
+    List<Aapplication> selectVinfoByAIDFYstatus(@Param("begin") int begin, @Param("size") int size, @Param("aapplication") Aapplication aapplication);
+    int selectVinfoByAIDCountstatus(Aapplication aapplication);
+
+    @Update("update aapplication set applicationstatusid = 3 where applicationid = #{applicationid}")
+    void updateApplicationstatusid3(String applicationid);
 }

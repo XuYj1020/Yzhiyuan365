@@ -49,6 +49,13 @@ public class AapplicationService {
         sqlSession.close();
     }
 
+    public void updateApplicationstatusid3(String applicationid){
+        SqlSession sqlSession = factory.openSession();
+        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+        aapplicationemapper.updateApplicationstatusid3(applicationid);
+        sqlSession.close();
+    }
+
     public PageFY<Aapplication> selectVinfoByAIDFY(int begin, int size, Aapplication aapplication){
         SqlSession sqlSession = factory.openSession();
         AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
@@ -66,6 +73,22 @@ public class AapplicationService {
         return page;
     }
 
+    public PageFY<Aapplication> selectVinfoByAIDFYstatus(int begin, int size, Aapplication aapplication){
+        SqlSession sqlSession = factory.openSession();
+        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+
+//        总记录数
+        int total = aapplicationemapper.selectVinfoByAIDCountstatus(aapplication);
+        System.out.println(total);
+        begin = (begin - 1) * size;
+        List<Aapplication> aapplications = aapplicationemapper.selectVinfoByAIDFYstatus(begin,size,aapplication);
+
+        PageFY<Aapplication> page = new PageFY<>();
+        page.setTotal(total);
+        page.setShuju(aapplications);
+        sqlSession.close();
+        return page;
+    }
 
     public static void main(String[] args) {
         AapplicationService app = new AapplicationService();

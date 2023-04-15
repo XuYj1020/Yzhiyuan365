@@ -89,4 +89,25 @@ public class AapplicationServlet extends BaseServlet{
         resp.getWriter().write(jsonString);
     }
 
+    public void selectVinfoByAIDFYstatus(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        String begin = req.getParameter("begin");
+        int currentpage = Integer.parseInt(begin);
+        System.out.println(currentpage);
+        String size = req.getParameter("size");
+        int pagesize = Integer.parseInt(size);
+        System.out.println(pagesize);
+        Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+        System.out.println("-------------");
+        System.out.println(aapplication);
+        PageFY<Aapplication> aapplications = aapplicationservice.selectVinfoByAIDFYstatus(currentpage,pagesize,aapplication);
+        System.out.println("-------------");
+        System.out.println(aapplications);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(aapplications);
+        resp.getWriter().write(jsonString);
+    }
+
 }

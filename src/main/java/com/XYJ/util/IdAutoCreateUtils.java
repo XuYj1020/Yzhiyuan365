@@ -357,6 +357,30 @@ public static Applicationreview auditid(String params){
         Evaluation evaluation = JSON.parseObject(jsonString,Evaluation.class);
         return evaluation;
     }
+    public static Signcode signcode(String params){
+        //          获取传入的json数据，转成map
+        Map mapTypes = JSON.parseObject(params);
+//        获取当前年月日  后六位
+        SimpleDateFormat yyyyMMdd = new SimpleDateFormat(YYYY_MM_DD);
+        String date = yyyyMMdd.format(new Date()).substring(6);
 
+        //获取时间戳后4位
+        String timeMillis = String.valueOf(System.currentTimeMillis());
+        String fiveNumber = timeMillis.substring(timeMillis.length() - 4);
+
+        //获取随机数后2位
+        String tempRandom = String.valueOf(Math.random());
+        String suiji = tempRandom.substring(tempRandom.length() - 2);
+
+        String signinid = date + suiji +  fiveNumber ;
+//        把拼接后的organizationid存到map
+        mapTypes.put("signinid", signinid);
+
+        String jsonString = JSON.toJSONString(mapTypes);
+
+        Signcode signcode = JSON.parseObject(jsonString, Signcode.class);
+
+        return signcode;
+    }
 
 }

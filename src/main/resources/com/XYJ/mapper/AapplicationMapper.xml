@@ -47,6 +47,22 @@
 <!--            <result column="lastlogintime" property="lastlogintime" ></result>-->
 <!--            <result column="pictureaddress" property="pictureaddress" ></result>-->
         </association>
+        <association property="signrecords" javaType="com.XYJ.pojo.Signrecord">
+            <id column="recordid" property="recordid"></id>
+            <result column="signintime" property="signintime"></result>
+            <result column="signouttime" property="signouttime"></result>
+        </association>
+        <association property="aleaves" javaType="com.XYJ.pojo.Aleave">
+            <id column="leaveapplicationid" property="leaveapplicationid"></id>
+            <result column="applicationtime" property="applicationtime"></result>
+            <result column="reason" property="reason"></result>
+        </association>
+        <association property="leavereviews" javaType="com.XYJ.pojo.Leavereview">
+            <id column="leaveauditid" property="leaveauditid"></id>
+            <result column="auditstatusid" property="auditstatusid"></result>
+            <result column="eta" property="eta"></result>
+            <result column="feedback" property="feedback"></result>
+        </association>
     </resultMap>
 <!--    select * from volunteer,aapplication-->
 <!--    <where>-->
@@ -81,6 +97,34 @@
             aa.activityid = #{activityid}
             <if test="applicationstatusid == 1">
             and   aa.applicationstatusid = 1
+            </if>
+        </where>
+    </select>
+
+    <select id="selectVinfoByAIDFYstatus" resultMap="rs1">
+        select * from aapplication
+        left join volunteer on volunteer.volunteerid = aapplication.volunteerid
+        left join aleave on aleave.applicationid = aapplication.applicationid
+        left join signrecord on signrecord.applicationid = aapplication.applicationid
+        left join leavereview on leavereview.leaveapplicationid = aleave.leaveapplicationid
+                 <where>
+                     aapplication.activityid =#{aapplication.activityid}  and aapplication.applicationstatusid = #{aapplication.applicationstatusid}
+                     <if test="aapplication.auditid == 1">
+                         and leavereview.auditstatusid = 1
+                     </if>
+                 </where>
+        limit #{begin},#{size};
+    </select>
+    <select id="selectVinfoByAIDCountstatus" resultType="java.lang.Integer">
+        select count(*) from aapplication
+                          left join volunteer on volunteer.volunteerid = aapplication.volunteerid
+                          left join aleave on aleave.applicationid = aapplication.applicationid
+                          left join signrecord on signrecord.applicationid = aapplication.applicationid
+                          left join leavereview on leavereview.leaveapplicationid = aleave.leaveapplicationid
+        <where>
+            aapplication.activityid =#{activityid}  and aapplication.applicationstatusid = #{applicationstatusid}
+            <if test="auditid == 1">
+                and leavereview.auditstatusid = 1
             </if>
         </where>
     </select>

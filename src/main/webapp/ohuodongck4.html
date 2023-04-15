@@ -78,16 +78,6 @@
 						    align="center">
 						  </el-table-column>
 						  <el-table-column
-						    prop="enrolmentopeningtime"
-						    label="报名开始时间"
-						    align="center">
-						  </el-table-column>
-						  <el-table-column
-						    prop="enrolmentdeadline"
-						    label="报名结束时间"
-						    align="center">
-						  </el-table-column>
-						  <el-table-column
 						    prop="numberofrequiredvolunteer"
 						    label="招募人数"
 						    align="center">
@@ -97,6 +87,11 @@
 						    label="报名人数"
 						    align="center">
 						  </el-table-column>
+						  <el-table-column
+						    prop="areanews.lat"
+						    label="签到码"
+						    align="center">
+						  </el-table-column>
 					      <el-table-column
 					        fixed="right"
 					        label="操作"
@@ -104,7 +99,12 @@
 					        <template slot-scope="scope">
 					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
 								<el-button  type="text" size="small" @click="ckbmry(scope.row)">查看已报名人员</el-button>
-								<el-button  type="text" size="small" @click="shenh(scope.row)">审核参加人员</el-button>
+								<el-button  type="text" size="small" @click="shenh(scope.row)">请假审核</el-button>
+								<el-popconfirm
+								  title="请确认是否生成签到码？"
+									@confirm="scqdm(scope.row)"
+									>
+								  <el-button type="text" size="small" slot="reference">生成签到码</el-button>
 							  </el-popconfirm>
 					        </template>
 					      </el-table-column>
@@ -116,7 +116,7 @@
 				      @size-change="handleSizeChange"
 				      @current-change="handleCurrentChange"
 				      :current-page="currentPage"
-				      :page-sizes="[20, 50, 100]"
+				      :page-sizes="[10, 20, 40]"
 				      :page-size="pageSize"
 				      layout="total, sizes, prev, pager, next, jumper"
 				      :total="total">
@@ -167,8 +167,110 @@
 			  </div>
 			</el-dialog>
 			
-			<el-dialog title="查看报名人员" :visible.sync="dialogTableVisibleBM">
-			  <el-table :data="gridDataBM">
+			<el-dialog title="活动人员" :visible.sync="dialogTableVisibleZT">
+<!-- 				<el-button-group>
+					applicationstatusid 4，5，3 
+				  <el-button type="primary" @click="yiqiandao">已签到</el-button>
+				  <el-button type="primary" @click="weiqiandao">未签到</el-button>
+				  <el-button type="primary" @click="qingjia">请假</el-button>
+				</el-button-group> -->
+				
+				  <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+				    <el-tab-pane label="已签到" name="yiqiandao">
+						<el-table :data="gridDataZT">
+							<el-table-column property="applicationid" label="报名ID"></el-table-column>
+							<el-table-column property="users.name" label="姓名"></el-table-column>
+							<el-table-column property="users.phone" label="联系方式"></el-table-column>
+							<el-table-column property="atime" label="报名时间"></el-table-column>
+							<el-table-column property="signrecords.signintime" label="签到时间"></el-table-column>
+							<el-table-column
+							  fixed="right"
+							  label="操作"
+							  align="center">
+							  <template slot-scope="scope">
+							    <el-button @click="vinfo(scope.row)" type="text" size="small">查看</el-button>
+								</el-popconfirm>
+							  </template>
+							</el-table-column>
+						</el-table>	
+						<div class="block">
+						  <el-pagination
+						    @size-change="handleSizeChangeZT"
+						    @current-change="handleCurrentChangeZT"
+						    :current-page="currentPageZT"
+						    :page-sizes="[20, 50, 100]"
+						    :page-size="pageSizeZT"
+						    layout="total, sizes, prev, pager, next, jumper"
+						    :total="totalZT">
+						  </el-pagination>
+						</div>
+						
+					</el-tab-pane>
+				    <el-tab-pane label="未签到" name="weiqiandao">
+						<el-table :data="gridDataZT">
+							<el-table-column property="applicationid" label="报名ID"></el-table-column>
+							<el-table-column property="users.name" label="姓名"></el-table-column>
+							<el-table-column property="users.phone" label="联系方式"></el-table-column>
+							<el-table-column property="atime" label="报名时间"></el-table-column>
+							<el-table-column
+							  fixed="right"
+							  label="操作"
+							  align="center">
+							  <template slot-scope="scope">
+							    <el-button @click="vinfo(scope.row)" type="text" size="small">查看</el-button>
+								</el-popconfirm>
+							  </template>
+							</el-table-column>
+						</el-table>
+						<div class="block">
+						  <el-pagination
+						    @size-change="handleSizeChangeZT"
+						    @current-change="handleCurrentChangeZT"
+						    :current-page="currentPageZT"
+						    :page-sizes="[20, 50, 100]"
+						    :page-size="pageSizeZT"
+						    layout="total, sizes, prev, pager, next, jumper"
+						    :total="totalZT">
+						  </el-pagination>
+						</div>
+						
+					</el-tab-pane>
+				    <el-tab-pane label="请假人员" name="qingjia">
+						<el-table :data="gridDataZT">
+							<el-table-column property="applicationid" label="报名ID"></el-table-column>
+							<el-table-column property="users.name" label="姓名"></el-table-column>
+							<el-table-column property="users.phone" label="联系方式"></el-table-column>
+							<el-table-column property="atime" label="报名时间"></el-table-column>
+							<el-table-column property="aleaves.applicationtime" label="请假时间"></el-table-column>
+							<el-table-column property="aleaves.reason" label="请假理由"></el-table-column>
+							<el-table-column
+							  fixed="right"
+							  label="操作"
+							  align="center">
+							  <template slot-scope="scope">
+							    <el-button @click="vinfo(scope.row)" type="text" size="small">查看</el-button>
+								</el-popconfirm>
+							  </template>
+							</el-table-column>
+						</el-table>
+						<div class="block">
+						  <el-pagination
+						    @size-change="handleSizeChangeZT"
+						    @current-change="handleCurrentChangeZT"
+						    :current-page="currentPageZT"
+						    :page-sizes="[20, 50, 100]"
+						    :page-size="pageSizeZT"
+						    layout="total, sizes, prev, pager, next, jumper"
+						    :total="totalZT">
+						  </el-pagination>
+						</div>
+						
+					</el-tab-pane>
+				  </el-tabs>
+				
+				
+				
+<!-- 			  <el-table :data="gridDataZT">
 			    <el-table-column property="users.name" label="姓名"></el-table-column>
 			    <el-table-column property="users.phone" label="联系方式"></el-table-column>
 				<el-table-column property="users.volunteerhours" label="志愿时长"></el-table-column>
@@ -192,25 +294,25 @@
 			  </el-table>
 			  <div class="block">
 			    <el-pagination
-			      @size-change="handleSizeChangeBM"
-			      @current-change="handleCurrentChangeBM"
-			      :current-page="currentPageBM"
+			      @size-change="handleSizeChangeZT"
+			      @current-change="handleCurrentChangeZT"
+			      :current-page="currentPageZT"
 			      :page-sizes="[20, 50, 100]"
-			      :page-size="pageSizeBM"
+			      :page-size="pageSizeZT"
 			      layout="total, sizes, prev, pager, next, jumper"
-			      :total="totalBM">
+			      :total="totalZT">
 			    </el-pagination>
-			  </div>
+			  </div> -->
 			</el-dialog>
 			
-			<el-dialog title="审核参加人员" :visible.sync="dialogTableVisibleSH">
-			  <el-table :data="gridDataSH">
-			    <el-table-column property="users.name" label="姓名"></el-table-column>
-			    <el-table-column property="users.phone" label="联系方式"></el-table-column>
-				<el-table-column property="users.volunteerhours" label="志愿时长"></el-table-column>
-				<el-table-column property="users.credit" label="信用分"></el-table-column>
-			    <el-table-column property="etd" label="报名时间"></el-table-column>
-				<el-table-column property="users.idnumber" label="审核状态"></el-table-column>
+			<el-dialog title="请假审核" :visible.sync="dialogTableVisibleSH">
+			  <el-table :data="gridDataZT">
+				<el-table-column property="applicationid" label="报名ID"></el-table-column>
+				<el-table-column property="users.name" label="姓名"></el-table-column>
+				<el-table-column property="users.phone" label="联系方式"></el-table-column>
+				<el-table-column property="atime" label="报名时间"></el-table-column>
+				<el-table-column property="aleaves.applicationtime" label="请假时间"></el-table-column>
+				<el-table-column property="aleaves.reason" label="请假理由"></el-table-column>
 				<el-table-column
 				  fixed="right"
 				  label="操作"
@@ -297,17 +399,18 @@
 						pageSize:20,
 						total:null,
 						tableData:[],
-						currentPageBM:1,
-						pageSizeBM:20,
-						totalBM:null,
-						gridDataBM:[],
+						currentPageZT:1,
+						pageSizeZT:20,
+						totalZT:null,
+						gridDataZT:[],
+						activeName:'yiqiandao',
 						currentPageSH:1,
 						pageSizeSH:20,
 						totalSH:null,
 						gridDataSH:[],
 						dialogVisible:false,
 						dialogFormVisibleXG:false,
-						dialogTableVisibleBM:false,
+						dialogTableVisibleZT:false,
 						dialogTableVisibleSH:false,
 						dialogFormVisibleSH1:false,
 						dialogTableVisibleVINFO:false,
@@ -320,15 +423,12 @@
 						applicationid:'',
 						formInline:{
 							organizationid:'',
-							activestatusid:'22'
+							activestatusid:'3'
 						},
-						formBM:{
-							applicationstatusid:'1',
-							activityid:''	
-						},
-						formSH:{
-							auditstatusid:'1',
-							activityid:''	
+						formZT:{
+							applicationstatusid:4,
+							activityid:'',
+							auditid:''
 						},
 						auditstatus: [{
 								auditstatusid: '2',
@@ -338,13 +438,14 @@
 								auditstatus: '审核不通过'
 						    }],
 						formSH1:{
-							auditid:'',
+							leaveauditid:'',
+							// leaver
 							auditstatusid:'',
 							feedback:'',
 							leaderid:'',
-							activityid:'',
-							volunteerid:'',
-							numberofenrolledvolunteer:''
+							leaveapplicationid:'',
+							// aleave
+							statusid:'',
 						},
 						rulesSH1:{
 							auditstatusid: [
@@ -353,7 +454,11 @@
 						},
 						formVinfo:{
 							volunteerid:''
+						},
+						insertqdmform:{
+							activityid:''
 						}
+						
 					}
 				},
 				methods:{
@@ -367,25 +472,23 @@
 					  this.currentPage = val
 					  this.selectActivityBYOIDFYSQ()
 					},
-					handleSizeChangeBM(val) {
+					handleSizeChangeZT(val) {
 					  // console.log(`每页 ${val} 条`);
-					  this.pageSize = val
-					  this.selectVinfoByAIDFY()
+					  this.pageSizeZT = val
 					},
-					handleCurrentChangeBM(val) {
+					handleCurrentChangeZT(val) {
 					  // console.log(`当前页: ${val}`);
-					  this.currentPage = val
-					  this.selectVinfoByAIDFY()
+					  this.currentPageZT = val
+					  // this.selectActivityBYOIDFYSQ()
 					},
 					handleSizeChangeSH(val) {
 					  // console.log(`每页 ${val} 条`);
-					  this.pageSize = val
-					  this.selectVinfoByAIDFYSH()
+					  this.pageSizeSH = val
 					},
 					handleCurrentChangeSH(val) {
 					  // console.log(`当前页: ${val}`);
-					  this.currentPage = val
-					  this.selectVinfoByAIDFYSH()
+					  this.currentPageSH = val
+					  // this.selectActivityBYOIDFYSQ()
 					},
 					selectActivityBYOIDFYSQ(){
 						axios({
@@ -426,6 +529,7 @@
 						    console.log(error.response);//可以拿到后端返回的信息
 						  });
 					},
+					// 活动详情
 					selectActivityAID(){
 						axios({
 						    method:"post",
@@ -450,36 +554,8 @@
 						    console.log(error.response);//可以拿到后端返回的信息
 						  });
 					},
-					
-					updateActivityActivestatusid(){
-						axios({
-						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid?activityid=" + this.activityid,
-							headers:{
-								vtoken:localStorage.getItem('vtoken')
-							},
-						  }).then((resp)=>{
-							  
-						  }).catch((error)=> {
-						    console.log(error.response);//可以拿到后端返回的信息
-						  });
-					},
-					
-					updateActivityreviewAuditstatusid(){
-						axios({
-						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/activityreview/updateActivityreviewAuditstatusid?auditid=" + this.auditid,
-							headers:{
-								vtoken:localStorage.getItem('vtoken')
-							},
-						  }).then((resp)=>{
-							  
-						  }).catch((error)=> {
-						    console.log(error.response);//可以拿到后端返回的信息
-						  });
-					},
-					
-					
+
+// 查看
 					handleClick(row) {
 					        // console.log(row);
 							// console.log(row.activityid);
@@ -487,77 +563,86 @@
 							this.dialogVisible=true
 							this.selectActivityAID()
 					      },
-					qxfb(row){
-						this.auditid = row.activityreview.auditid
-						this.activityid = row.activityid
-						this.updateActivityActivestatusid()
-						// this.updateActivityreviewAuditstatusid()
-						this.$message.success('取消成功');
-						location.reload()	
-					},
+// 查看已报名人员
 					ckbmry(row){
-						this.formSH.activityid=this.formBM.activityid = row.activityid
-						this.selectVinfoByAIDFY()
-						this.dialogTableVisibleBM = true
+						this.formZT.activityid = row.activityid
+						this.selectVinfoByAIDFYstatus()
+						this.dialogTableVisibleZT = true
 					},
-					
-					selectVinfoByAIDFY(){
+					handleClick(tab, event) {
+					  console.log(tab, event);
+					  if(this.activeName == 'yiqiandao'){
+						  this.formZT.applicationstatusid = 4
+					  }else if(this.activeName == 'weiqiandao'){
+						  this.formZT.applicationstatusid = 5
+					  }else{
+						  this.formZT.applicationstatusid = 3
+					  }
+					  this.selectVinfoByAIDFYstatus()
+					},
+					// yiqiandao(){
+					// 	this.formZT.applicationstatusid = 4
+					// 	console.log("yiqiandao()"+this.formZT.applicationstatusid)
+					// 	console.log("yiqiandao()"+this.formZT.activityid)
+					// 	this.selectVinfoByAIDFYstatus()
+					// },
+					// weiqiandao(){
+					// 	this.formZT.applicationstatusid = 5
+					// 	this.selectVinfoByAIDFYstatus()
+					// 	console.log("weiqiandao()"+this.formZT.applicationstatusid)
+					// 	console.log("yiqiandao()"+this.formZT.activityid)
+					// },
+					// qingjia(){
+					// 	this.formZT.applicationstatusid = 3
+					// 	this.selectVinfoByAIDFYstatus()
+					// 	console.log("qingjia()"+this.formZT.applicationstatusid)
+					// 	console.log("yiqiandao()"+this.formZT.activityid)
+					// },
+					selectVinfoByAIDFYstatus(){
+						console.log("selectVinfoByAIDFYstatus()"+this.formZT.applicationstatusid)
+						console.log("selectVinfoByAIDFYstatus()"+this.formZT.activityid)
 						axios({
 							method:"post",
-							url:'http://localhost:8080/Yzhiyuan365/aapplication/selectVinfoByAIDFY?begin='+this.currentPageBM + '&size='+this.pageSizeBM,
+							url:'http://localhost:8080/Yzhiyuan365/aapplication/selectVinfoByAIDFYstatus?begin='+this.currentPageZT + '&size='+this.pageSizeZT,
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},
-							data:this.formBM
+							data:this.formZT
 						}).then((resp)=>{
 							console.log(resp.data)
 							console.log(resp.data['shuju'])
 							console.log(resp.data['total'])
-							this.totalBM = resp.data['total']
-							this.gridDataBM=resp.data['shuju']
+							this.totalZT = resp.data['total']
+							this.gridDataZT=resp.data['shuju']
 						}).catch((error)=>{
 							console.log(error.response)
 						})
 					},
 					
 					shenh(row){
-						if(row.admissionpolicy == 1){
-							this.$message.warning('该活动不需要人员审核');
-						}else{
-							this.formSH1.activityid = this.formSH.activityid = row.activityid
+							this.formSH1.activityid  = row.activityid
 							this.formSH1.numberofenrolledvolunteer = row.numberofenrolledvolunteer <= 0? 1 : 2
 							console.log(row.numberofenrolledvolunteer)
 							console.log(this.formSH1.numberofenrolledvolunteer)
 							this.dialogTableVisibleSH = true
-							this.selectVinfoByAIDFYSH()
 							this.formSH1.leaderid = row.leaderid ==''?localStorage.getItem('oid'):row.leaderid
-						}
-					},
-					
-					selectVinfoByAIDFYSH(){
-						axios({
-							method:"post",
-							url:'http://localhost:8080/Yzhiyuan365/applicationreview/selectVinfoByAIDFYSH?begin='+this.currentPageBM + '&size='+this.pageSizeBM,
-							headers:{
-								vtoken:localStorage.getItem('vtoken')
-							},
-							data:this.formSH
-						}).then((resp)=>{
-							console.log(resp.data)
-							console.log(resp.data['shuju'])
-							console.log(resp.data['total'])
-							this.totalSH = resp.data['total']
-							this.gridDataSH=resp.data['shuju']
-						}).catch((error)=>{
-							console.log(error.response)
-						})
-					},
-					
+							
+							this.formZT.activityid = row.activityid
+							this.formZT.auditid = 1
+							this.formZT.applicationstatusid = 5
+							this.selectVinfoByAIDFYstatus()
+						},
 					shenh2(row){
-						this.dialogFormVisibleSH1 = true
 						this.formSH1.leaderid = row.leaderid ==''?localStorage.getItem('oid'):row.leaderid
-						this.formSH1.volunteerid = row.users.volunteerid
-						this.formSH1.auditid = row.auditid
+						// this.formSH1.auditid = row.auditid
+						
+						this.formSH1.leaveauditid = row.leavereviews.leaveauditid
+						this.formSH1.leaveapplicationid = row.aleaves.leaveapplicationid
+						this.formSH1.applicationid = row.applicationid
+						let a = this.formSH1.auditstatusid
+						this.formSH1.statusid = a
+						console.log(this.formSH1)
+						this.dialogFormVisibleSH1 = true
 					},
 					
 					tjSH(){
@@ -568,13 +653,13 @@
 					  // alert('submit!');
 					  axios({
 						  method:"post",
-						  url:"http://localhost:8080/Yzhiyuan365/applicationreview/updateAuditstatusid1",
+						  url:"http://localhost:8080/Yzhiyuan365/leavereview/update",
 						  data:this.formSH1
 					  }).then((resp)=>{
 						  console.log(resp.data);
 						  this.$message.success('提交审核成功');
 						  this.dialogFormVisibleSH1 = false
-						  this.selectVinfoByAIDFYSH()
+						  this.selectVinfoByAIDFYstatus()
 						  // location.reload()
 					  }).catch((error)=>{
 						  console.log(error.response);
@@ -605,7 +690,37 @@
 						console.log(error.resp)
 					})
 				},
-					
+				
+				scqdm(row){
+					if(row.areanews.cityCode != 0){
+						this.$message.error("已存在签到码，请不要重复生成")
+					}else{
+						this.insertqdmform.activityid = row.activityid
+						this.insertqdm()
+					}	
+				},
+				insertqdm(){
+					axios({
+						method:"post",
+						url:'http://localhost:8080/Yzhiyuan365/signcode/insert',
+						Headers:{
+							vtoken:localStorage.getItem('vtoken')
+						},
+						data:this.insertqdmform
+					}).then((resp)=>{
+						console.log(resp.data)
+						if(resp.data == "success"){
+							this.$message.success("签到码生成成功")
+							this.selectActivityBYOIDFYSQ()
+						}
+
+					}).catch((error)=>{
+						console.log(error.resp)
+					})
+				},
+				
+
+				
 				},
 				
 			})

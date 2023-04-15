@@ -24,4 +24,11 @@ public class AleaveService {
         sqlSession.close();
         return leaveapplicationid;
     }
+
+    public void update(Aleave aleave){
+        SqlSession sqlSession = factory.openSession();
+        AleaveMapper aleaveMapper = sqlSession.getMapper(AleaveMapper.class);
+        aleaveMapper.update(aleave);
+        sqlSession.close();
+    }
 }

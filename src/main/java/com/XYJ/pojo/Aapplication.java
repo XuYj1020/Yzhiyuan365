@@ -13,7 +13,35 @@ public class Aapplication {
   private User   users;
   private Applicationreview applicationreviews;
   private Admissionpolicy admissionpolicys;
+  private Signrecord signrecords;
 
+  private Aleave aleaves;
+  private Leavereview leavereviews;
+
+
+  public Leavereview getLeavereviews() {
+    return leavereviews;
+  }
+
+  public void setLeavereviews(Leavereview leavereviews) {
+    this.leavereviews = leavereviews;
+  }
+
+  public Aleave getAleaves() {
+    return aleaves;
+  }
+
+  public void setAleaves(Aleave aleaves) {
+    this.aleaves = aleaves;
+  }
+
+  public Signrecord getSignrecords() {
+    return signrecords;
+  }
+
+  public void setSignrecords(Signrecord signrecords) {
+    this.signrecords = signrecords;
+  }
 
   public Admissionpolicy getAdmissionpolicys() {
     return admissionpolicys;
@@ -104,6 +132,9 @@ public class Aapplication {
             ", users=" + users +
             ", applicationreviews=" + applicationreviews +
             ", admissionpolicys=" + admissionpolicys +
+            ", signrecords=" + signrecords +
+            ", aleaves=" + aleaves +
+            ", leavereviews=" + leavereviews +
             '}';
   }
 }
