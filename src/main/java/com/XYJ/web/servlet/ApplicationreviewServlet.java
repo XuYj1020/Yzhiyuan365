@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Objects;
 
 @WebServlet(urlPatterns = "/applicationreview/*")
 public class ApplicationreviewServlet extends BaseServlet{
@@ -51,15 +53,20 @@ public class ApplicationreviewServlet extends BaseServlet{
         String params = bufferedReader.readLine();
         Applicationreview applicationreview = JSON.parseObject(params,Applicationreview.class);
         applicationreviewservice.updateAuditstatusid1(applicationreview);
-
-        Activity activity = JSON.parseObject(params,Activity.class);
-        ActivityService activityService = new ActivityService();
-        activityService.updateActivitynumberofenrolledvolunteer(activity);
-
-        Aapplication aapplication = IdAutoCreateUtils.applicationid(params);
-        AapplicationService aapplicationService = new AapplicationService();
-        aapplicationService.insert(aapplication);
-
+        Map mapTypes = JSON.parseObject(params);
+        String auditstatusid =  (String)mapTypes.get("auditstatusid");
+        System.out.println("--------------------------");
+        System.out.println(auditstatusid);
+        System.out.println("--------------------------");
+        if(auditstatusid.equals("2")){
+            Activity activity = JSON.parseObject(params,Activity.class);
+            ActivityService activityService = new ActivityService();
+            activityService.updateActivitynumberofenrolledvolunteer(activity);
+System.out.println(activity);
+            Aapplication aapplication = IdAutoCreateUtils.applicationid(params);
+            AapplicationService aapplicationService = new AapplicationService();
+            aapplicationService.insert(aapplication);
+        }
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write("success");
     }
