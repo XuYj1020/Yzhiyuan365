@@ -148,6 +148,13 @@ public class ActivityService {
         sqlSession.close();
     }
 
+    public void updateActivitynumberofenrolledvolunteer(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        activitymapper.updateActivitynumberofenrolledvolunteer(activity);
+        sqlSession.close();
+    }
+
     public static void main(String[] args) {
         ActivityService activityService = new ActivityService();
         List<Activity> ac =  activityService.selectByAcstyleidjoin("HD1101019803312778");

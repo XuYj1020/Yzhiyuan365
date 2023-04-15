@@ -1,7 +1,11 @@
 package com.XYJ.service;
 
 import com.XYJ.mapper.AapplicationMapper;
+import com.XYJ.mapper.ActivityMapper;
 import com.XYJ.pojo.Aapplication;
+import com.XYJ.pojo.Activity;
+import com.XYJ.pojo.PageFY;
+import com.XYJ.pojo.User;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -44,6 +48,25 @@ public class AapplicationService {
         aapplicationemapper.updateApplicationstatusid(applicationid);
         sqlSession.close();
     }
+
+    public PageFY<Aapplication> selectVinfoByAIDFY(int begin, int size, Aapplication aapplication){
+        SqlSession sqlSession = factory.openSession();
+        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+
+//        总记录数
+        int total = aapplicationemapper.selectVinfoByAIDCount(aapplication);
+        System.out.println(total);
+        begin = (begin - 1) * size;
+        List<Aapplication> aapplications = aapplicationemapper.selectVinfoByAIDFY(begin,size,aapplication);
+
+        PageFY<Aapplication> page = new PageFY<>();
+        page.setTotal(total);
+        page.setShuju(aapplications);
+        sqlSession.close();
+        return page;
+    }
+
+
     public static void main(String[] args) {
         AapplicationService app = new AapplicationService();
         System.out.println(app.applicationid("HD1302032503304169"));

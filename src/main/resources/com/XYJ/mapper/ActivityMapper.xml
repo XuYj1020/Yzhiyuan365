@@ -291,7 +291,7 @@
         </if>
           and activity.district = areanew.area_code and areanew.`level` = 3 and aapplication.applicationstatusid = #{activity.applicationstatusid}
           and aapplication.volunteerid = #{activity.volunteerid}
-        order by activity.starttime limit #{begin},#{size};
+        order by activity.creationtime limit #{begin},#{size};
     </select>
 
     <select id="selectActivityByVIDCount" resultType="java.lang.Integer">
@@ -464,6 +464,24 @@
                acstyle =  #{acstyle},
            </if>
        </set>
+            where activityid = #{activityid}
+    </update>
+    <update id="updateActivitynumberofenrolledvolunteer">
+        update activity
+        <set>
+            <if test="numberofenrolledvolunteer == 0">
+                numberofenrolledvolunteer = 0
+            </if>
+            <if test="numberofenrolledvolunteer == 1">
+                numberofenrolledvolunteer = 1
+            </if>
+            <if test="numberofenrolledvolunteer == 2">
+                numberofenrolledvolunteer = numberofenrolledvolunteer + 1
+            </if>
+            <if test="numberofenrolledvolunteer == 3">
+                numberofenrolledvolunteer = numberofenrolledvolunteer - 1
+            </if>
+        </set>
             where activityid = #{activityid}
     </update>
 </mapper>

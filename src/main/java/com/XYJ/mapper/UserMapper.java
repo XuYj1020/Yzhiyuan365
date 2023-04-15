@@ -1,6 +1,8 @@
 package com.XYJ.mapper;
 
+import com.XYJ.pojo.Activity;
 import com.XYJ.pojo.User;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -29,4 +31,5 @@ public interface UserMapper {
     List<User>selectByVid(String volunteerid);
 
     void updateVinfo(User user);
+
 }

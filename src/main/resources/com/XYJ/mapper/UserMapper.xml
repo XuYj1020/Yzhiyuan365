@@ -132,6 +132,19 @@
         <collection property="areanews" ofType="com.XYJ.pojo.Areanew" >
             <result column="whole_name" property="wholeName"></result>
         </collection>
+        <collection property="aapplications" ofType="com.XYJ.pojo.Aapplication" >
+            <id column="applicationid" property="applicationid"></id>
+            <result column="atime" property="atime"></result>
+            <result column="applicationstatusid" property="applicationstatusid"></result>
+            <result column="aapplicationsauditid" property="auditid"></result>
+        </collection>
+        <collection property="applicationreviews" ofType="com.XYJ.pojo.Applicationreview" >
+            <id column="auditid" property="auditid"></id>
+            <result column="leaderid" property="leaderid"></result>
+            <result column="etd" property="etd"></result>
+            <result column="eta" property="eta"></result>
+            <result column="feedback" property="feedback"></result>
+        </collection>
     </resultMap>
 
 
@@ -146,6 +159,7 @@
                           LEFT JOIN areanew on volunteer.district = areanew.area_code
         where volunteer.volunteerid = #{volunteerid} and areanew.`level`=3
     </select>
+
 
     <update id="updateVinfo">
         update volunteer
@@ -210,4 +224,7 @@
             </set>
             where volunteerid = #{volunteerid}
     </update>
+
+
+
 </mapper>

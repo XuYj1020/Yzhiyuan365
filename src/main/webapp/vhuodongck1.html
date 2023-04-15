@@ -183,6 +183,11 @@
 							volunteerid:'',
 							activestatusid:'1',
 							applicationstatusid:'1'
+						},
+						info:{
+							applicationid:'',
+							activityid:'',
+							numberofenrolledvolunteer:''
 						}
 					}
 				},
@@ -267,6 +272,7 @@
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},
+							data:this.info
 						  }).then((resp)=>{
 							  if(resp.data == "success"){
 								  this.$message({
@@ -289,7 +295,9 @@
 					      },
 					qxbm(row){
 						console.log(row.aapplications.applicationid)
-						this.applicationid = row.aapplications.applicationid
+						this.info.applicationid = this.applicationid = row.aapplications.applicationid
+						this.info.activityid = row.activityid
+						this.info.numberofenrolledvolunteer = row.numberofenrolledvolunteer <= 0? 0 : 3
 						this.updateApplicationstatusid()
 						
 						

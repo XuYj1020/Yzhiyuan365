@@ -33,9 +33,29 @@ public class User {
   private Education educations;
   private Politicaliandscape politicaliandscapes;
 
+  private Aapplication aapplications;
+    private Applicationreview applicationreviews;
 //  private Area areas;
 
     private Areanew areanews;
+
+
+    public Aapplication getAapplications() {
+        return aapplications;
+    }
+
+    public void setAapplications(Aapplication aapplications) {
+        this.aapplications = aapplications;
+    }
+
+    public Applicationreview getApplicationreviews() {
+        return applicationreviews;
+    }
+
+    public void setApplicationreviews(Applicationreview applicationreviews) {
+        this.applicationreviews = applicationreviews;
+    }
+
     public Occupation getOccupations() {
         return occupations;
     }
@@ -312,6 +332,8 @@ public class User {
                 ", occupations=" + occupations +
                 ", educations=" + educations +
                 ", politicaliandscapes=" + politicaliandscapes +
+                ", aapplications=" + aapplications +
+                ", applicationreviews=" + applicationreviews +
                 ", areanews=" + areanews +
                 '}';
     }

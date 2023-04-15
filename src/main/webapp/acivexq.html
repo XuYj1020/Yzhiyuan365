@@ -275,7 +275,8 @@
 							// 活动id
 							activityid:'',
 							volunteerid:'',
-							auditid:''
+							auditid:'',
+							numberofenrolledvolunteer:''
 						}
 					      };
 				},
@@ -375,8 +376,8 @@
 							// 得到类别中文
 							console.log(resp.data[0].acstyles.acstyle)
 							console.log(resp.data[0].havealeader)
-							
 							this.Activitys=resp.data
+							this.sendinfo.numberofenrolledvolunteer = resp.data[0].numberofenrolledvolunteer <= 0? 1 : 2
 							this.SelectadressByAreaID()
 							this.selectOinfoByOID()
 							// 如果有活动管理员就去活动管理员表搜索管理员的信息
@@ -429,16 +430,22 @@
 					
 					// 我要报名  审核制
 					shbm(){
-						console.log(this.sendinfo.auditid)
-						axios({
-							method:"post",
-							url:"http://localhost:8080/Yzhiyuan365/applicationreview/insert",
-							data:this.sendinfo
-						}).then((resp)=>{
-							console.log(resp.data)
-						}).catch((resp)=>{
-							console.log(error.resp)
-						})
+						this.selectByAcstyleidjoin()
+						if(this.Activitys[0].numberofrequiredvolunteer<=this.Activitys[0].numberofenrolledvolunteer){
+							this.$message.error('人员已招满')
+						}else{
+							console.log(this.sendinfo.auditid)
+							axios({
+								method:"post",
+								url:"http://localhost:8080/Yzhiyuan365/applicationreview/insert",
+								data:this.sendinfo
+							}).then((resp)=>{
+								console.log(resp.data)
+							}).catch((resp)=>{
+								console.log(error.resp)
+							})
+						}
+
 					}
 				}
 			})

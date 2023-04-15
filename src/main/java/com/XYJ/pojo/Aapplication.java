@@ -6,11 +6,38 @@ public class Aapplication {
   private String applicationid;
   private String activityid;
   private String volunteerid;
-  private int applicationstatusid;
+  private int     applicationstatusid;
   private String atime;
   private String auditid;
 
+  private User   users;
+  private Applicationreview applicationreviews;
+  private Admissionpolicy admissionpolicys;
 
+
+  public Admissionpolicy getAdmissionpolicys() {
+    return admissionpolicys;
+  }
+
+  public void setAdmissionpolicys(Admissionpolicy admissionpolicys) {
+    this.admissionpolicys = admissionpolicys;
+  }
+
+  public User getUsers() {
+    return users;
+  }
+
+  public void setUsers(User users) {
+    this.users = users;
+  }
+
+  public Applicationreview getApplicationreviews() {
+    return applicationreviews;
+  }
+
+  public void setApplicationreviews(Applicationreview applicationreviews) {
+    this.applicationreviews = applicationreviews;
+  }
 
   public String getApplicationid() {
     return applicationid;
@@ -74,6 +101,9 @@ public class Aapplication {
             ", applicationstatusid=" + applicationstatusid +
             ", atime='" + atime + '\'' +
             ", auditid='" + auditid + '\'' +
+            ", users=" + users +
+            ", applicationreviews=" + applicationreviews +
+            ", admissionpolicys=" + admissionpolicys +
             '}';
   }
 }

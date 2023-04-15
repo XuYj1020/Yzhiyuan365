@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace名称空间-->
+<!--<mapper namespace="test">-->
+<mapper namespace="com.XYJ.mapper.AapplicationMapper">
+
+    <resultMap id="rs1" type="com.XYJ.pojo.Aapplication">
+        <id column="applicationid"  property="applicationid"></id>
+        <result column="activityid"  property="activityid"></result>
+        <result column="volunteerid"  property="volunteerid"></result>
+        <result column="applicationstatusid"  property="applicationstatusid"></result>
+        <result column="atime"  property="atime"></result>
+        <result column="auditid"  property="auditid"></result>
+        <association property="applicationreviews" javaType="com.XYJ.pojo.Applicationreview">
+            <id column="auditid" property="auditid"></id>
+            <result column="leaderid" property="leaderid"></result>
+            <result column="etd" property="etd"></result>
+            <result column="eta" property="eta"></result>
+            <result column="feedback" property="feedback"></result>
+        </association>
+        <association property="admissionpolicys" javaType="com.XYJ.pojo.Admissionpolicy">
+            <result column="adm" property="admissionpolicy"></result>
+        </association>
+        <association property="users" javaType="com.XYJ.pojo.User">
+            <id column="volunteerid" property="volunteerid" ></id>
+            <result column="phone" property="phone" ></result>
+            <result column="applicationstatus" property="password" ></result>
+            <result column="name" property="name" ></result>
+            <result column="auditstatus" property="idnumber" ></result>
+            <result column="gender" property="gender" ></result>
+            <result column="birthday" property="birthday" ></result>
+            <result column="province" property="province" ></result>
+            <result column="city" property="city" ></result>
+            <result column="district" property="district" ></result>
+            <result column="address" property="address" ></result>
+            <!--        <result column="education" property="education" ></result>-->
+            <!--        <result column="occupation" property="occupation" ></result>-->
+            <!--        <result column="politicaliandscape" property="politicaliandscape" ></result>-->
+            <result column="email" property="email" ></result>
+            <result column="volunteerhours" property="volunteerhours" ></result>
+            <result column="volunteercoins" property="volunteercoins" ></result>
+            <result column="credit" property="credit" ></result>
+            <result column="registrationtime" property="registrationtime" ></result>
+            <result column="userstatusid" property="userstatusid" ></result>
+<!--            <result column="lastlogintime" property="lastlogintime" ></result>-->
+<!--            <result column="pictureaddress" property="pictureaddress" ></result>-->
+        </association>
+    </resultMap>
+<!--    select * from volunteer,aapplication-->
+<!--    <where>-->
+<!--        volunteer.volunteerid = aapplication.volunteerid-->
+<!--        <if test="aapplication.applicationstatusid == 1">-->
+<!--            and   aapplication.applicationstatusid = 1-->
+<!--        </if>-->
+<!--        and aapplication.activityid = #{aapplication.activityid}-->
+<!--    </where>-->
+<!--    order by aapplication.atime limit #{begin},#{size};-->
+    <select id="selectVinfoByAIDFY" resultMap="rs1">
+        select * ,ad.admissionpolicy as adm,(select `status` from applicationstatus where applicationstatus.applicationstatusid = aa.applicationstatusid) as applicationstatus,(select `status` from  auditstatus where auditstatus.auditstatusid = ap.auditstatusid) as auditstatus from  aapplication as aa
+        left join volunteer as vo on vo.volunteerid = aa.volunteerid
+        left join applicationreview as ap on ap.auditid = aa.auditid
+        left join activity as ac on ac.activityid = aa.activityid
+        left join admissionpolicy as ad on ad.admissionpolicyid = ac.admissionpolicy
+                 <where>
+                     aa.activityid = #{aapplication.activityid}
+                     <if test="aapplication.applicationstatusid == 1">
+                         and   aa.applicationstatusid = 1
+                     </if>
+                 </where>
+        order by aa.atime limit #{begin},#{size};
+    </select>
+    <select id="selectVinfoByAIDCount" resultType="java.lang.Integer">
+        select count(*) from  aapplication as aa
+        left join volunteer as vo on vo.volunteerid = aa.volunteerid
+        left join applicationreview as ap on ap.auditid = aa.auditid
+        left join activity as ac on ac.activityid = aa.activityid
+        left join admissionpolicy as ad on ad.admissionpolicyid = ac.admissionpolicy
+        <where>
+            aa.activityid = #{activityid}
+            <if test="applicationstatusid == 1">
+            and   aa.applicationstatusid = 1
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

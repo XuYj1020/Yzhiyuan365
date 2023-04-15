@@ -7,11 +7,39 @@ public class Applicationreview {
   private String activityid;
   private String volunteerid;
   private String leaderid;
-  private int auditstatusid;
+  private int    auditstatusid;
   private String etd;
   private String eta;
   private String feedback;
 
+  private User   users;
+  private Aapplication aapplications;
+  private Admissionpolicy admissionpolicys;
+
+
+  public User getUsers() {
+    return users;
+  }
+
+  public void setUsers(User users) {
+    this.users = users;
+  }
+
+  public Aapplication getAapplications() {
+    return aapplications;
+  }
+
+  public void setAapplications(Aapplication aapplications) {
+    this.aapplications = aapplications;
+  }
+
+  public Admissionpolicy getAdmissionpolicys() {
+    return admissionpolicys;
+  }
+
+  public void setAdmissionpolicys(Admissionpolicy admissionpolicys) {
+    this.admissionpolicys = admissionpolicys;
+  }
 
   public String getAuditid() {
     return auditid;
@@ -95,6 +123,9 @@ public class Applicationreview {
             ", etd='" + etd + '\'' +
             ", eta='" + eta + '\'' +
             ", feedback='" + feedback + '\'' +
+            ", users=" + users +
+            ", aapplications=" + aapplications +
+            ", admissionpolicys=" + admissionpolicys +
             '}';
   }
 }

@@ -1,7 +1,9 @@
 package com.XYJ.mapper;
 
 import com.XYJ.pojo.Aapplication;
+import com.XYJ.pojo.Activity;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -21,4 +23,8 @@ public interface AapplicationMapper {
 
     @Update("update aapplication set applicationstatusid = 2 where applicationid = #{applicationid}")
     void updateApplicationstatusid(String applicationid);
+
+
+    List<Aapplication> selectVinfoByAIDFY(@Param("begin") int begin, @Param("size") int size, @Param("aapplication") Aapplication aapplication);
+    int selectVinfoByAIDCount(Aapplication aapplication);
 }

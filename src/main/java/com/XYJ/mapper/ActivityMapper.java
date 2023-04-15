@@ -38,4 +38,6 @@ public interface ActivityMapper {
     void updateActivityActivestatusid(String activityid);
 
     void updateAinfo(Activity activity);
+
+    void updateActivitynumberofenrolledvolunteer(Activity activity);
 }
