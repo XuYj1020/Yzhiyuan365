@@ -99,20 +99,8 @@
 					        <template slot-scope="scope">
 					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
 								<el-button  type="text" size="small" @click="ckbmry(scope.row)">查看已报名人员</el-button>
-								<el-button  type="text" size="small" @click="RYshenh(scope.row)">审核参加人员</el-button>
-								<el-button  type="text" size="small" @click="shenh(scope.row)">请假审核</el-button>
-								<el-popconfirm
-								  title="请确认是否生成签到码？"
-									@confirm="scqdm(scope.row)"
-									>
-								  <el-button type="text" size="small" slot="reference">生成签到码</el-button>
-							  </el-popconfirm>
-							  <el-popconfirm
-							  	  title="完成后会进行志愿时长发放,请确认已签到人员"
-							  		@confirm="wchd(scope.row)"
-							  		>
-							  	   <el-button type="text" size="small" slot="reference">完成活动</el-button>
-							  </el-popconfirm>
+								<el-button  type="text" size="small" @click="RYshenh(scope.row)">待录取人员</el-button>
+								<el-button  type="text" size="small" @click="shenh(scope.row)">待审核的请假申请</el-button>
 					        </template>
 					      </el-table-column>
 					    </el-table>
@@ -275,13 +263,9 @@
 						</div>
 					</el-tab-pane>
 				  </el-tabs>
-				    <span slot="footer" class="dialog-footer" v-show="dialogTableVisibleZTshow">
-				      <el-button @click="dialogTableVisibleZT = false">取 消</el-button>
-				      <el-button type="primary" @click="qrwc">确 定</el-button>
-				    </span>
 				</el-dialog>
 				
-				<el-dialog title="审核参加人员" :visible.sync="dialogTableVisibleRYSH">
+				<el-dialog title="待录取人员" :visible.sync="dialogTableVisibleRYSH">
 				  <el-table :data="gridDataRYSH">
 				    <el-table-column property="users.name" label="姓名"></el-table-column>
 				    <el-table-column property="users.phone" label="联系方式"></el-table-column>
@@ -295,7 +279,6 @@
 					  align="center">
 					  <template slot-scope="scope">
 					    <el-button @click="vinfo(scope.row)" type="text" size="small">查看</el-button>
-						<el-button  type="text" size="small" @click="RYshenh2(scope.row)">审核</el-button>
 						</el-popconfirm>
 					  </template>
 					</el-table-column>
@@ -312,76 +295,7 @@
 				    </el-pagination>
 				  </div>
 				</el-dialog>
-				
-				<el-dialog title="审核意见" :visible.sync="dialogFormVisibleRYSH1">
-				  <el-form :model="formRYSH1" ref="formRYSH1" :rules="rulesRYSH1">
-					<el-form-item label="审核状态" prop="auditstatusid">
-					<el-select v-model="formRYSH1.auditstatusid" placeholder="请选择">
-					    <el-option
-					      v-for="item in auditstatus"
-					      :key="item.auditstatusid"
-					      :label="item.auditstatus"
-					      :value="item.auditstatusid">
-					    </el-option>
-					  </el-select>
-				    <el-form-item label="审核意见">
-					  <el-input
-					  type="textarea"
-					  placeholder="请输入审核意见"
-					  v-model.trim="formRYSH1.feedback"
-					  maxlength="300"
-					  show-word-limit
-					  autocomplete="off"></el-input>
-				    </el-form-item>
-				  </el-form>
-				  <div slot="footer" class="dialog-footer">
-				    <el-button @click="dialogFormVisibleRYSH1 = false">取 消</el-button>
-				    <el-button type="primary" @click="tjRYSH()">确 定</el-button>
-				  </div>
-				</el-dialog>
-				
-				
-				
-				
-				
-				
-				
-<!-- 			  <el-table :data="gridDataZT">
-			    <el-table-column property="users.name" label="姓名"></el-table-column>
-			    <el-table-column property="users.phone" label="联系方式"></el-table-column>
-				<el-table-column property="users.volunteerhours" label="志愿时长"></el-table-column>
-				<el-table-column property="users.credit" label="信用分"></el-table-column>
-			    <el-table-column property="atime" label="报名时间"></el-table-column>
-				<el-table-column property="users.password" label="报名状态"></el-table-column>
-				<el-table-column property="admissionpolicys.admissionpolicy" label="录取方式"></el-table-column>
-				<el-table-column property="applicationreviews.eta" label="审核时间"></el-table-column>
-				<el-table-column property="users.idnumber" label="审核状态"></el-table-column>
-				<el-table-column property="applicationreviews.leaderid" label="审核人员"></el-table-column>
-				<el-table-column property="applicationreviews.feedback" label="审核意见"></el-table-column>
-				<el-table-column
-				  fixed="right"
-				  label="操作"
-				  align="center">
-				  <template slot-scope="scope">
-				    <el-button @click="vinfo(scope.row)" type="text" size="small">查看</el-button>
-					</el-popconfirm>
-				  </template>
-				</el-table-column>
-			  </el-table>
-			  <div class="block">
-			    <el-pagination
-			      @size-change="handleSizeChangeZT"
-			      @current-change="handleCurrentChangeZT"
-			      :current-page="currentPageZT"
-			      :page-sizes="[20, 50, 100]"
-			      :page-size="pageSizeZT"
-			      layout="total, sizes, prev, pager, next, jumper"
-			      :total="totalZT">
-			    </el-pagination>
-			  </div> -->
-			
-			
-			<el-dialog title="请假审核" :visible.sync="dialogTableVisibleSH">
+			<el-dialog title="待审核的请假审核" :visible.sync="dialogTableVisibleSH">
 			  <el-table :data="gridDataZT">
 				<el-table-column property="applicationid" label="报名ID"></el-table-column>
 				<el-table-column property="users.name" label="姓名"></el-table-column>
@@ -395,7 +309,6 @@
 				  align="center">
 				  <template slot-scope="scope">
 				    <el-button @click="vinfo(scope.row)" type="text" size="small">查看</el-button>
-					<el-button  type="text" size="small" @click="shenh2(scope.row)">审核</el-button>
 					</el-popconfirm>
 				  </template>
 				</el-table-column>
@@ -410,33 +323,6 @@
 			      layout="total, sizes, prev, pager, next, jumper"
 			      :total="totalSH">
 			    </el-pagination>
-			  </div>
-			</el-dialog>
-			
-			<el-dialog title="审核意见" :visible.sync="dialogFormVisibleSH1">
-			  <el-form :model="formSH1" ref="formSH1" :rules="rulesSH1">
-				<el-form-item label="审核状态" prop="auditstatusid">
-				<el-select v-model="formSH1.auditstatusid" placeholder="请选择">
-				    <el-option
-				      v-for="item in auditstatus"
-				      :key="item.auditstatusid"
-				      :label="item.auditstatus"
-				      :value="item.auditstatusid">
-				    </el-option>
-				  </el-select>
-			    <el-form-item label="审核意见">
-				  <el-input
-				  type="textarea"
-				  placeholder="请输入审核意见"
-				  v-model.trim="formSH1.feedback"
-				  maxlength="300"
-				  show-word-limit
-				  autocomplete="off"></el-input>
-			    </el-form-item>
-			  </el-form>
-			  <div slot="footer" class="dialog-footer">
-			    <el-button @click="dialogFormVisibleSH1 = false">取 消</el-button>
-			    <el-button type="primary" @click="tjSH()">确 定</el-button>
 			  </div>
 			</el-dialog>
 			
@@ -465,7 +351,6 @@
 			new Vue({
 				el:"#app",
 				created() {
-					this.formInline.organizationid = localStorage.getItem('oid')
 					this.selectActivityBYOIDFYSQ()
 					// this.selectActivityAID()
 				},
@@ -486,7 +371,6 @@
 						gridDataSH:[],
 						dialogVisible:false,
 						dialogTableVisibleZT:false,
-						dialogTableVisibleZTshow:false,
 						dialogTableVisibleSH:false,
 						dialogFormVisibleSH1:false,
 						dialogTableVisibleVINFO:false,
@@ -498,45 +382,12 @@
 						leaders:'',
 						applicationid:'',
 						formInline:{
-							organizationid:'',
 							activestatusid:'3'
 						},
 						formZT:{
 							applicationstatusid:4,
 							activityid:'',
 							auditid:''
-						},
-						formWC:{
-							applicationstatusid:"",
-							activityid:'',
-							volunteerid:'',
-							volunteerhours:'',
-							activestatusid:''
-						},
-						ztyqd:'',
-						ztwqd:'',
-						ztqj:'',
-						auditstatus: [{
-								auditstatusid: '2',
-								auditstatus: '审核通过'
-						    }, {
-								auditstatusid: '3',
-								auditstatus: '审核不通过'
-						    }],
-						formSH1:{
-							leaveauditid:'',
-							// leaver
-							auditstatusid:'',
-							feedback:'',
-							leaderid:'',
-							leaveapplicationid:'',
-							// aleave
-							statusid:'',
-						},
-						rulesSH1:{
-							auditstatusid: [
-								{required: true, message: '请选择审核状态', trigger: 'blur'}
-							]
 						},
 						formVinfo:{
 							volunteerid:''
@@ -555,20 +406,7 @@
 							auditstatusid:'1',
 							activityid:''	
 						},
-						formRYSH1:{
-							auditid:'',
-							auditstatusid:'',
-							feedback:'',
-							leaderid:'',
-							activityid:'',
-							volunteerid:'',
-							numberofenrolledvolunteer:''
-						},
-						rulesRYSH1:{
-							auditstatusid: [
-								{required: true, message: '请选择审核状态', trigger: 'blur'}
-							]
-						},
+						
 					}
 				},
 				methods:{
@@ -688,7 +526,6 @@
 					ckbmry(row){
 						this.formZT.activityid = row.activityid
 						this.selectVinfoByAIDFYstatus()
-						this.dialogTableVisibleZTshow=false
 						this.dialogTableVisibleZT = true
 					},
 					handleClicktabs(tab, event) {
@@ -702,24 +539,7 @@
 					  }
 					  this.selectVinfoByAIDFYstatus()
 					},
-					// yiqiandao(){
-					// 	this.formZT.applicationstatusid = 4
-					// 	console.log("yiqiandao()"+this.formZT.applicationstatusid)
-					// 	console.log("yiqiandao()"+this.formZT.activityid)
-					// 	this.selectVinfoByAIDFYstatus()
-					// },
-					// weiqiandao(){
-					// 	this.formZT.applicationstatusid = 5
-					// 	this.selectVinfoByAIDFYstatus()
-					// 	console.log("weiqiandao()"+this.formZT.applicationstatusid)
-					// 	console.log("yiqiandao()"+this.formZT.activityid)
-					// },
-					// qingjia(){
-					// 	this.formZT.applicationstatusid = 3
-					// 	this.selectVinfoByAIDFYstatus()
-					// 	console.log("qingjia()"+this.formZT.applicationstatusid)
-					// 	console.log("yiqiandao()"+this.formZT.activityid)
-					// },
+
 					selectVinfoByAIDFYstatus(){
 						console.log("selectVinfoByAIDFYstatus()"+this.formZT.applicationstatusid)
 						console.log("selectVinfoByAIDFYstatus()"+this.formZT.activityid)
@@ -753,131 +573,20 @@
 							this.formWC.volunteerhours = row.volunteerhours
 							this.formWC.activestatusid = 4
 							this.selectVinfoByAIDFYstatus()
-							this.dialogTableVisibleZTshow=true,
 							this.dialogTableVisibleZT = true
 						}	
 					},
 					
-					qrwc(){
-						this.dialogTableVisibleZT = false
-						this.yqd()
-						this.wqd()
-						this.qj()
-						if(this.ztyqd == "success" && this.ztwqd== "success" && this.ztqj == "success"){
-							this.$message.success('活动已完结');
-							this.selectVinfoByAIDFYstatus()
-						}
-						
-						
-						
-					},
-					// 已签到人员
-					// 1 新增志愿时长发放表   前台传出  活动ID，志愿时长    后台  生成记录ID  获取志愿者ID applicationstatusid =4  时长 = 志愿时长
-					// 2 修改志愿者志愿时长   前台传出  志愿时长           后台   修改     获取志愿者ID applicationstatusid =4    时长 = 原时长+志愿时长
-					yqd(){
-						this.formWC.applicationstatusid =4
-						console.log(this.formWC.applicationstatusid)
-						axios({
-							method:"post",
-							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
-							headers:{
-								vtoken:localStorage.getItem('vtoken')
-							},
-							data:this.formWC
-						}).then((resp)=>{
-							this.ztyqd = resp.data
-						}).catch((error)=>{
-							console.log(error.response)
-						})
-					},
-					
-					// 未签到人员
-					// 1 新增志愿时长发放表   前台传出  活动ID，志愿时长    后台  生成记录ID  获取志愿者ID applicationstatusid =5   时长 = 0
-					wqd(){
-						this.formWC.applicationstatusid =5
-						axios({
-							method:"post",
-							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
-							headers:{
-								vtoken:localStorage.getItem('vtoken')
-							},
-							data:this.formWC
-						}).then((resp)=>{
-							this.ztwqd = resp.data
-						}).catch((error)=>{
-							console.log(error.response)
-						})
-					},
-					
-					// 请假人员
-					// 1 新增志愿时长发放表   前台传出  活动ID，志愿时长    后台  生成记录ID  获取志愿者ID applicationstatusid =3 时长 = 0
-					qj(){
-						this.formWC.applicationstatusid =3
-						axios({
-							method:"post",
-							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
-							headers:{
-								vtoken:localStorage.getItem('vtoken')
-							},
-							data:this.formWC
-						}).then((resp)=>{
-							this.ztqj = resp.data
-						}).catch((error)=>{
-							console.log(error.response)
-						})
-					},
-					// 3 修改活动状态  前台传入 活动ID activestatusid     后台  根据ID修改状态   activestatusid = 4
 					
 
 					shenh(row){
-							this.formSH1.activityid  = row.activityid
-							console.log(row.numberofenrolledvolunteer)
-							console.log(this.formSH1.numberofenrolledvolunteer)
 							this.dialogTableVisibleSH = true
-							this.formSH1.leaderid = row.leaderid ==''?localStorage.getItem('oid'):row.leaderid
-							
 							this.formZT.activityid = row.activityid
 							this.formZT.auditid = 1
 							this.formZT.applicationstatusid = 5
 							this.selectVinfoByAIDFYstatus()
 						},
-					shenh2(row){
-						this.formSH1.leaderid = row.leaderid ==''?localStorage.getItem('oid'):row.leaderid
-						// this.formSH1.auditid = row.auditid
-						
-						this.formSH1.leaveauditid = row.leavereviews.leaveauditid
-						this.formSH1.leaveapplicationid = row.aleaves.leaveapplicationid
-						this.formSH1.applicationid = row.applicationid
-						let a = this.formSH1.auditstatusid
-						this.formSH1.statusid = a
-						console.log(this.formSH1)
-						this.dialogFormVisibleSH1 = true
-					},
 					
-					tjSH(){
-					this.$refs.formSH1
-					.validate()
-					// 验证通过
-					.then(()=>{
-					  // alert('submit!');
-					  axios({
-						  method:"post",
-						  url:"http://localhost:8080/Yzhiyuan365/leavereview/update",
-						  data:this.formSH1
-					  }).then((resp)=>{
-						  console.log(resp.data);
-						  this.$message.success('提交审核成功');
-						  this.dialogFormVisibleSH1 = false
-						  this.selectVinfoByAIDFYstatus()
-						  // location.reload()
-					  }).catch((error)=>{
-						  console.log(error.response);
-					  })						   
-					})
-					.catch(()=>{
-						  console.log('error submit!!');
-					})
-				},
 				
 				vinfo(row){
 					this.vid = row.users.volunteerid
@@ -933,16 +642,10 @@
 						if(row.admissionpolicy == 1){
 							this.$message.warning('该活动不需要人员审核');
 						}else{
-							this.formRYSH1.activityid = this.formRYSH.activityid = row.activityid
-							this.formRYSH1.numberofenrolledvolunteer = row.numberofenrolledvolunteer <= 0? 1 : 2
-							console.log(row.numberofenrolledvolunteer)
-							console.log(this.formRYSH1.numberofenrolledvolunteer)
-							// this.dialogTableVisibleSH = true
 							this.dialogTableVisibleRYSH = true
 							console.log(this.dialogTableVisibleRYSH)
 							console.log(this.dialogTableVisibleRYSH1)
 							this.selectVinfoByAIDFYRYSH()
-							this.formRYSH1.leaderid = localStorage.getItem('oid')
 						}
 					},
 					
@@ -964,41 +667,6 @@
 							console.log(error.response)
 						})
 					},
-					
-					RYshenh2(row){
-						this.dialogFormVisibleRYSH1 = true
-						this.formRYSH1.leaderid = localStorage.getItem('oid')
-						this.formRYSH1.volunteerid = row.users.volunteerid
-						this.formRYSH1.auditid = row.auditid
-					},
-					
-					tjRYSH(){
-					this.$refs.formRYSH1
-					.validate()
-					// 验证通过
-					.then(()=>{
-					  // alert('submit!');
-					  axios({
-						  method:"post",
-						  url:"http://localhost:8080/Yzhiyuan365/applicationreview/updateAuditstatusid1",
-						  data:this.formRYSH1
-					  }).then((resp)=>{
-						  console.log(resp.data);
-						  this.$message.success('提交审核成功');
-						  this.dialogFormVisibleRYSH1 = false
-						  this.selectVinfoByAIDFYRYSH()
-						  // location.reload()
-					  }).catch((error)=>{
-						  console.log(error.response);
-					  })						   
-					})
-					.catch(()=>{
-						  console.log('error submit!!');
-					})
-				},
-				
-				
-				
 				},
 				
 			})

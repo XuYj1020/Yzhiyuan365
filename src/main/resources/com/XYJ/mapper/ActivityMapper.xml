@@ -417,7 +417,7 @@
             and activity.activestatusid = 3
         </if>
         <if test="activestatusid == 4">
-            and activity.activestatusid = 3
+            and activity.activestatusid = 4
         </if>
         <if test="activestatusid == 63">
             and activityreview.auditstatusid = 3
