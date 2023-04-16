@@ -385,6 +385,9 @@
         <if test="activity.activestatusid == 3">
             and activity.activestatusid = 3
         </if>
+        <if test="activity.activestatusid == 4">
+            and activity.activestatusid = 4
+        </if>
         and activity.organizationid = #{activity.organizationid}
         order by activity.starttime limit #{begin},#{size};
     </select>
@@ -406,6 +409,9 @@
             and activityreview.auditstatusid = 2 and activity.activestatusid = 2
         </if>
         <if test="activestatusid == 3">
+            and activity.activestatusid = 3
+        </if>
+        <if test="activestatusid == 4">
             and activity.activestatusid = 3
         </if>
           and activity.organizationid = #{organizationid}

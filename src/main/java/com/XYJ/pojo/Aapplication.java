@@ -18,6 +18,16 @@ public class Aapplication {
   private Aleave aleaves;
   private Leavereview leavereviews;
 
+  private Distribute distributes;
+
+
+  public Distribute getDistributes() {
+    return distributes;
+  }
+
+  public void setDistributes(Distribute distributes) {
+    this.distributes = distributes;
+  }
 
   public Leavereview getLeavereviews() {
     return leavereviews;
@@ -135,6 +145,7 @@ public class Aapplication {
             ", signrecords=" + signrecords +
             ", aleaves=" + aleaves +
             ", leavereviews=" + leavereviews +
+            ", distributes=" + distributes +
             '}';
   }
 }

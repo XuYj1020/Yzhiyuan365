@@ -63,6 +63,11 @@
             <result column="eta" property="eta"></result>
             <result column="feedback" property="feedback"></result>
         </association>
+        <association property="distributes" javaType="com.XYJ.pojo.Distribute">
+            <id column="recordid" property="recordid"></id>
+            <result column="volunteerhours" property="volunteerhours"></result>
+            <result column="releasetime" property="releasetime"></result>
+        </association>
     </resultMap>
 <!--    select * from volunteer,aapplication-->
 <!--    <where>-->
@@ -107,6 +112,7 @@
         left join aleave on aleave.applicationid = aapplication.applicationid
         left join signrecord on signrecord.applicationid = aapplication.applicationid
         left join leavereview on leavereview.leaveapplicationid = aleave.leaveapplicationid
+        left join distribute on distribute.activityid = aapplication.activityid and volunteer.volunteerid = distribute.volunteerid
                  <where>
                      aapplication.activityid =#{aapplication.activityid}  and aapplication.applicationstatusid = #{aapplication.applicationstatusid}
                      <if test="aapplication.auditid == 1">
@@ -121,6 +127,7 @@
                           left join aleave on aleave.applicationid = aapplication.applicationid
                           left join signrecord on signrecord.applicationid = aapplication.applicationid
                           left join leavereview on leavereview.leaveapplicationid = aleave.leaveapplicationid
+        left join distribute on distribute.activityid = aapplication.activityid and volunteer.volunteerid = distribute.volunteerid
         <where>
             aapplication.activityid =#{activityid}  and aapplication.applicationstatusid = #{applicationstatusid}
             <if test="auditid == 1">
