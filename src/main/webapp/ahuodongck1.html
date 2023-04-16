@@ -227,7 +227,7 @@
 							activityid:'',
 							activestatusid:''
 						},
-						updateActivityActivestatusid61ZT :'false',
+						updateActivityActivestatusid71ZT :'false',
 						updateZT :'false',
 						rulesSH1:{
 							auditstatusid: [
@@ -312,18 +312,18 @@
 						  });
 					},
 					
-					// 更新活动状态和活动发布状态  不通过活动状态待审核，审核状态不通过   通过活动状态已发布，审核状态通过
-					updateActivityActivestatusid61(){
+					// 更新活动状态和活动发布状态  不通过活动状态不通过，审核状态不通过   通过活动状态已发布，审核状态通过
+					updateActivityActivestatusid71(){
 						axios({
 						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid61",
+						    url:"http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid71",
 							headers:{
 								vtoken:localStorage.getItem('atoken')
 							},
 							data:this.formSH1
 						  }).then((resp)=>{
 							  console.log(resp.data)
-							  this.updateActivityActivestatusid61ZT = resp.data
+							  this.updateActivityActivestatusid71ZT = resp.data
 						  }).catch((error)=> {
 						    console.log(error.response);//可以拿到后端返回的信息
 						  });
@@ -369,12 +369,11 @@
 						if(this.formSH1.auditstatusid == '2'){
 							this.formSH1.activestatusid = '1'
 						}else{
-							this.formSH1.activestatusid = '6'
+							this.formSH1.activestatusid = '7'
 						}
-						
 						Promise
 						.all([
-							this.updateActivityActivestatusid61(),
+							this.updateActivityActivestatusid71(),
 							this.update()
 						])
 						.then(res => {
@@ -386,9 +385,9 @@
 						})
 						.catch(err => console.log('error: ', err))
 						
-						// this.updateActivityActivestatusid61()
+						// this.updateActivityActivestatusid71()
 						// this.update()
-						// if(this.updateActivityActivestatusid61ZT == "success" && this.updateZT == "success"){
+						// if(this.updateActivityActivestatusid71ZT == "success" && this.updateZT == "success"){
 						// 	this.$message.success('审核成功')
 						// 	this.selectActivityBYOIDFYSQ()
 						// }

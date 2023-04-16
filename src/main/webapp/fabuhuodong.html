@@ -32,7 +32,7 @@
 									<el-form-item label="组织名称">
 									  <!-- <el-input v-model="ruleForm.oname"></el-input> -->
 									  <!-- <p>{{ruleForm.organizationid}}</p> -->
-									  {{ruleForm.oname}}
+									  <!-- {{ruleForm.oname}} -->
 									</el-form-item>
 									
 									<el-form-item label="活动标题" prop="title">
@@ -173,7 +173,7 @@
 									   </el-select>
 									</el-form-item>
 									
-									<p>{{ruleForm.havealeader}}</p>
+									<!-- <p>{{ruleForm.havealeader}}</p> -->
 									<el-form-item label="管理者" prop="leader" v-if="ruleForm.havealeader==1">
 									  <el-select v-model="ruleForm.leader" placeholder="请选择" multiple>
 									  <el-option
@@ -184,7 +184,7 @@
 									     </el-option>
 									   </el-select>
 									</el-form-item>
-									<p>{{ruleForm.leader}}</p>
+									<!-- <p>{{ruleForm.leader}}</p> -->
 									<el-form-item>
 										<el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
 										<el-button @click="resetForm('ruleForm')">重置</el-button>

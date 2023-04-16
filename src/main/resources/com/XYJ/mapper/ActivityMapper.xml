@@ -202,7 +202,7 @@
             </if>
             <if test="activityid != null and activityid != '' ">
                 and activityid like
-                concat('%',#{activityid},'%');
+                concat('%',#{activityid},'%')
             </if>
             <if test="title != null and title != '' ">
                 and title like
@@ -231,7 +231,7 @@
             </if>
             <if test="activityid != null and activityid != '' ">
                 and activityid like
-                concat('%',#{activityid},'%');
+                concat('%',#{activityid},'%')
             </if>
             <if test="title != null and title != '' ">
                 and title like
@@ -261,7 +261,7 @@
             </if>
             <if test="activity.activityid != null and activity.activityid != '' ">
                 and activityid like
-                concat('%',#{activity.activityid},'%');
+                concat('%',#{activity.activityid},'%')
             </if>
             <if test="activity.title != null and activity.title != '' ">
                 and title like
@@ -382,6 +382,12 @@
         <if test="activity.activestatusid == 22">
             and activityreview.auditstatusid = 2 and activity.activestatusid = 2
         </if>
+        <if test="activity.activestatusid == 73">
+            and activityreview.auditstatusid = 3 and activity.activestatusid = 7
+        </if>
+        <if test="activity.activestatusid == 45">
+            and (activityreview.auditstatusid = 4 or activity.activestatusid = 5)
+        </if>
         <if test="activity.activestatusid == 3">
             and activity.activestatusid = 3
         </if>
@@ -412,6 +418,12 @@
         </if>
         <if test="activestatusid == 22">
             and activityreview.auditstatusid = 2 and activity.activestatusid = 2
+        </if>
+        <if test="activestatusid == 73">
+            and activityreview.auditstatusid = 3 and activity.activestatusid = 7
+        </if>
+        <if test="activestatusid == 45">
+            and (activityreview.auditstatusid = 4 or activity.activestatusid = 5)
         </if>
         <if test="activestatusid == 3">
             and activity.activestatusid = 3

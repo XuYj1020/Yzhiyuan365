@@ -148,10 +148,10 @@ public class ActivityService {
         sqlSession.close();
     }
 
-    public void updateActivityActivestatusid61(Activity activity){
+    public void updateActivityActivestatusid71(Activity activity){
         SqlSession sqlSession = factory.openSession();
         ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
-        activitymapper.updateActivityActivestatusid61(activity);
+        activitymapper.updateActivityActivestatusid71(activity);
         sqlSession.close();
     }
 

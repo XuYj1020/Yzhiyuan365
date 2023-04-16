@@ -41,7 +41,7 @@ public interface ActivityMapper {
     void updateActivityActivestatusid4(Activity activity);
 
     @Update("update activity set activestatusid = #{activestatusid} where activityid=#{activityid}")
-    void updateActivityActivestatusid61(Activity activity);
+    void updateActivityActivestatusid71(Activity activity);
     void updateAinfo(Activity activity);
 
     void updateActivitynumberofenrolledvolunteer(Activity activity);
