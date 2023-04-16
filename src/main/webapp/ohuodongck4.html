@@ -106,6 +106,12 @@
 									>
 								  <el-button type="text" size="small" slot="reference">生成签到码</el-button>
 							  </el-popconfirm>
+							  <el-popconfirm
+							  	  title="完成后会进行志愿时长发放,请确认已签到人员"
+							  		@confirm="wchd(scope.row)"
+							  		>
+							  	   <el-button type="text" size="small" slot="reference">完成活动</el-button>
+							  </el-popconfirm>
 					        </template>
 					      </el-table-column>
 					    </el-table>
@@ -175,7 +181,7 @@
 				  <el-button type="primary" @click="qingjia">请假</el-button>
 				</el-button-group> -->
 				
-				  <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+				  <el-tabs v-model="activeName" type="card" @tab-click="handleClicktabs">
 				    <el-tab-pane label="已签到" name="yiqiandao">
 						<el-table :data="gridDataZT">
 							<el-table-column property="applicationid" label="报名ID"></el-table-column>
@@ -212,6 +218,8 @@
 							<el-table-column property="users.name" label="姓名"></el-table-column>
 							<el-table-column property="users.phone" label="联系方式"></el-table-column>
 							<el-table-column property="atime" label="报名时间"></el-table-column>
+							<el-table-column property="signrecords.signintime" label="签到时间"></el-table-column>
+							<el-table-column property="signrecords.signouttime" label="签退时间"></el-table-column>
 							<el-table-column
 							  fixed="right"
 							  label="操作"
@@ -267,6 +275,10 @@
 						
 					</el-tab-pane>
 				  </el-tabs>
+				    <span slot="footer" class="dialog-footer" v-show="dialogTableVisibleZTshow">
+				      <el-button @click="dialogTableVisibleZT = false">取 消</el-button>
+				      <el-button type="primary" @click="qrwc">确 定</el-button>
+				    </span>
 				
 				
 				
@@ -396,7 +408,7 @@
 				data(){
 					return{
 						currentPage:1,
-						pageSize:20,
+						pageSize:10,
 						total:null,
 						tableData:[],
 						currentPageZT:1,
@@ -411,6 +423,7 @@
 						dialogVisible:false,
 						dialogFormVisibleXG:false,
 						dialogTableVisibleZT:false,
+						dialogTableVisibleZTshow:false,
 						dialogTableVisibleSH:false,
 						dialogFormVisibleSH1:false,
 						dialogTableVisibleVINFO:false,
@@ -430,6 +443,16 @@
 							activityid:'',
 							auditid:''
 						},
+						formWC:{
+							applicationstatusid:"",
+							activityid:'',
+							volunteerid:'',
+							volunteerhours:'',
+							activestatusid:''
+						},
+						ztyqd:'',
+						ztwqd:'',
+						ztqj:'',
 						auditstatus: [{
 								auditstatusid: '2',
 								auditstatus: '审核通过'
@@ -567,9 +590,10 @@
 					ckbmry(row){
 						this.formZT.activityid = row.activityid
 						this.selectVinfoByAIDFYstatus()
+						this.dialogTableVisibleZTshow=false
 						this.dialogTableVisibleZT = true
 					},
-					handleClick(tab, event) {
+					handleClicktabs(tab, event) {
 					  console.log(tab, event);
 					  if(this.activeName == 'yiqiandao'){
 						  this.formZT.applicationstatusid = 4
@@ -618,7 +642,95 @@
 							console.log(error.response)
 						})
 					},
+					wchd(row){
+						let endtime =new Date(row.endtime)
+						let now = new Date()
+						if(row.areanews.cityCode == 0){
+							this.$message.error("未生成签到码")
+						}else if(endtime > now){
+							this.$message.error("还没到活动结束时间")
+						}else{
+							this.formZT.activityid = row.activityid
+							this.formWC.activityid = row.activityid
+							this.formWC.volunteerhours = row.volunteerhours
+							this.formWC.activestatusid = 4
+							this.selectVinfoByAIDFYstatus()
+							this.dialogTableVisibleZTshow=true,
+							this.dialogTableVisibleZT = true
+						}	
+					},
 					
+					qrwc(){
+						this.dialogTableVisibleZT = false
+						this.yqd()
+						this.wqd()
+						this.qj()
+						if(this.ztyqd == "success" && this.ztwqd== "success" && this.ztqj == "success"){
+							this.$message.success('活动已完结');
+							this.selectVinfoByAIDFYstatus()
+						}
+						
+						
+						
+					},
+					// 已签到人员
+					// 1 新增志愿时长发放表   前台传出  活动ID，志愿时长    后台  生成记录ID  获取志愿者ID applicationstatusid =4  时长 = 志愿时长
+					// 2 修改志愿者志愿时长   前台传出  志愿时长           后台   修改     获取志愿者ID applicationstatusid =4    时长 = 原时长+志愿时长
+					yqd(){
+						this.formWC.applicationstatusid =4
+						console.log(this.formWC.applicationstatusid)
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formWC
+						}).then((resp)=>{
+							this.ztyqd = resp.data
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					},
+					
+					// 未签到人员
+					// 1 新增志愿时长发放表   前台传出  活动ID，志愿时长    后台  生成记录ID  获取志愿者ID applicationstatusid =5   时长 = 0
+					wqd(){
+						this.formWC.applicationstatusid =5
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formWC
+						}).then((resp)=>{
+							this.ztwqd = resp.data
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					},
+					
+					// 请假人员
+					// 1 新增志愿时长发放表   前台传出  活动ID，志愿时长    后台  生成记录ID  获取志愿者ID applicationstatusid =3 时长 = 0
+					qj(){
+						this.formWC.applicationstatusid =3
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formWC
+						}).then((resp)=>{
+							this.ztqj = resp.data
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					},
+					// 3 修改活动状态  前台传入 活动ID activestatusid     后台  根据ID修改状态   activestatusid = 4
+					
+
 					shenh(row){
 							this.formSH1.activityid  = row.activityid
 							this.formSH1.numberofenrolledvolunteer = row.numberofenrolledvolunteer <= 0? 1 : 2

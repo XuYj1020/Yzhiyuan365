@@ -32,4 +32,6 @@ public interface UserMapper {
 
     void updateVinfo(User user);
 
+//    志愿者时长和活动ID刚好活动有
+    void updatehourse(Activity activity);
 }

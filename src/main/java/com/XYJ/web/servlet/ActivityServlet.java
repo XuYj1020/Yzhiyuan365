@@ -1,11 +1,7 @@
 package com.XYJ.web.servlet;
 
-import com.XYJ.pojo.Activity;
-import com.XYJ.pojo.Activityreview;
-import com.XYJ.pojo.PageFY;
-import com.XYJ.pojo.User;
-import com.XYJ.service.ActivityService;
-import com.XYJ.service.ActivityreviewService;
+import com.XYJ.pojo.*;
+import com.XYJ.service.*;
 import com.XYJ.util.IdAutoCreateUtils;
 import com.alibaba.fastjson.JSON;
 
@@ -16,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet( urlPatterns = "/Activity/*")
 public class ActivityServlet extends BaseServlet{
@@ -184,6 +181,73 @@ public class ActivityServlet extends BaseServlet{
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write("success");
     }
+
+    public void updateActivityActivestatusid4(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String params = bufferedReader.readLine();
+        Activity activity = JSON.parseObject(params,Activity.class);
+//      1根据传入的 applicationstatusid 判断是否已签到 是否为4  已签到调用 yqs  未签到调用wqd  完成时长记录新增
+        Map mapTypes = JSON.parseObject(params);
+        int applicationstatusid = (int)mapTypes.get("applicationstatusid");
+        System.out.println("--------------------------");
+        System.out.println(applicationstatusid);
+        System.out.println("--------------------------");
+        String applicationstatusids = String.valueOf(applicationstatusid);
+        System.out.println("--------------------------");
+        System.out.println(applicationstatusids);
+        System.out.println("--------------------------");
+        if(applicationstatusids.equals("4")){
+//            调用方法获取志愿者ID数组
+            Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+            AapplicationService aapplicationService = new AapplicationService();
+            String[] volunteerids= aapplicationService.selectVID(aapplication);
+            System.out.println("--------------------------");
+            System.out.println(applicationstatusids);
+            System.out.println("--------------------------");
+            for (int i = 0; i < volunteerids.length; i++) {
+//                System.out.println(volunteerids[i] + " ");
+                mapTypes.put("volunteerid",volunteerids[i]);
+                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+                DistributeService distributeService = new DistributeService();
+                distributeService.insertyqd(distribute);
+                System.out.println("--------------------------");
+                System.out.println(distribute);
+                System.out.println("--------------------------");
+            }
+        } else if (applicationstatusids.equals("3")) {
+            Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+            AapplicationService aapplicationService = new AapplicationService();
+            String[] volunteerids= aapplicationService.selectVID(aapplication);
+            for (int i = 0; i < volunteerids.length; i++) {
+//            System.out.println(volunteerids[i] + " ");
+                mapTypes.put("volunteerid", volunteerids[i]);
+                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+                DistributeService distributeService = new DistributeService();
+                distributeService.insertwqd(distribute);
+            }
+            UserService userService = new UserService();
+            userService.updatehourse(activity);
+        } else{
+            Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+            AapplicationService aapplicationService = new AapplicationService();
+            String[] volunteerids= aapplicationService.selectVID(aapplication);
+            for (int i = 0; i < volunteerids.length; i++) {
+//            System.out.println(volunteerids[i] + " ");
+                mapTypes.put("volunteerid",volunteerids[i]);
+                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+                DistributeService distributeService = new DistributeService();
+                distributeService.insertwqd(distribute);
+            }
+        }
+
+        activityservice.updateActivityActivestatusid4(activity);
+//        activityservice.updateActivityActivestatusid4(ac);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
+    }
+
+
 
     public void updateAinfo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");

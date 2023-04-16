@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AapplicationMapper {
 
@@ -33,4 +34,8 @@ public interface AapplicationMapper {
 
     @Update("update aapplication set applicationstatusid = 3 where applicationid = #{applicationid}")
     void updateApplicationstatusid3(String applicationid);
+
+//    搜索志愿者ID存入数组 新增志愿时长发放表时用到
+    @Select("select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = #{applicationstatusid} GROUP BY volunteerid")
+    String[] selectVID(Aapplication aapplication);
 }

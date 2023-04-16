@@ -11,7 +11,9 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.XYJ.util.SqlSessionFactoryUtils.getSqlSessionFactory;
 import static javafx.scene.input.KeyCode.L;
@@ -56,6 +58,7 @@ public class AapplicationService {
         sqlSession.close();
     }
 
+
     public PageFY<Aapplication> selectVinfoByAIDFY(int begin, int size, Aapplication aapplication){
         SqlSession sqlSession = factory.openSession();
         AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
@@ -90,15 +93,28 @@ public class AapplicationService {
         return page;
     }
 
+    public String[] selectVID(Aapplication aapplication){
+        SqlSession sqlSession = factory.openSession();
+        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+        String[] aapplications = aapplicationemapper.selectVID(aapplication);
+        sqlSession.close();
+        return aapplications;
+    }
     public static void main(String[] args) {
         AapplicationService app = new AapplicationService();
-        System.out.println(app.applicationid("HD1302032503304169"));
-        System.out.println("HDBM13020325033041690020".substring(4));
-        String a = "HDBM13020325033041690020".substring(4);
-        System.out.println(a);
-        long num =Long.parseLong(a.substring(a.length()-15))+1;
-        System.out.println(num);
-        String b = a.substring(0,a.length()-15);
-        System.out.println(b);
+//        System.out.println(app.applicationid("HD1302032503304169"));
+//        System.out.println("HDBM13020325033041690020".substring(4));
+//        String a = "HDBM13020325033041690020".substring(4);
+//        System.out.println(a);
+//        long num =Long.parseLong(a.substring(a.length()-15))+1;
+//        System.out.println(num);
+//        String b = a.substring(0,a.length()-15);
+//        System.out.println(b);
+//        String[] aapplications = app.selectVID("HD1302032503304169");
+//        System.out.println(app.selectVID("HD1302032503304169"));
+//        System.out.println(Arrays.toString(aapplications));
+//        for (int i = 0; i < aapplications.length; i++) {
+//            System.out.println(aapplications[i] + " ");
+//        }
     }
 }

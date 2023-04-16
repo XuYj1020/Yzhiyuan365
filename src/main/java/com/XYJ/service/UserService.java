@@ -1,6 +1,7 @@
 package com.XYJ.service;
 
 import com.XYJ.mapper.UserMapper;
+import com.XYJ.pojo.Activity;
 import com.XYJ.pojo.User;
 import com.XYJ.util.SqlSessionFactoryUtils;
 import com.alibaba.fastjson.JSON;
@@ -150,6 +151,16 @@ public class UserService {
         usermapper.updateVinfo(user);
         sqlSession.close();
     }
+
+
+    public void updatehourse(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        UserMapper usermapper = sqlSession.getMapper(UserMapper.class);
+        usermapper.updatehourse(activity);
+        sqlSession.close();
+    }
+
+
     //测试语句是否正确
     public static <Sting> void main(String[] args) throws IOException {
        UserService s = new UserService();

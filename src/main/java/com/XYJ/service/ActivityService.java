@@ -141,6 +141,13 @@ public class ActivityService {
         sqlSession.close();
     }
 
+    public void updateActivityActivestatusid4(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        activitymapper.updateActivityActivestatusid4(activity);
+        sqlSession.close();
+    }
+
     public void updateAinfo(Activity activity){
         SqlSession sqlSession = factory.openSession();
         ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
@@ -154,6 +161,9 @@ public class ActivityService {
         activitymapper.updateActivitynumberofenrolledvolunteer(activity);
         sqlSession.close();
     }
+
+
+
 
     public static void main(String[] args) {
         ActivityService activityService = new ActivityService();

@@ -383,4 +383,38 @@ public static Applicationreview auditid(String params){
         return signcode;
     }
 
+    public static Distribute distributerecordid(Map mapTypes){
+//        把数据转成map类型
+//        Map mapTypes = JSON.parseObject(params);
+        String activityid = (String) mapTypes.get("activityid");
+        System.out.println(activityid);
+//        判断原先是否已经有发放数据，如果没有则返回0001，如果有则返回最新的审核编号
+        DistributeService dis = new DistributeService();
+        String diss = dis.recordid(activityid);
+        String recordid;
+//        审核ID规则  原始活动ID + 0001 编号
+        if(diss.equals("0001")){
+            activityid = activityid.replaceFirst("HD","HDSC");
+            recordid = activityid + diss;
+            System.out.println(recordid);
+        }else{
+//            先把前面的HDSC去掉
+            String a = diss.substring(4);
+//            把去掉后的数字转成long类型  只取后面15位，因为long最多只支持19位   int溢出，  转换完成后+1
+            long num =Long.parseLong(a.substring(a.length()-15))+1;
+//            把前面被截掉的拿回来
+            String str = a.substring(0,a.length()-15);
+//            字符串重新拼接
+            recordid =  "HDSC" + str + num;
+        }
+//        把生成的auditid封装进map集合中，然后再传出去
+        mapTypes.put("recordid", recordid);
+        System.out.println(recordid);
+        System.out.println(mapTypes);
+        String jsonString = JSON.toJSONString(mapTypes);
+        Distribute distribute = JSON.parseObject(jsonString,Distribute.class);
+        System.out.println("我是AUTO里面的"+distribute);
+        return distribute;
+    }
+
 }
