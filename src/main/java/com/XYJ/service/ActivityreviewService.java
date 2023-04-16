@@ -16,6 +16,15 @@ public class ActivityreviewService{
         sqlSession.close();
     }
 
+
+    public void update(Activityreview activityreview){
+        SqlSession sqlSession = factory.openSession();
+        ActivityreviewMapper activityreviewMapper = sqlSession.getMapper(ActivityreviewMapper.class);
+        activityreviewMapper.update(activityreview);
+        sqlSession.close();
+    }
+
+
     public void insert(Activityreview activityreview){
         SqlSession sqlSession = factory.openSession();
         ActivityreviewMapper activityreviewMapper = sqlSession.getMapper(ActivityreviewMapper.class);

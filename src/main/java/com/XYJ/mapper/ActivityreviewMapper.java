@@ -11,4 +11,7 @@ public interface ActivityreviewMapper {
 
     @Insert("insert into activityreview(auditid, activityid, auditstatusid) values (#{auditid}, #{activityid}, 1)")
     void insert(Activityreview activityreview);
+
+    @Update("update activityreview set auditstatusid = #{auditstatusid} , eta = now() , feedback = #{feedback}, id = #{id} where auditid = #{auditid}")
+    void update(Activityreview activityreview);
 }

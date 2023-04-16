@@ -388,7 +388,12 @@
         <if test="activity.activestatusid == 4">
             and activity.activestatusid = 4
         </if>
-        and activity.organizationid = #{activity.organizationid}
+        <if test="activity.activestatusid == 63">
+            and activityreview.auditstatusid = 3
+        </if>
+          <if test="activity.organizationid !=null and activity.organizationid != ''">
+              and activity.organizationid = #{activity.organizationid}
+          </if>
         order by activity.starttime limit #{begin},#{size};
     </select>
     <select id="selectActivityByOIDCountSQ" resultType="java.lang.Integer">
@@ -414,7 +419,13 @@
         <if test="activestatusid == 4">
             and activity.activestatusid = 3
         </if>
-          and activity.organizationid = #{organizationid}
+        <if test="activestatusid == 63">
+            and activityreview.auditstatusid = 3
+        </if>
+          <if test="organizationid != null and organizationid != ''">
+              and activity.organizationid = #{organizationid}
+          </if>
+
     </select>
 
 
