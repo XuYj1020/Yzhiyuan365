@@ -135,6 +135,15 @@
             </if>
         </where>
     </select>
+    <select id="selectByVAIDjoinCOUNT" resultType="java.lang.Integer">
+        select count(*) from applicationreview
+        left join aapplication on applicationreview.activityid = aapplication.activityid
+        where applicationreview.volunteerid = #{volunteerid}
+          and applicationreview.activityid = #{activityid}
+          and ((aapplication.applicationstatusid = 1
+                    and applicationreview.auditstatusid= 2)
+               or applicationreview.auditstatusid = 1)
+    </select>
 
 
 </mapper>

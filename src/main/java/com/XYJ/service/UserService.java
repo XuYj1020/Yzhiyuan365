@@ -1,7 +1,9 @@
 package com.XYJ.service;
 
+import com.XYJ.mapper.ActivityMapper;
 import com.XYJ.mapper.UserMapper;
 import com.XYJ.pojo.Activity;
+import com.XYJ.pojo.PageFY;
 import com.XYJ.pojo.User;
 import com.XYJ.util.SqlSessionFactoryUtils;
 import com.alibaba.fastjson.JSON;
@@ -10,6 +12,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -160,6 +163,27 @@ public class UserService {
         sqlSession.close();
     }
 
+    public PageFY<User> baomingyanz(String volunteerid, Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+
+//        总记录数
+        int total = userMapper.selectActivityCount(volunteerid,activity);
+        System.out.println(total);
+        List<User> users= userMapper.selectVCredit(volunteerid);
+
+        PageFY<User> yanzheng = new PageFY<>();
+        yanzheng.setTotal(total);
+        yanzheng.setShuju(users);
+        sqlSession.close();
+        return yanzheng;
+    }
+
+
+
+
+
+
 
     //测试语句是否正确
     public static <Sting> void main(String[] args) throws IOException {
@@ -204,5 +228,12 @@ public class UserService {
 //        System.out.println(s.selectByjoinAID("HD330301810406"));
         System.out.println(s.selectByVid("330689230325018483"));
 
+        Map<String,Object> map = new HashMap<>();
+        map.put("starttime","2023-04-11 08:00:00");
+        map.put("endtime","2023-4-27 9:00:00");
+        String jsonString = JSON.toJSONString(map);
+        Activity act = JSON.parseObject(jsonString,Activity.class);
+        PageFY<User> baomingyanz = s.baomingyanz("338965230325121908",act);
+        System.out.println(baomingyanz);
     }
 }

@@ -53,6 +53,37 @@ public class AapplicationServlet extends BaseServlet{
        resp.getWriter().write(jsonString);
    }
 
+    public void selectByVAIDCOUNT(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+//        接收用户报名信息数据
+        BufferedReader us = req.getReader();
+        String params = us.readLine();//获取json字符串
+
+        Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+        int applications = aapplicationservice.selectByVAIDCOUNT(aapplication);
+        String app = String.valueOf(applications);
+//        返回数据
+        resp.setContentType("text/json;charset=utf-8");
+        //        将集合转换为JSON数据 序列化
+        resp.getWriter().write(app);
+    }
+
+    public void selectByVAIDjoinCOUNT(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+//        接收用户报名信息数据
+        BufferedReader us = req.getReader();
+        String params = us.readLine();//获取json字符串
+
+        Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+        int applications = aapplicationservice.selectByVAIDjoinCOUNT(aapplication);
+        String app = String.valueOf(applications);
+//        返回数据
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write(app);
+    }
+
+
+
    public void updateApplicationstatusid(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
        req.setCharacterEncoding("UTF-8");
        String applicationid = req.getParameter("applicationid");

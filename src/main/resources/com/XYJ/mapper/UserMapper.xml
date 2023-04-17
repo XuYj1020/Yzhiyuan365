@@ -161,6 +161,7 @@
     </select>
 
 
+
     <update id="updateVinfo">
         update volunteer
             <set>
@@ -228,5 +229,22 @@
         update volunteer set volunteerhours = volunteerhours + #{volunteerhours} , volunteercoins = volunteercoins + #{volunteerhours} WHERE volunteerid in (select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = 4 GROUP BY volunteerid)
     </update>
 
+    <select id="selectActivityCount" resultType="java.lang.Integer">
+        select count(*) from volunteer
+          left join aapplication on aapplication.volunteerid = volunteer.volunteerid
+          left join applicationreview on applicationreview.volunteerid = volunteer.volunteerid
+          left join activity on activity.activityid = aapplication.activityid
+          left join activityreview on activityreview.activityid = activity.activityid
+        where
+            (activity.endtime BETWEEN #{activity.starttime} and #{activity.endtime} OR
+             activity.starttime BETWEEN #{activity.starttime} and #{activity.endtime} OR
+             #{activity.starttime} > activity.starttime and  activity.endtime > #{activity.endtime})
+          and aapplication.applicationstatusid in (1,3,4,5)
+          and applicationreview.auditstatusid in (1,2)
+          and volunteer.volunteerid = #{volunteerid}
+    </select>
+    <select id="selectVCredit" resultType="com.XYJ.pojo.User">
+        select credit from volunteer where volunteerid = #{volunteerid}
+    </select>
 
 </mapper>

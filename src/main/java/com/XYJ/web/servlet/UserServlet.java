@@ -1,6 +1,8 @@
 package com.XYJ.web.servlet;
 
+import com.XYJ.pojo.Activity;
 import com.XYJ.pojo.Organization;
+import com.XYJ.pojo.PageFY;
 import com.XYJ.pojo.User;
 import com.XYJ.service.UserService;
 import com.XYJ.util.CCTokenUtil;
@@ -300,5 +302,18 @@ public class UserServlet extends BaseServlet{
         userservice.updateVinfo(user);
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write("success");
+    }
+
+    public void baomingyanz(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        String volunteerid = req.getParameter("vid");
+        Activity activity = JSON.parseObject(params,Activity.class);
+        System.out.println(activity);
+        PageFY<User> users = userservice.baomingyanz(volunteerid,activity);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(users);
+        resp.getWriter().write(jsonString);
     }
 }

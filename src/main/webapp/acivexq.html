@@ -144,9 +144,24 @@
 											<!-- 没有到报名时间 -->
 											<el-button type="primary" v-if="new Date(Activitys[0].enrolmentopeningtime) > new Date()" :disabled="new Date(Activitys[0].enrolmentopeningtime) > new Date()">报名时间未到</el-button>
 											<!-- 报名时间内 -->
-											<el-button type="primary" @click="bm" v-if="new Date(Activitys[0].enrolmentopeningtime) < new Date() && new Date(Activitys[0].enrolmentdeadline) > new Date()">我要报名</el-button>
+											<!-- <el-button type="primary" @click="bm" v-if="new Date(Activitys[0].enrolmentopeningtime) < new Date() && new Date(Activitys[0].enrolmentdeadline) > new Date()">我要报名</el-button> -->
 											<!-- 报名时间已过 -->
-											<el-button type="primary" v-if="new Date(Activitys[0].enrolmentdeadline) < new Date()" :disabled="new Date(Activitys[0].enrolmentdeadline) < new Date()">报名已截止</el-button>
+											<!-- <el-button type="primary" v-if="new Date(Activitys[0].enrolmentdeadline) < new Date()" :disabled="new Date(Activitys[0].enrolmentdeadline) < new Date()">报名已截止</el-button> -->
+											
+											<!-- 报名时间内 -->
+											<div v-if="new Date(Activitys[0].enrolmentopeningtime) < new Date() && new Date(Activitys[0].enrolmentdeadline) > new Date()">
+												<el-button type="primary" @click="bm" v-if=" applicationcount ==0 && applicationcountjoin == 0">我要报名</el-button>
+												<el-button type="success"  v-if=" applicationcount !=0" :disabled="applicationcount !=0">已录取</el-button>
+												<el-button type="warning"  v-if=" applicationcountjoin != 0" :disabled="applicationcountjoin != 0">报名审核中</el-button>
+											</div>
+											
+											<div v-if="new Date(Activitys[0].enrolmentdeadline) < new Date()">
+												<el-button type="primary"  v-if=" applicationcount ==0 && applicationcountjoin == 0" :disabled="new Date(Activitys[0].enrolmentdeadline) < new Date()">报名已截止</el-button>
+												<el-button type="success"  v-if=" applicationcount !=0" :disabled="applicationcount !=0">已录取</el-button>
+												<el-button type="warning"  v-if=" applicationcountjoin != 0" :disabled="applicationcountjoin != 0">报名审核中</el-button>
+											</div>
+											
+											
 											<!-- 录取方式为先到先得，当前时间小于报名截止时间，同时状态为已报名，则显示取消报名 -->
 											<!-- <el-button type="primary" @click="bm" v-if="Activitys[0].admissionpolicy==1 &&applications.applicationstatusid === 1 && new Date(Activitys[0].enrolmentdeadline) > new Date()">取消报名</el-button> -->
 											<!-- 录取方式为审核制，当前时间小于报名截止时间，同时状态为已报名，则显示取消报名 -->
@@ -248,13 +263,13 @@
 			new Vue({
 				el:"#app",
 				created() {
-					this.sendinfo.volunteerid = localStorage.getItem('vid')
+					this.baomyanzform.volunteerid =this.sendinfo.volunteerid = localStorage.getItem('vid')
 					this.vname=localStorage.getItem('vname'),
 					// 调用方法获取url参数
 					this.getQueryString();
 					this.sendinfo.activityid = this.query.activityid;
-					this.selectByAcstyleidjoin();
-					this.selectByVAID();
+					this.selectByAcstyleidjoin()
+					
 				},
 				data(){
 					return {
@@ -270,22 +285,34 @@
 						vsignupnew:'',
 						// 活动管理员信息
 						leaders:'',
-						applications:'',
+						applicationcount:0,
+						applicationcountjoin:0,
 						sendinfo:{
 							// 活动id
 							activityid:'',
 							volunteerid:'',
 							auditid:'',
-							numberofenrolledvolunteer:''
-						}
-					      };
+							numberofenrolledvolunteer:'',
+							applicationstatusid: 1
+						},
+						
+						baomyanzform:{
+							volunteerid:'',
+							starttime:'',
+							endtime:''
+						},
+						count:'',
+						credit:'',
+						creditscorerequirement:''
+					};
 				},
 				 methods: {
 					// url参数获取
 					getQueryString(){
 					  let params = location.search.split('?')[1]; // 获取?号后面的参数 name=&age=
 					  if (!params){
-							return null;// 如果无参，返回null
+							// return null;// 如果无参，返回null
+							location.href = './searchhuodong.html'
 					  }else{
 							let paramss = params.split("&"); // 将参数分割成数组 ['name=mick', 'age=20']
 							for (let i = 0; i < paramss.length; i++) {
@@ -378,8 +405,15 @@
 							console.log(resp.data[0].havealeader)
 							this.Activitys=resp.data
 							this.sendinfo.numberofenrolledvolunteer = resp.data[0].numberofenrolledvolunteer <= 0? 1 : 2
+							this.baomyanzform.starttime = resp.data[0].starttime
+							this.baomyanzform.endtime = resp.data[0].endtime
+							this.creditscorerequirement = resp.data[0].creditscorerequirement
 							this.SelectadressByAreaID()
 							this.selectOinfoByOID()
+							this.baomingyanz()
+							this.selectByVAIDjoinCOUNT()
+							this.selectByVAIDCOUNT()
+							console.log(this.baomyanzform)
 							// 如果有活动管理员就去活动管理员表搜索管理员的信息
 							if(resp.data[0].havealeader == 1){
 								this.selectByjoinAID()
@@ -389,33 +423,62 @@
 						  });
 					},
 					// 判断用户是否已经报名
-					selectByVAID(){
+					selectByVAIDCOUNT(){
 						axios({
 							method:"post",
-							url:"http://localhost:8080/Yzhiyuan365/aapplication/selectByVAID",
+							url:"http://localhost:8080/Yzhiyuan365/aapplication/selectByVAIDCOUNT",
 							data:this.sendinfo
 						}).then((resp)=>{
 							console.log(resp.data)
-							this.applications = resp.data[0]
+							this.applicationcount = resp.data
 						}).catch((resp)=>{
 							console.log(error.resp)
 						})
 					},
 					
-					
+					selectByVAIDjoinCOUNT(){
+						axios({
+							method:"post",
+							url:"http://localhost:8080/Yzhiyuan365/aapplication/selectByVAIDjoinCOUNT",
+							data:this.sendinfo
+						}).then((resp)=>{
+							console.log(resp.data)
+							this.applicationcountjoin = resp.data
+						}).catch((resp)=>{
+							console.log(error.resp)
+						})
+					},
 					
 					// 报名
 					bm(){
-						if(this.Activitys[0].admissionpolicy==1){
-							this.zjbm();
-							
+						this.selectByVAIDCOUNT()
+						this.selectByVAIDjoinCOUNT()
+						if(this.applicationcount != 0){
+							this.$message.error("你已报名该活动")
+						}else if(this.applicationcountjoin != 0){
+							this.$message.error("你已报名该活动")
 						}else{
-							this.shbm();
+							this.baomingyanz()
+							if(this.credit < this.creditscorerequirement){
+								this.$message.error("信用分不符合要求")
+							}else if(this.count >0){
+								this.$message.error("与其他已报名活动时间冲突")
+							}else{
+								if(this.Activitys[0].admissionpolicy==1){
+									this.zjbm();	
+								}else{
+									this.shbm();
+							}
 						}
+					  }
+						
 					},
 					// 我要报名  先到先得
 					zjbm(){
 						this.sendinfo.auditid = 0
+						if(this.Activitys[0].numberofrequiredvolunteer<=this.Activitys[0].numberofenrolledvolunteer){
+							this.$message.error('人员已招满')
+						}else{
 						console.log(this.sendinfo.auditid)
 						axios({
 							method:"post",
@@ -423,9 +486,12 @@
 							data:this.sendinfo
 						}).then((resp)=>{
 							console.log(resp.data)
+							this.$message.success("报名成功")
+							this.selectByAcstyleidjoin();
 						}).catch((resp)=>{
 							console.log(error.resp)
 						})
+						}
 					},
 					
 					// 我要报名  审核制
@@ -441,11 +507,30 @@
 								data:this.sendinfo
 							}).then((resp)=>{
 								console.log(resp.data)
+								this.$message.success("提交报名申请，请等待审核")
+								this.selectByAcstyleidjoin();
 							}).catch((resp)=>{
 								console.log(error.resp)
 							})
 						}
 
+					},
+					
+					baomingyanz(){
+						console.log(this.baomyanzform)
+						axios({
+							method:"post",
+							url:"http://localhost:8080/Yzhiyuan365/user/baomingyanz?vid="+this.baomyanzform.volunteerid,
+							data:this.baomyanzform
+						}).then((resp)=>{
+							this.count = resp.data['total']
+							this.credit = resp.data['shuju'][0].credit
+							console.log(resp.data)
+							console.log(resp.data['total'])
+							console.log(resp.data['shuju'][0].credit)
+						}).catch((resp)=>{
+							console.log(error.response)
+						})
 					}
 				}
 			})

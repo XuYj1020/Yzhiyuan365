@@ -22,6 +22,11 @@ public interface AapplicationMapper {
     @Select("select * from aapplication where volunteerid = #{volunteerid} and activityid = #{activityid} order by atime desc limit 1")
     List<Aapplication> selectByVAID(Aapplication aapplication);
 
+    @Select("select count(*) from aapplication where volunteerid = #{volunteerid} and activityid = #{activityid} and applicationstatusid = #{applicationstatusid}")
+    int selectByVAIDCOUNT(Aapplication aapplication);
+
+    int selectByVAIDjoinCOUNT(Aapplication aapplication);
+
     @Update("update aapplication set applicationstatusid = 2 where applicationid = #{applicationid}")
     void updateApplicationstatusid(String applicationid);
 

@@ -44,6 +44,22 @@ public class AapplicationService {
         return application;
     }
 
+    public int selectByVAIDCOUNT(Aapplication aapplication){
+        SqlSession sqlSession = factory.openSession();
+        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+        int count = aapplicationemapper.selectByVAIDCOUNT(aapplication);
+        sqlSession.close();
+        return count;
+    }
+
+    public int selectByVAIDjoinCOUNT(Aapplication aapplication){
+        SqlSession sqlSession = factory.openSession();
+        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+        int count = aapplicationemapper.selectByVAIDjoinCOUNT(aapplication);
+        sqlSession.close();
+        return count;
+    }
+
     public void updateApplicationstatusid(String applicationid){
         SqlSession sqlSession = factory.openSession();
         AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
