@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace名称空间-->
+<!--<mapper namespace="test">-->
+<mapper namespace="com.XYJ.mapper.OjoinMapper">
+    <resultMap id="rs1" type="com.XYJ.pojo.Ojoin">
+        <id column="applicationid" property="applicationid" ></id>
+        <result column="volunteerid" property="volunteerid" ></result>
+        <result column="organizationid" property="organizationid" ></result>
+        <result column="auditstatusid" property="auditstatusid" ></result>
+        <result column="applicationtime" property="applicationtime" ></result>
+        <result column="eta" property="eta" ></result>
+        <result column="feedback" property="feedback" ></result>
+        <association property="omembers" javaType="com.XYJ.pojo.Omembers">
+            <id column="stafid" property="stafid" ></id>
+            <result column="organizationid" property="organizationid" ></result>
+            <result column="volunteerid" property="volunteerid" ></result>
+            <result column="memberstatusid" property="memberstatusid" ></result>
+            <result column="mlevelid" property="mlevelid" ></result>
+            <result column="applicationid" property="applicationid" ></result>
+            <result column="jointime" property="jointime" ></result>
+        </association>
+        <association property="organizations" javaType="com.XYJ.pojo.Organization">
+            <id column="organizationid" property="organizationid" />
+            <result column="phone" property="phone" />
+            <result column="password" property="password"/>
+            <result column="otype" property="otype" />
+            <result column="registrationstatus" property="registrationstatus" />
+            <result column="unifiedcode" property="unifiedcode"/>
+            <result column="name" property="name"/>
+            <result column="idnumber" property="idnumber" />
+            <result column="oname" property="oname" />
+            <result column="province" property="province" />
+            <result column="city" property="city"/>
+            <result column="district" property="district" />
+            <result column="oaddress" property="oaddress" />
+            <result column="oemail" property="oemail" />
+            <result column="ointroduce" property="ointroduce" />
+            <result column="olevel" property="olevel" />
+            <result column="registrationtime" property="registrationtime" />
+            <result column="lastlogintime" property="lastlogintime" />
+            <result column="userstatusid" property="userstatusid" />
+        </association>
+        <association property="users" javaType="com.XYJ.pojo.User">
+            <id column="volunteerid" property="volunteerid" ></id>
+            <result column="phone" property="phone" ></result>
+            <result column="password" property="password" ></result>
+            <result column="name" property="name" ></result>
+            <result column="idnumber" property="idnumber" ></result>
+            <result column="gender" property="gender" ></result>
+            <result column="birthday" property="birthday" ></result>
+            <result column="province" property="province" ></result>
+            <result column="city" property="city" ></result>
+            <result column="district" property="district" ></result>
+            <result column="address" property="address" ></result>
+            <!--        <result column="education" property="education" ></result>-->
+            <!--        <result column="occupation" property="occupation" ></result>-->
+            <!--        <result column="politicaliandscape" property="politicaliandscape" ></result>-->
+            <result column="email" property="email" ></result>
+            <result column="volunteerhours" property="volunteerhours" ></result>
+            <result column="volunteercoins" property="volunteercoins" ></result>
+            <result column="credit" property="credit" ></result>
+            <result column="registrationtime" property="registrationtime" ></result>
+            <result column="userstatusid" property="userstatusid" ></result>
+            <result column="lastlogintime" property="lastlogintime" ></result>
+            <result column="pictureaddress" property="pictureaddress" ></result>
+        </association>
+        <association property="auditstatus" javaType="com.XYJ.pojo.Auditstatus">
+            <result column="status" property="status" ></result>
+        </association>
+    </resultMap>
+    <select id="selectALLBYOVIDJOINFY" resultMap="rs1">
+        select * from ojoin
+                          left join volunteer on ojoin.volunteerid = volunteer.volunteerid
+                          left join omembers on omembers.volunteerid =ojoin.volunteerid
+                          left join organization on organization.organizationid = ojoin.organizationid
+        <where>
+            <if test="ojoin.auditstatusid != null and ojoin.auditstatusid != ''">
+                and ojoin.auditstatusid = #{ojoin.auditstatusid}
+            </if>
+            <if test="ojoin.volunteerid != null and ojoin.volunteerid != ''">
+                and ojoin.volunteerid = #{ojoin.volunteerid}
+            </if>
+            <if test="ojoin.organizationid != null and ojoin.organizationid != ''">
+                and ojoin.organizationid = #{ojoin.organizationid}
+            </if>
+        </where>
+        order by ojoin.applicationtime limit #{begin},#{size};
+    </select>
+    <select id="selectALLBYOVIDJOINFYCount" resultType="java.lang.Integer">
+        select count(*) from ojoin
+        left join volunteer on ojoin.volunteerid = volunteer.volunteerid
+        left join omembers on omembers.volunteerid = ojoin.volunteerid
+        left join organization on organization.organizationid = ojoin.organizationid
+        <where>
+            <if test="auditstatusid != null and auditstatusid != ''">
+                and ojoin.auditstatusid = #{auditstatusid}
+            </if>
+            <if test="volunteerid != null and volunteerid != ''">
+                and ojoin.volunteerid = #{volunteerid}
+            </if>
+            <if test="organizationid != null and organizationid != ''">
+                and ojoin.organizationid = #{organizationid}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

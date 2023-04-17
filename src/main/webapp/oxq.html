@@ -115,11 +115,11 @@
 										<div class="text item" style="height: 310px;">
 											<!-- 描述列表，一行一项 -->
 											<el-descriptions  :column="1">
-											    <el-descriptions-item label="组织类型"><el-tag size="small" v-text="organizations.otypes.otype"></el-tag></el-descriptions-item>
+											    <el-descriptions-item label="组织类型" v-if="organizations.otypes"><el-tag size="small" v-text="organizations.otypes.otype"></el-tag></el-descriptions-item>
 											    <!-- <el-descriptions-item label="所在区域">18100000000</el-descriptions-item> -->
-											    <el-descriptions-item label="登记状况">{{organizations.registrationstatuss.registrationstatus}}</el-descriptions-item>
+											    <el-descriptions-item label="登记状况"v-if="organizations.registrationstatuss">{{organizations.registrationstatuss.registrationstatus}}</el-descriptions-item>
 											    <el-descriptions-item label="注册时间" >{{organizations.registrationtime}}</el-descriptions-item>
-												<el-descriptions-item label="组织人数"></el-descriptions-item>
+												<el-descriptions-item label="组织人数" v-if="organizations.areanews">{{organizations.areanews.pinYin}}人</el-descriptions-item>
 												<el-descriptions-item label="组织负责人">{{organizations.name}}</el-descriptions-item>
 												<el-descriptions-item label="活动时长"></el-descriptions-item>
 											    <el-descriptions-item label="联系地址">{{Areas}}&nbsp;{{organizations.oaddress}} </el-descriptions-item>
@@ -186,10 +186,7 @@
 					this.SelectomamberByOVID();
 					this.SelectojoinByOVID();
 				},
-				data(){
-					// console.log(location.search.split('?')[1])
-					// let param = location.search.split('?')[1],
-					
+				data(){		
 					return {
 						Activitys:'',
 						vname:'',
@@ -212,27 +209,27 @@
 					      };
 				},
 				 methods: {
-					selectByOID(){
-						console.log(this.query.organizationid)
-						axios({
-						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/organization/selectByOID?organizationid="+this.query.organizationid,
-							// headers:headers,
-							headers:{
-								vtoken:localStorage.getItem('vtoken')
-							},
-							// data:this.aa,
-						  }).then((resp)=>{
-						    // console.log(resp)
-							console.log(resp.data)
-							// 得到类别中文
-							// console.log(resp.data[0].acstyles.acstyle)
-							// console.log(resp.data.datalist)
-							this.organizations=resp.data
-						  }).catch((error)=> {
-						    console.log(error.response);//可以拿到后端返回的信息
-						  });
-					},
+					// selectByOID(){
+					// 	console.log(this.query.organizationid)
+					// 	axios({
+					// 	    method:"post",
+					// 	    url:"http://localhost:8080/Yzhiyuan365/organization/selectByOID?organizationid="+this.query.organizationid,
+					// 		// headers:headers,
+					// 		headers:{
+					// 			vtoken:localStorage.getItem('vtoken')
+					// 		},
+					// 		// data:this.aa,
+					// 	  }).then((resp)=>{
+					// 	    // console.log(resp)
+					// 		console.log(resp.data)
+					// 		// 得到类别中文
+					// 		// console.log(resp.data[0].acstyles.acstyle)
+					// 		// console.log(resp.data.datalist)
+					// 		this.organizations=resp.data
+					// 	  }).catch((error)=> {
+					// 	    console.log(error.response);//可以拿到后端返回的信息
+					// 	  });
+					// },
 					
 					// url参数获取
 					getQueryString(){
@@ -255,7 +252,7 @@
 					
 					// 通过活动类型编号查找活动类型
 					selectByOID(){
-						console.log(this.query.organizationid)
+						// console.log(this.query.organizationid)
 						axios({
 						    method:"post",
 						    url:"http://localhost:8080/Yzhiyuan365/organization/selectByOID?organizationid="+this.query.organizationid,
@@ -263,13 +260,8 @@
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},
-							// data:this.aa,
 						  }).then((resp)=>{
-						    // console.log(resp)
 							console.log(resp.data)
-							// 得到类别中文
-							// console.log(resp.data[0].acstyles.acstyle)
-							// console.log(resp.data.datalist)
 							this.organizations=resp.data
 							this.SelectadressByAreaID()  
 						  }).catch((error)=> {
@@ -286,13 +278,8 @@
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},
-							// data:this.aa,
 						  }).then((resp)=>{
-						    // console.log(resp)
 							console.log(resp.data)
-							// 得到类别中文
-							// console.log(resp.data[0].acstyles.acstyle)
-							// console.log(resp.data.datalist)
 							this.Areas=resp.data
 						  }).catch((error)=> {
 						    console.log(error.response);//可以拿到后端返回的信息

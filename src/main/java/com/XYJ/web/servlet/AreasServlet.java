@@ -40,7 +40,6 @@ public class AreasServlet extends BaseServlet{
 //新代码，通过区级行政区划找到省市区
     public void SelectadressByAreaID(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String AreaID = req.getParameter("district");
-
         String areas = areaservice.SelectadressByAreaID(AreaID);
         String jsonString = JSON.toJSONString(areas);
         resp.setContentType("text/json;charset=utf-8");

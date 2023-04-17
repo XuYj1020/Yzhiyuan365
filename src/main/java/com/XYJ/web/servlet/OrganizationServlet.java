@@ -107,6 +107,29 @@ public class OrganizationServlet extends BaseServlet{
         }
     }
 
+    public void selectByOIDAll(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        String organizationid = req.getParameter("organizationid");
+        System.out.println(organizationid);
+        List<Organization> organizations = organizationservice.selectByOIDAll(organizationid);
+        String jsonString = JSON.toJSONString(organizations);
+        resp.setContentType("text/json;charset=utf-8");
+//        传递组织信息
+        if(!organizations.isEmpty()){
+//            拿到的是数组，数组里面有对象，要把[]去掉后，再转成{}map键值对形式
+            String organization = jsonString.substring(1,jsonString.length()-1);
+            Map organizationinfo = JSON.parseObject(organization);
+//            移除密码信息
+//            organizationinfo.remove("password");
+            jsonString = JSON.toJSONString(organizationinfo);
+            resp.getWriter().write(jsonString);
+            System.out.println(jsonString);
+        }else{
+            resp.getWriter().write("组织不存在");
+        }
+    }
+
+
     //    活动详情页面，活动发布活动的组织信息，全部组织
     public void selectOinfoByOID(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
         req.setCharacterEncoding("UTF-8");
@@ -132,5 +155,28 @@ public class OrganizationServlet extends BaseServlet{
         resp.setContentType("text/json;charset=utf-8");
         String jsonString = JSON.toJSONString(organizations);
         resp.getWriter().write(jsonString);
+    }
+
+
+    public void updateOphone(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String param = bufferedReader.readLine();
+        Organization organization = JSON.parseObject(param,Organization.class);
+        System.out.println(param);
+        organizationservice.updateOphone(organization);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
+    }
+
+    public void updateOinfo(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String param = bufferedReader.readLine();
+        Organization organization = JSON.parseObject(param,Organization.class);
+        System.out.println(param);
+        organizationservice.updateOinfo(organization);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
     }
 }

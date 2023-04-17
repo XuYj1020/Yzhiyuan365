@@ -50,6 +50,13 @@ public class OrganizationService {
         return organizations;
     }
 
+    public List<Organization> selectByOIDAll(String organization){
+        SqlSession sqlSession = factory.openSession();
+        OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
+        List<Organization> organizations = organizationmapper.selectByOIDAll(organization);
+        sqlSession.close();
+        return organizations;
+    }
     public List<Organization> selectOinfoByOID (String organization){
         SqlSession sqlSession = factory.openSession();
         OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
@@ -70,9 +77,23 @@ public class OrganizationService {
         page.setTotal(total);
         return page;
     }
+
+    public void updateOphone(Organization organization){
+        SqlSession sqlSession = factory.openSession();
+        OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
+        organizationmapper.updateOphone(organization);
+        sqlSession.close();
+    }
+    public void updateOinfo(Organization organization){
+        SqlSession sqlSession = factory.openSession();
+        OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
+        organizationmapper.updateOinfo(organization);
+        sqlSession.close();
+    }
+
     public static void main(String[] args) {
         OrganizationService o = new OrganizationService();
-        System.out.println(o.selectOinfoByOID("1301040503284166"));
+        System.out.println(o.selectByOID("1301040503284166"));
 
         Map<String,Object> ainfo = new HashMap<>();
 //        ainfo.put("otype","1");

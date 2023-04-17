@@ -6,20 +6,11 @@ public class Omembers {
   private String stafid;
   private String organizationid;
   private String volunteerid;
-  private int memberstatusid;
-  private int mlevelid;
+  private int    memberstatusid;
+  private int    mlevelid;
   private String applicationid;
-
-
   private String jointime;
 
-  public String getJointime() {
-    return jointime;
-  }
-
-  public void setJointime(String jointime) {
-    this.jointime = jointime;
-  }
 
   public String getStafid() {
     return stafid;
@@ -72,6 +63,15 @@ public class Omembers {
 
   public void setApplicationid(String applicationid) {
     this.applicationid = applicationid;
+  }
+
+
+  public String getJointime() {
+    return jointime;
+  }
+
+  public void setJointime(String jointime) {
+    this.jointime = jointime;
   }
 
   @Override

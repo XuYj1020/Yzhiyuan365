@@ -6,11 +6,49 @@ public class Ojoin {
   private String applicationid;
   private String volunteerid;
   private String organizationid;
-  private int auditstatusid;
+  private int    auditstatusid;
   private String applicationtime;
   private String eta;
   private String feedback;
 
+  private Omembers omembers;
+  private Organization organizations;
+  private User users;
+
+  private Auditstatus auditstatus;
+
+
+  public Auditstatus getAuditstatus() {
+    return auditstatus;
+  }
+
+  public void setAuditstatus(Auditstatus auditstatus) {
+    this.auditstatus = auditstatus;
+  }
+
+  public Omembers getOmembers() {
+    return omembers;
+  }
+
+  public void setOmembers(Omembers omembers) {
+    this.omembers = omembers;
+  }
+
+  public Organization getOrganizations() {
+    return organizations;
+  }
+
+  public void setOrganizations(Organization organizations) {
+    this.organizations = organizations;
+  }
+
+  public User getUsers() {
+    return users;
+  }
+
+  public void setUsers(User users) {
+    this.users = users;
+  }
 
   public String getApplicationid() {
     return applicationid;
@@ -84,6 +122,10 @@ public class Ojoin {
             ", applicationtime='" + applicationtime + '\'' +
             ", eta='" + eta + '\'' +
             ", feedback='" + feedback + '\'' +
+            ", omembers=" + omembers +
+            ", organizations=" + organizations +
+            ", users=" + users +
+            ", auditstatus=" + auditstatus +
             '}';
   }
 }

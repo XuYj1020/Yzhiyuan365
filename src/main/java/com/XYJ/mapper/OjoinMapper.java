@@ -1,8 +1,10 @@
 package com.XYJ.mapper;
 
+import com.XYJ.pojo.Activity;
 import com.XYJ.pojo.Ojoin;
 import com.XYJ.pojo.Omembers;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -19,4 +21,6 @@ public interface OjoinMapper {
     @Select("select * from ojoin where auditstatusid=1 and organizationid = #{organizationid} and volunteerid = #{volunteerid} order by applicationtime desc LIMIT 1; ")
     List<Ojoin> selectByOVid(Ojoin ojoin);
 
+    List<Ojoin> selectALLBYOVIDJOINFY(@Param("begin") int begin, @Param("size") int size, @Param("ojoin")Ojoin ojoin);
+    int selectALLBYOVIDJOINFYCount(Ojoin ojoin);
 }

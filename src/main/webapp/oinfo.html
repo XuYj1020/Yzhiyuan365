@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<style>
+			 .bg-purple-dark {
+			    background: #99a9bf;
+			  }
+			  .bg-purple {
+			    background: #d3dce6;
+			  }
+			  .bg-purple-light {
+			    background: #e5e9f2;
+			  }
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-row type="flex" justify="center">
+			  <el-col :span="22">
+				  <div>
+					  <el-card class="box-card" shadow="never">
+					    <div class="text item">
+					      <el-row>
+					        <el-col :span="24">
+								<div>
+									<el-descriptions title="组织信息" :column="2" border>
+										    <template slot="extra">
+										      <el-button type="primary" size="small" @click="dialogFormVisible = true">修改组织信息</el-button>
+										    </template>
+									  <el-descriptions-item label="组织id" >{{oinfos.organizationid}}</el-descriptions-item>
+									  <el-descriptions-item label="组织名称">{{oinfos.oname}}</el-descriptions-item>
+									  <el-descriptions-item label="组织状态">{{oinfos.name}}</el-descriptions-item>
+									  <el-descriptions-item label="手机号">
+										  <el-row>
+										    <el-col :span="18"><div>{{oinfos.phone}}</div></el-col>
+											<el-col :span="6">
+												<div>
+													<el-link type="primary" :underline="false" @click="dialogFormVisible1 = true">修改手机号</el-link>
+												</div>
+											</el-col>
+										  </el-row>
+									  </el-descriptions-item>
+									  <el-descriptions-item label="负责人名字">{{oinfos.name}}</el-descriptions-item>
+									  <el-descriptions-item label="负责人身份证号">{{oinfos.idnumber}}</el-descriptions-item>
+									  <el-descriptions-item label="所在地区" v-if="oinfos.areanews">{{oinfos.areanews.wholeName}}</el-descriptions-item>
+									  <el-descriptions-item label="组织类型"v-if="oinfos.otypes">{{oinfos.otypes.otype}}</el-descriptions-item>
+									  <el-descriptions-item label="登记状况"v-if="oinfos.registrationstatuss">{{oinfos.registrationstatuss.registrationstatus}}</el-descriptions-item>
+									  <el-descriptions-item label="统一信用代码">{{oinfos.unifiedcode}}</el-descriptions-item>
+									  <el-descriptions-item label="组织人数"v-if="oinfos.areanews">{{oinfos.areanews.pinYin}}人</el-descriptions-item>
+									  <el-descriptions-item label="邮箱地址">{{oinfos.oemail}}</el-descriptions-item>
+									  <el-descriptions-item label="注册时间">{{oinfos.registrationtime}}</el-descriptions-item>
+									  <el-descriptions-item label="详细地址">{{oinfos.oaddress}}</el-descriptions-item>
+									</el-descriptions>
+								</div>
+							</el-col>
+					      </el-row>
+					    </div>
+					  </el-card>
+				  </div>
+			  </el-col>
+			</el-row>
+			
+			
+			
+			<el-dialog title="修改组织信息" :visible.sync="dialogFormVisible">
+				<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
+					<el-form-item label="组织名称" prop="oname">
+					  <el-input v-model="ruleForm.oname" :placeholder="oinfos.oname"></el-input>
+					</el-form-item>
+					
+					<el-form-item label="登记状态" prop="registrationstatus">
+					    <el-select v-model="ruleForm.registrationstatus" :placeholder="oinfos.registrationstatuss.registrationstatus" @change="selectOtype()" v-if="oinfos.registrationstatuss">
+					      <el-option 
+						  v-for="items in Registrationstatuses"
+						  :key="items.registrationstatusid"
+						  :label="items.registrationstatus" 
+						  :value="items.registrationstatusid">
+						  </el-option>
+					    </el-select>
+					</el-form-item>
+					
+					<el-form-item label="组织类型" prop="otype">
+					    <el-select v-model="ruleForm.otype" :placeholder="oinfos.otypes.otype" v-if="oinfos.otypes">
+					      <el-option 
+						  v-for="items in Otypes"
+						  :key="items.otypeid"
+						  :label="items.otype" 
+						  :value="items.otypeid"> 
+						  </el-option>
+					    </el-select>
+					</el-form-item>
+					
+					<el-form-item label="社会统一信用代码" prop="unifiedcode" v-if="ruleForm.registrationstatus===1">
+					  <el-input v-model.trim="ruleForm.unifiedcode" style="width:300px" :placeholder="oinfos.unifiedcode"></el-input>
+					</el-form-item>
+					
+					<el-form-item label="地址" prop="selectedAds">
+						<el-cascader
+						    size="large"
+						    :options="ads"
+						    v-model="ruleForm.selectedAds"
+						    @change="handleChange">
+						  </el-cascader>
+					</el-form-item>
+					
+					<el-form-item label="详细地址" prop="oaddress">
+					  <el-input v-model.trim="ruleForm.oaddress" style="width:300px" :placeholder="oinfos.oaddress"></el-input>
+					</el-form-item>
+					
+					<el-form-item label="电子邮箱" prop="oemail" >
+					    <el-input v-model.trim="ruleForm.oemail" :placeholder="oinfos.oemail"></el-input>
+					</el-form-item>
+					
+					<el-form-item label="负责人姓名" prop="name" >
+					  <el-input v-model.trim="ruleForm.name" :placeholder="oinfos.name"></el-input>
+					</el-form-item>
+					
+					<el-form-item label="负责人身份证号" prop="idnumber" >
+					  <el-input v-model.trim="ruleForm.idnumber" :placeholder="oinfos.idnumber"></el-input>
+					</el-form-item>
+					
+					<el-form-item label="组织介绍"  prop="ointroduce">
+					  <el-input 
+					  type="textarea"
+					  placeholder="请输入50-300字组织介绍"
+					  v-model.trim="ruleForm.ointroduce" 
+					  minlength="50"
+					  maxlength="300"
+					  show-word-limit
+					  style="width:300px"
+					  :placeholder="oinfos.ointroduce"></el-input>
+					</el-form-item>
+				</el-form>
+				
+				
+			    <div slot="footer" class="dialog-footer">
+			      <el-button @click="dialogFormVisible = false">取 消</el-button>
+			      <el-button type="primary" @click="upOinfo">确 定</el-button>
+			    </div>
+			</el-dialog>
+
+
+			<el-dialog title="修改手机号" :visible.sync="dialogFormVisible1">
+				<el-form :model="form1" status-icon :rules="rules" ref="form1">
+				  <el-form-item label="当前手机号">
+				    {{oinfos.phone}}
+				  </el-form-item>
+				  <el-form-item label="发送验证码" prop="verifycode1">
+				    <el-input v-model.number.trim="form1.verifycode1" style="width:300px"></el-input>
+				    <span><el-button type="primary" @click="fsdxForm1()" :disabled="checkstate1" size="small" v-text="fsdx1">发送验证码</el-button></span>
+				  </el-form-item>
+				  <el-form-item label="新手机号" prop="phone">
+				    <el-input v-model.number="form1.phone"></el-input>
+				  </el-form-item>
+				  <el-form-item label="发送验证码" prop="verifycode2">
+				    <el-input v-model.number.trim="form1.verifycode2" style="width:300px"></el-input>
+				    <span><el-button type="primary" @click="fsdxForm2()" :disabled="checkstate2" size="small" v-text="fsdx2">发送验证码</el-button></span>
+				  </el-form-item>
+				</el-form>
+				<div slot="footer" class="dialog-footer">
+				  <el-button @click="qx">取 消</el-button>
+				  <el-button type="primary" @click="updateOphone">确 定</el-button>
+				</div>
+			</el-dialog>	
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created(){
+					this.selectRegistrationstatuses()
+					this.selectOtype()
+					this.ruleForm.organizationid = this.form1.organizationid = localStorage.getItem('oid')
+					this.selectByOIDAll()
+				},
+				
+				data(){
+					return{
+						oinfos:'',
+						dialogFormVisible: false,
+						//登记状态选择
+						Registrationstatuses:[],
+						// 组织类型
+						Otypes:[],
+						// 地址选择
+						ads: regionData,
+						// 表单验证
+						ruleForm: {
+							organizationid:'',
+							oname:'',
+							registrationstatus:'',
+							otype:'',
+							unifiedcode:'',
+							selectedAds:[],
+							oaddress:'',
+							oemail:'',
+							name:'',
+							idnumber:'',
+							ointroduce:'',
+							province:'',
+							city:'',
+							district:''					
+						},
+						
+						
+						dialogFormVisible1: false,
+						checkstate1:false,
+						fsdx1:'发送验证码',
+						num1:'60',
+						checkstate2:false,
+						fsdx2:'发送验证码',
+						num2:'60',
+						form1:{
+							organizationid:'',
+							phone:'',
+							verifycode1:'',
+							verifycode2:''
+						},
+						rules:{
+							phone:[
+								{required: true, message: '请输入手机号', trigger: 'blur'},
+								{pattern:/^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/,message: '手机号格式错误', trigger: 'blur'}
+							],
+														
+							unifiedcode:[
+								{required: true, message: '请输入企业信用代码', trigger: 'blur'},
+								// 暂时不启用，测试阶段   该代码有效
+								// {pattern:/^([0-9A-HJ-NPQRTUWXY]{2}\d{6}[0-9A-HJ-NPQRTUWXY]{10}|[1-9]\d{14})$/,message: '信用代码格式有误请检查', trigger: 'blur'},
+							],
+							oemail:[
+								{type:'email', message: '请输入正确的邮箱', trigger: 'blur'}
+							],
+							idnumber:[
+								{pattern:/^([1-6][1-9]|50)\d{4}(18|19|20)\d{2}((0[1-9])|10|11|12)(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,message: '身份证号格式错误', trigger: 'blur'}
+							],
+							ointroduce:[
+								{min:50,max:300, message: '组织介绍应在50-300字之间', trigger: 'blur'}
+							]
+					}
+				}
+				},
+				methods:{
+					selectByOIDAll(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/organization/selectByOIDAll?organizationid="+localStorage.getItem('oid'),
+							headers:{
+								vtoken:localStorage.getItem('otoken')
+							},
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.oinfos=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					upOinfo(){
+						this.$refs.ruleForm
+						.validate()
+						.then(()=>{
+							axios({
+							method:'post',
+							url:'http://localhost:8080/Yzhiyuan365/organization/updateOinfo',
+							headers:{
+								vtoken:localStorage.getItem('otoken')
+							},
+								data:this.ruleForm
+							}).then((resp)=>{
+								if(resp.data == "success"){
+									this.dialogFormVisible = false
+									// this.selectByOid()
+									location.reload()
+								}
+							}).catch((error)=>{
+								console.log(error.response)
+							})
+						})
+						.catch(()=>{
+							console.log('error submit!!');
+						})
+					},
+					updateOphone(){
+						this.$refs.form1
+						.validate()
+						.then(()=>{
+							axios({
+							method:'post',
+							url:'http://localhost:8080/Yzhiyuan365/organization/updateOphone',
+							headers:{
+								vtoken:localStorage.getItem('otoken')
+							},
+								data:this.form1
+							}).then((resp)=>{
+								console.log(resp.data)
+								if(resp.data == "success"){
+									this.dialogFormVisible1 = false
+									// this.selectByOid()
+									location.reload()
+								}
+							}).catch((error)=>{
+								console.log(error.response)
+							})
+						})
+						.catch(()=>{
+							console.log('error submit!!');
+						})
+					},
+					fsdxForm1(){
+						  this.checkstate1 = true
+						  this.fsdx1 = `60秒后重新发送`
+						  let time = setInterval(()=>{ 
+						  	  this.num1--
+						  	  console.log(this.num1)
+						  	  this.fsdx1 = `${this.num1}秒后重新发送`
+						  	  // 不能点击
+						  	  if(this.num1 <= 0){
+						  		  clearInterval(time)
+						  		  this.fsdx1 = `重新发送`
+						  		  // 可以重新点击
+						  		  this.checkstate1 = false
+						  				}
+						  	},1000)
+					},
+					
+					fsdxForm2(){
+					  this.$refs.form1
+					  .validateField('phone',(errorMessage)=>{
+						  console.log(errorMessage)
+						  if(errorMessage){
+						  return
+						  }
+						  console.log('验证通过')
+						  this.checkstate2 = true
+						  this.fsdx2 = `60秒后重新发送`
+						  let time = setInterval(()=>{ 
+						  	  this.num2--
+						  	  console.log(this.num2)
+						  	  this.fsdx2 = `${this.num2}秒后重新发送`
+						  	  // 不能点击
+						  	  if(this.num2 <= 0){
+						  		  clearInterval(time)
+						  		  this.fsdx2 = `重新发送`
+						  		  // 可以重新点击
+						  		  this.checkstate2 = false
+						  				}
+						  	},1000)
+					  })
+					},
+
+					qx(){
+						this.dialogFormVisible1 = false
+						location.reload()
+					},
+					
+					// 地址
+					handleChange (value) {
+						var a = this.ruleForm.selectedAds
+							this.ruleForm.province = a[0]
+							this.ruleForm.city = a[1]
+							this.ruleForm.district = a[2]
+							// console.log(this.ruleForm.province)
+							// console.log(this.ruleForm.city)
+							// console.log(this.ruleForm.district)
+						},
+						
+						
+					// 获取登记状态的下拉栏
+					selectRegistrationstatuses(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Registrationstatus/selectAll",
+							// headers:headers,
+							// headers:{
+							// 	'Access-Control-Allow-Origin':'*'
+							// }
+						  }).then((resp)=>{
+						    // console.log(resp)
+							console.log(resp.data)
+							// console.log(resp.data.datalist)
+							this.Registrationstatuses=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					// 活动类别
+					selectOtype(){
+						this.ruleForm.otype=''
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/otype/selectByRegistrationstatusid",
+							data:this.ruleForm.registrationstatus
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.Otypes=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					}
+				}
+			})
+		</script>
+	</body>
+</html>

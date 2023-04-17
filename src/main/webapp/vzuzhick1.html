@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<style>
+			 .bg-purple-dark {
+			    background: #99a9bf;
+			  }
+			  .bg-purple {
+			    background: #d3dce6;
+			  }
+			  .bg-purple-light {
+			    background: #e5e9f2;
+			  }
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-row type="flex" justify="center">
+			  <el-col :span="22">
+				  <div class="grid-content bg-purple-dark">
+					  <el-table
+					      :data="tableData"
+					      border
+					      style="width: 100%">
+					      <el-table-column
+					        fixed
+					        prop="applicationid"
+					        label="申请ID"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="organizations.oname"
+					        label="组织名称"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="organizations.name"
+					        label="组织负责人"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="applicationtime"
+					        label="申请时间"
+					        align="center">
+					      </el-table-column>
+						  <el-table-column
+						    prop="auditstatus.status"
+						    label="申请状态"
+						    align="center">
+						  </el-table-column>
+					      <el-table-column
+					        fixed="right"
+					        label="操作"
+					        align="center">
+					        <template slot-scope="scope">
+					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+					          <el-button type="text" size="small">取消申请</el-button>
+					        </template>
+					      </el-table-column>
+					    </el-table>
+				  </div>
+				  <div class="block">
+				    <el-pagination
+				      @size-change="handleSizeChange"
+				      @current-change="handleCurrentChange"
+				      :current-page="currentPage"
+				      :page-sizes="[20, 50, 100]"
+				      :page-size="pageSize"
+				      layout="total, sizes, prev, pager, next, jumper"
+				      :total="total">
+				    </el-pagination>
+				  </div>
+			  </el-col>
+			</el-row>
+			
+			
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created() {
+					this.formInline.volunteerid = localStorage.getItem('vid')
+					this.selectALLBYOVIDJOINFY()
+				},
+				data(){
+					return{
+						currentPage:1,
+						pageSize:20,
+						total:null,
+						tableData:[],
+						dialogVisible:false,
+						formInline:{
+							volunteerid:'',
+							auditstatusid:'1'
+						},
+					}
+				},
+				methods:{
+					handleSizeChange(val) {
+					  // console.log(`每页 ${val} 条`);
+					  this.pageSize = val
+					  this.selectALLBYOVIDJOINFY()
+					},
+					handleCurrentChange(val) {
+					  // console.log(`当前页: ${val}`);
+					  this.currentPage = val
+					  this.selectALLBYOVIDJOINFY()
+					},
+					selectALLBYOVIDJOINFY(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/ojoin/selectALLBYOVIDJOINFY?begin='+this.currentPage + '&size='+this.pageSize,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formInline
+						}).then((resp)=>{
+							console.log(resp.data)
+							this.total = resp.data['total']
+							this.tableData=resp.data['shuju']
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					}
+				}
+			})
+		</script>
+	</body>
+</html>
