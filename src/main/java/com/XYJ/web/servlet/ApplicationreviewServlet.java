@@ -1,9 +1,6 @@
 package com.XYJ.web.servlet;
 
-import com.XYJ.pojo.Aapplication;
-import com.XYJ.pojo.Activity;
-import com.XYJ.pojo.Applicationreview;
-import com.XYJ.pojo.PageFY;
+import com.XYJ.pojo.*;
 import com.XYJ.service.AapplicationService;
 import com.XYJ.service.ActivityService;
 import com.XYJ.service.ApplicationreviewService;
@@ -16,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -88,6 +86,15 @@ System.out.println(activity);
         System.out.println(applicationreviews);
         resp.setContentType("text/json;charset=utf-8");
         String jsonString = JSON.toJSONString(applicationreviews);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectshenhshul(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        String activityid = req.getParameter("activityid");
+        List<ShenHeShuLiang> shenHeShuLiang = applicationreviewservice.selectshenhshul(activityid);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(shenHeShuLiang);
         resp.getWriter().write(jsonString);
     }
 }

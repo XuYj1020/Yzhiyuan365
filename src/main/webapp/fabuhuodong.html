@@ -32,7 +32,7 @@
 									<el-form-item label="组织名称">
 									  <!-- <el-input v-model="ruleForm.oname"></el-input> -->
 									  <!-- <p>{{ruleForm.organizationid}}</p> -->
-									  <!-- {{ruleForm.oname}} -->
+									  {{ruleForm.oname}}
 									</el-form-item>
 									
 									<el-form-item label="活动标题" prop="title">
@@ -93,7 +93,7 @@
 									    </el-date-picker>
 									  </div>
 									</el-form-item>
-									<p v-text="ruleForm.actiontime"></p>
+									<!-- <p v-text="ruleForm.actiontime"></p> -->
 									
 									<el-form-item label="志愿时长" prop="volunteerhours">
 										<el-input-number v-model="ruleForm.volunteerhours" :precision="1" :step="0.5" :max="maxhour"></el-input-number>

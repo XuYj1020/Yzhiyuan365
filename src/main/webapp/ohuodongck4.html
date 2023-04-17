@@ -282,6 +282,10 @@
 				</el-dialog>
 				
 				<el-dialog title="审核参加人员" :visible.sync="dialogTableVisibleRYSH">
+					<span>招募人数：{{selectshenhshuls.numberofrequiredvolunteer}}</span>
+					<span>已报名人数：{{selectshenhshuls.numberofenrolledvolunteer}}</span>
+					<span>申请数：{{selectshenhshuls.shenqingshu}}</span>
+					<span>已审核：{{selectshenhshuls.yishenhe}}</span>
 				  <el-table :data="gridDataRYSH">
 				    <el-table-column property="users.name" label="姓名"></el-table-column>
 				    <el-table-column property="users.phone" label="联系方式"></el-table-column>
@@ -566,9 +570,11 @@
 						},
 						rulesRYSH1:{
 							auditstatusid: [
-								{required: true, message: '请选择审核状态', trigger: 'blur'}
+								{required: true, message: '请选择审核状态', trigger: 'blur'},
+								{validator: this.Validatorauditstatusid, trigger: 'blur'}
 							]
 						},
+						selectshenhshuls:''
 					}
 				},
 				methods:{
@@ -834,7 +840,7 @@
 							console.log(row.numberofenrolledvolunteer)
 							console.log(this.formSH1.numberofenrolledvolunteer)
 							this.dialogTableVisibleSH = true
-							this.formSH1.leaderid = row.leaderid ==''?localStorage.getItem('oid'):row.leaderid
+							this.formSH1.leaderid = row.leaderid ==localStorage.getItem('oid')
 							
 							this.formZT.activityid = row.activityid
 							this.formZT.auditid = 1
@@ -842,7 +848,7 @@
 							this.selectVinfoByAIDFYstatus()
 						},
 					shenh2(row){
-						this.formSH1.leaderid = row.leaderid ==''?localStorage.getItem('oid'):row.leaderid
+						this.formSH1.leaderid = row.leaderid ==localStorage.getItem('oid')
 						// this.formSH1.auditid = row.auditid
 						
 						this.formSH1.leaveauditid = row.leavereviews.leaveauditid
@@ -942,6 +948,7 @@
 							console.log(this.dialogTableVisibleRYSH)
 							console.log(this.dialogTableVisibleRYSH1)
 							this.selectVinfoByAIDFYRYSH()
+							this.selectshenhshul()
 							this.formRYSH1.leaderid = localStorage.getItem('oid')
 						}
 					},
@@ -958,13 +965,36 @@
 							console.log(resp.data)
 							console.log(resp.data['shuju'])
 							console.log(resp.data['total'])
-							this.totalSH = resp.data['total']
-							this.gridDataSH=resp.data['shuju']
+							this.totalRYSH = resp.data['total']
+							this.gridDataRYSH=resp.data['shuju']
 						}).catch((error)=>{
 							console.log(error.response)
 						})
 					},
-					
+					selectshenhshul(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/applicationreview/selectshenhshul?activityid=' + this.formSH1.activityid,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+						}).then((resp)=>{
+							console.log(resp.data)
+							this.selectshenhshuls = resp.data[0]
+							this.formSH1.numberofenrolledvolunteer = resp.data[0].numberofenrolledvolunteer <= 0? 1 : 2
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					},
+					// 审核状态规则
+					Validatorauditstatusid(rule, value, callback) {
+						if(value == '2' && this.selectshenhshuls.numberofenrolledvolunteer >= this.selectshenhshuls.numberofrequiredvolunteer){
+							callback('人员已招满，无法审核通过');
+						}else{
+							callback();
+						}
+					},
+
 					RYshenh2(row){
 						this.dialogFormVisibleRYSH1 = true
 						this.formRYSH1.leaderid = localStorage.getItem('oid')
@@ -987,6 +1017,7 @@
 						  this.$message.success('提交审核成功');
 						  this.dialogFormVisibleRYSH1 = false
 						  this.selectVinfoByAIDFYRYSH()
+						  this.selectshenhshul()
 						  // location.reload()
 					  }).catch((error)=>{
 						  console.log(error.response);

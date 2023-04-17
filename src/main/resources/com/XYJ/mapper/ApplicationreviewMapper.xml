@@ -28,15 +28,15 @@
         <association property="users" javaType="com.XYJ.pojo.User">
             <id column="volunteerid" property="volunteerid" ></id>
             <result column="phone" property="phone" ></result>
-            <result column="applicationstatus" property="password" ></result>
+            <result column="password" property="password" ></result>
             <result column="name" property="name" ></result>
-            <result column="status" property="idnumber" ></result>
+            <result column="idnumber" property="idnumber" ></result>
             <result column="gender" property="gender" ></result>
             <result column="birthday" property="birthday" ></result>
             <result column="province" property="province" ></result>
-            <result column="city" property="city" ></result>
-            <result column="district" property="district" ></result>
-            <result column="address" property="address" ></result>
+            <result column="shenqingshu" property="city" ></result>
+            <result column="yishenhe" property="district" ></result>
+            <result column="yiluqu" property="address" ></result>
             <!--        <result column="education" property="education" ></result>-->
             <!--        <result column="occupation" property="occupation" ></result>-->
             <!--        <result column="politicaliandscape" property="politicaliandscape" ></result>-->
@@ -51,7 +51,11 @@
         </association>
     </resultMap>
     <select id="selectVinfoByAIDFYSH" resultMap="rs1">
-        select * from applicationreview as ap
+        select *,
+        (select count(*) from applicationreview where applicationreview.activityid =#{applicationreview.activityid} )as shenqingshu,
+        (select count(*) from applicationreview  where applicationreview.activityid =#{applicationreview.activityid} and applicationreview.auditstatusid in (2,3) )as yishenhe,
+        (select count(*) from applicationreview  where applicationreview.activityid =#{applicationreview.activityid} and applicationreview.auditstatusid = 2 )as yiluqu
+        from applicationreview as ap
         left join volunteer as vo on vo.volunteerid = ap.volunteerid
         left join auditstatus as au on ap.auditstatusid = au.auditstatusid
         <where>
@@ -72,6 +76,14 @@
                 and ap.auditstatusid = 1
             </if>
         </where>
+    </select>
+    <select id="selectshenhshul" resultType="com.XYJ.pojo.ShenHeShuLiang">
+        select
+            (select count(*) from applicationreview where applicationreview.activityid =#{activityid} )as shenqingshu,
+            (select count(*) from applicationreview  where applicationreview.activityid =#{activityid} and applicationreview.auditstatusid in (2,3) )as yishenhe,
+            (select count(*) from applicationreview  where applicationreview.activityid =#{activityid} and applicationreview.auditstatusid = 2 )as yiluqu,
+            (select numberofrequiredvolunteer from activity where activityid = #{activityid} ) as numberofrequiredvolunteer,
+            (select numberofenrolledvolunteer from activity where activityid = #{activityid} ) as numberofenrolledvolunteer
     </select>
 
 

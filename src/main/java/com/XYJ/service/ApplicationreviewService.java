@@ -5,10 +5,13 @@ import com.XYJ.mapper.ApplicationreviewMapper;
 import com.XYJ.pojo.Aapplication;
 import com.XYJ.pojo.Applicationreview;
 import com.XYJ.pojo.PageFY;
+import com.XYJ.pojo.ShenHeShuLiang;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.XYJ.util.SqlSessionFactoryUtils.getSqlSessionFactory;
 
@@ -59,8 +62,19 @@ public class ApplicationreviewService {
         sqlSession.close();
         return page;
     }
+
+    public List<ShenHeShuLiang> selectshenhshul(String activityid){
+        SqlSession sqlSession = factory.openSession();
+        ApplicationreviewMapper applicationreviewMapper = sqlSession.getMapper(ApplicationreviewMapper.class);
+        List<ShenHeShuLiang> selectshenhshul = applicationreviewMapper.selectshenhshul(activityid);
+        sqlSession.close();
+        return selectshenhshul;
+    }
     public static void main(String[] args) {
         ApplicationreviewService a = new ApplicationreviewService();
         System.out.println(a.auditid("HD1101017903314795"));
+
+        List<ShenHeShuLiang> aapplications = a.selectshenhshul("HD1303047604159249");
+        System.out.println(aapplications);
     }
 }

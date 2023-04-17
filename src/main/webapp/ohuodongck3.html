@@ -204,6 +204,11 @@
 			</el-dialog>
 			
 			<el-dialog title="审核参加人员" :visible.sync="dialogTableVisibleSH">
+				<span>招募人数：{{selectshenhshuls.numberofrequiredvolunteer}}</span>
+				<span>已报名人数：{{selectshenhshuls.numberofenrolledvolunteer}}</span>
+				<span>申请数：{{selectshenhshuls.shenqingshu}}</span>
+				<span>已审核：{{selectshenhshuls.yishenhe}}</span>
+				<!-- <span>已录取：{{selectshenhshuls.yiluqu}}</span> -->
 			  <el-table :data="gridDataSH">
 			    <el-table-column property="users.name" label="姓名"></el-table-column>
 			    <el-table-column property="users.phone" label="联系方式"></el-table-column>
@@ -347,12 +352,14 @@
 						},
 						rulesSH1:{
 							auditstatusid: [
-								{required: true, message: '请选择审核状态', trigger: 'blur'}
+								{required: true, message: '请选择审核状态', trigger: 'blur'},
+								{validator: this.Validatorauditstatusid, trigger: 'blur'}
 							]
 						},
 						formVinfo:{
 							volunteerid:''
-						}
+						},
+						selectshenhshuls:'',
 					}
 				},
 				methods:{
@@ -524,12 +531,14 @@
 							this.$message.warning('该活动不需要人员审核');
 						}else{
 							this.formSH1.activityid = this.formSH.activityid = row.activityid
-							this.formSH1.numberofenrolledvolunteer = row.numberofenrolledvolunteer <= 0? 1 : 2
+							// this.formSH1.numberofenrolledvolunteer = row.numberofenrolledvolunteer <= 0? 1 : 2
 							console.log(row.numberofenrolledvolunteer)
 							console.log(this.formSH1.numberofenrolledvolunteer)
 							this.dialogTableVisibleSH = true
 							this.selectVinfoByAIDFYSH()
-							this.formSH1.leaderid = row.leaderid ==''?localStorage.getItem('oid'):row.leaderid
+							this.selectshenhshul()
+							this.formSH1.leaderid = row.leaderid ==localStorage.getItem('oid')
+
 						}
 					},
 					
@@ -551,6 +560,23 @@
 							console.log(error.response)
 						})
 					},
+					selectshenhshul(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/applicationreview/selectshenhshul?activityid=' + this.formSH1.activityid,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+						}).then((resp)=>{
+							console.log(resp.data)
+							this.selectshenhshuls = resp.data[0]
+							this.formSH1.numberofenrolledvolunteer = resp.data[0].numberofenrolledvolunteer <= 0? 1 : 2
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					},
+					
+					
 					
 					shenh2(row){
 						this.dialogFormVisibleSH1 = true
@@ -558,7 +584,14 @@
 						this.formSH1.volunteerid = row.users.volunteerid
 						this.formSH1.auditid = row.auditid
 					},
-					
+					// 审核状态规则
+					Validatorauditstatusid(rule, value, callback) {
+						if(value == '2' && this.selectshenhshuls.numberofenrolledvolunteer >= this.selectshenhshuls.numberofrequiredvolunteer){
+							callback('人员已招满，无法审核通过');
+						}else{
+							callback();
+						}
+					},
 					tjSH(){
 					this.$refs.formSH1
 					.validate()
@@ -574,6 +607,7 @@
 						  this.$message.success('提交审核成功');
 						  this.dialogFormVisibleSH1 = false
 						  this.selectVinfoByAIDFYSH()
+						  this.selectshenhshul()
 						  // location.reload()
 					  }).catch((error)=>{
 						  console.log(error.response);

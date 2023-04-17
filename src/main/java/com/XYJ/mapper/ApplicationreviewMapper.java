@@ -2,12 +2,14 @@ package com.XYJ.mapper;
 
 import com.XYJ.pojo.Aapplication;
 import com.XYJ.pojo.Applicationreview;
+import com.XYJ.pojo.ShenHeShuLiang;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ApplicationreviewMapper {
 
@@ -23,4 +25,6 @@ public interface ApplicationreviewMapper {
     void updateAuditstatusid1(Applicationreview applicationreview);
     List<Applicationreview> selectVinfoByAIDFYSH(@Param("begin") int begin, @Param("size") int size, @Param("applicationreview") Applicationreview applicationreview);
     int selectVinfoByAIDCountSH(Applicationreview applicationreview);
+
+    List<ShenHeShuLiang> selectshenhshul(String activityid);
 }
