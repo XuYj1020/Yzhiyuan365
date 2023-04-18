@@ -49,4 +49,21 @@ public class OjoinService {
         sqlSession.close();
         return page;
     }
+
+    public void updateauditstatusid(Ojoin ojoin){
+        SqlSession sqlSession = factory.openSession();
+        OjoinMapper ojoinmapper = sqlSession.getMapper(OjoinMapper.class);
+        ojoinmapper.updateauditstatusid(ojoin);
+        sqlSession.commit();
+        sqlSession.close();
+    }
+
+    public int selectshifoujiaruhoushenhe(Ojoin ojoin){
+        SqlSession sqlSession = factory.openSession();
+        OjoinMapper ojoinmapper = sqlSession.getMapper(OjoinMapper.class);
+        int count= ojoinmapper.selectshifoujiaruhoushenhe(ojoin);
+        sqlSession.commit();
+        sqlSession.close();
+        return count;
+    }
 }

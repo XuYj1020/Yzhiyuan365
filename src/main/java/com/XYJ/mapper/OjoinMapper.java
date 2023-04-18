@@ -23,4 +23,8 @@ public interface OjoinMapper {
 
     List<Ojoin> selectALLBYOVIDJOINFY(@Param("begin") int begin, @Param("size") int size, @Param("ojoin")Ojoin ojoin);
     int selectALLBYOVIDJOINFYCount(Ojoin ojoin);
+
+    void updateauditstatusid(Ojoin ojoin);
+
+    int selectshifoujiaruhoushenhe(Ojoin ojoin);
 }

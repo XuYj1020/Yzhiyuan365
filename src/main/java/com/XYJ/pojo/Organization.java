@@ -31,6 +31,16 @@ public class Organization {
 
     private Areanew areanews;
 
+    private Userststus userststus;
+
+    public Userststus getUserststus() {
+        return userststus;
+    }
+
+    public void setUserststus(Userststus userststus) {
+        this.userststus = userststus;
+    }
+
     public Areanew getAreanews() {
         return areanews;
     }
@@ -269,6 +279,7 @@ public class Organization {
                 ", otypes=" + otypes +
                 ", registrationstatuss=" + registrationstatuss +
                 ", areanews=" + areanews +
+                ", userststus=" + userststus +
                 '}';
     }
 }

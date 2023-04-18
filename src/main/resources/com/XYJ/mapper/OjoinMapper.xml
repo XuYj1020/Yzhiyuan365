@@ -71,11 +71,13 @@
             <result column="status" property="status" ></result>
         </association>
     </resultMap>
+
     <select id="selectALLBYOVIDJOINFY" resultMap="rs1">
         select * from ojoin
                           left join volunteer on ojoin.volunteerid = volunteer.volunteerid
                           left join omembers on omembers.volunteerid =ojoin.volunteerid
                           left join organization on organization.organizationid = ojoin.organizationid
+                        left join auditstatus on auditstatus.auditstatusid = ojoin.auditstatusid
         <where>
             <if test="ojoin.auditstatusid != null and ojoin.auditstatusid != ''">
                 and ojoin.auditstatusid = #{ojoin.auditstatusid}
@@ -94,6 +96,7 @@
         left join volunteer on ojoin.volunteerid = volunteer.volunteerid
         left join omembers on omembers.volunteerid = ojoin.volunteerid
         left join organization on organization.organizationid = ojoin.organizationid
+        left join auditstatus on auditstatus.auditstatusid = ojoin.auditstatusid
         <where>
             <if test="auditstatusid != null and auditstatusid != ''">
                 and ojoin.auditstatusid = #{auditstatusid}
@@ -108,4 +111,16 @@
     </select>
 
 
+    <update id="updateauditstatusid">
+        update ojoin set
+            auditstatusid = #{auditstatusid}
+        where applicationid = #{applicationid}
+    </update>
+
+    <select id="selectshifoujiaruhoushenhe" resultType="java.lang.Integer">
+        select count(*) from ojoin
+        left join omembers on omembers.volunteerid = ojoin.volunteerid
+        where ((ojoin.auditstatusid = 2 and omembers.memberstatusid = 1) or ojoin.auditstatusid = 1)
+          and ojoin.volunteerid = #{volunteerid} and ojoin.organizationid = #{organizationid}
+    </select>
 </mapper>

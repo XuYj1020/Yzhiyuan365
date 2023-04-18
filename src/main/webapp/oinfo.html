@@ -37,7 +37,7 @@
 										    </template>
 									  <el-descriptions-item label="组织id" >{{oinfos.organizationid}}</el-descriptions-item>
 									  <el-descriptions-item label="组织名称">{{oinfos.oname}}</el-descriptions-item>
-									  <el-descriptions-item label="组织状态">{{oinfos.name}}</el-descriptions-item>
+									  <el-descriptions-item label="组织状态" v-if="oinfos.userststus">{{oinfos.userststus.status}}</el-descriptions-item>
 									  <el-descriptions-item label="手机号">
 										  <el-row>
 										    <el-col :span="18"><div>{{oinfos.phone}}</div></el-col>
@@ -58,6 +58,7 @@
 									  <el-descriptions-item label="邮箱地址">{{oinfos.oemail}}</el-descriptions-item>
 									  <el-descriptions-item label="注册时间">{{oinfos.registrationtime}}</el-descriptions-item>
 									  <el-descriptions-item label="详细地址">{{oinfos.oaddress}}</el-descriptions-item>
+									  <el-descriptions-item label="组织介绍">{{oinfos.ointroduce}}</el-descriptions-item>
 									</el-descriptions>
 								</div>
 							</el-col>

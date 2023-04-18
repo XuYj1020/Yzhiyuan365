@@ -115,6 +115,10 @@
             <result column="whole_name" property="wholeName"></result>
             <result column="count" property="pinYin"></result>
         </association>
+        <association property="userststus" javaType="com.XYJ.pojo.Userststus">
+            <result column="userstatusid" property="userstatusid"></result>
+            <result column="status" property="status"></result>
+        </association>
     </resultMap>
 
     <select id="selectByOID" resultMap="rs1">
@@ -128,10 +132,11 @@
 
     <select id="selectByOIDAll" resultMap="rs1">
         select *,otype.otype as oo ,registrationstatus.registrationstatus as rr,(select count(*) from omembers where omembers.organizationid = organization.organizationid and omembers.memberstatusid = 1) as count
-        from organization,otype,registrationstatus,areanew
+        from organization,otype,registrationstatus,areanew,userststus
         where organization.otype = otype.otypeid
           and organization.registrationstatus = registrationstatus.registrationstatusid
           and areanew.area_code = organization.district
+          and userststus.userstatusid = organization.userstatusid
           and organizationid =#{organizationid};
     </select>
 
