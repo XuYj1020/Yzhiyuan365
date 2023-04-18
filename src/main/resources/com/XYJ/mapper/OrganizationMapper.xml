@@ -114,6 +114,7 @@
         <association property="areanews" javaType="com.XYJ.pojo.Areanew">
             <result column="whole_name" property="wholeName"></result>
             <result column="count" property="pinYin"></result>
+            <result column="zipCode" property="zipCode"></result>
         </association>
         <association property="userststus" javaType="com.XYJ.pojo.Userststus">
             <result column="userstatusid" property="userstatusid"></result>
@@ -122,7 +123,10 @@
     </resultMap>
 
     <select id="selectByOID" resultMap="rs1">
-        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr,(select count(*) from omembers where omembers.organizationid = organization.organizationid and omembers.memberstatusid = 1) as count
+        select *,otype.otype as oo ,
+               registrationstatus.registrationstatus as rr,
+               (select count(*) from omembers where omembers.organizationid = organization.organizationid and omembers.memberstatusid = 1) as count,
+                (select sum(distribute.volunteerhours) from distribute,activity,organization where distribute.activityid = activity.activityid and activity.organizationid = organization.organizationid) as zipCode
         from organization,otype,registrationstatus,areanew
         where organization.otype = otype.otypeid
           and organization.registrationstatus = registrationstatus.registrationstatusid

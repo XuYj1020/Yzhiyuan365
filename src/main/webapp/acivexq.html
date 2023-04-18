@@ -451,6 +451,11 @@
 					
 					// 报名
 					bm(){
+						if(!localStorage.getItem('vid')){
+							this.$message.error('未登录，请先登录');
+							window.open('./vlongin.html'); 
+							return
+						}
 						this.selectByVAIDCOUNT()
 						this.selectByVAIDjoinCOUNT()
 						if(this.applicationcount != 0){

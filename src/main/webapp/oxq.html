@@ -121,13 +121,13 @@
 											    <el-descriptions-item label="注册时间" >{{organizations.registrationtime}}</el-descriptions-item>
 												<el-descriptions-item label="组织人数" v-if="organizations.areanews">{{organizations.areanews.pinYin}}人</el-descriptions-item>
 												<el-descriptions-item label="组织负责人">{{organizations.name}}</el-descriptions-item>
-												<el-descriptions-item label="活动时长"></el-descriptions-item>
+												<el-descriptions-item label="活动时长" v-if="organizations.areanews">{{organizations.areanews.zipCode}}</el-descriptions-item>
 											    <el-descriptions-item label="联系地址">{{Areas}}&nbsp;{{organizations.oaddress}} </el-descriptions-item>
 											</el-descriptions>
-											<el-button type="warning" @click="sqjr" v-if="ojoins.auditstatusid == 1" >取消申请</el-button>
-											<el-button type="primary" @click="sqjr" v-else-if="omembers.memberstatusid !== 1 && omembers.memberstatusid !== 3">申请加入</el-button>
-											<el-button type="danger" @click="sqjr" v-else-if="omembers.memberstatusid === 1">退出组织</el-button>
-											<el-button v-else="omembers.memberstatusid === 3" :disabled="omembers.memberstatusid === 3">无法加入该组织</el-button>
+											<el-button type="warning"  v-if="count.zuzhiluquzhong != 0 && count.zuzhiyiluq == 0 && count.zuzhiheimingdan == 0" :disabled="count.zuzhiluquzhong != 0 && count.zuzhiyiluq == 0 && count.zuzhiheimingdan == 0">申请审核中</el-button>
+											<el-button type="primary" @click="sqjr" v-if="count.zuzhiluquzhong == 0 && count.zuzhiyiluq == 0 && count.zuzhiheimingdan == 0">申请加入</el-button>
+											<el-button type="success"  v-if="count.zuzhiluquzhong == 0 && count.zuzhiyiluq != 0 && count.zuzhiheimingdan == 0" :disabled="count.zuzhiluquzhong == 0 && count.zuzhiyiluq != 0 && count.zuzhiheimingdan == 0">已加入该组织</el-button>
+											<el-button type="danger" v-if="count.zuzhiluquzhong == 0 && count.zuzhiyiluq == 0 && count.zuzhiheimingdan != 0" :disabled="count.zuzhiluquzhong == 0 && count.zuzhiyiluq == 0 && count.zuzhiheimingdan != 0">无法加入该组织</el-button>
 										</div>
 										    
 									
@@ -141,20 +141,54 @@
 							      {{organizations.ointroduce}}
 							    </div>
 							  </el-card>
-							  <el-card class="box-card" shadow="never">
+							  <el-card class="box-card" shadow="never" style="height: 300px;">
 							    <div slot="header" class="clearfix">
 							      <span>进行中的活动</span>
 							    </div>
 							    <div  class="text item">
-							      
+							       <el-table
+							            :data="tableDatajxz"
+							            style="width: 100%">
+							            <el-table-column
+							              prop="title"
+							              label="活动名称"
+							              width="180">
+							            </el-table-column>
+							            <el-table-column
+							              prop="volunteerhours"
+							              label="志愿时长"
+							              width="180">
+							            </el-table-column>
+							            <el-table-column
+							              prop="starttime"
+							              label="活动开始时间">
+							            </el-table-column>
+							          </el-table>
 							    </div>
 							  </el-card>
-							  <el-card class="box-card" shadow="never">
+							  <el-card class="box-card" shadow="never" style="height: 300px;">
 							    <div slot="header" class="clearfix">
 							      <span>历史活动</span>
 							    </div>
 							    <div  class="text item">
-							      
+							       <el-table
+							            :data="tableDatals"
+							            style="width: 100%">
+							            <el-table-column
+							              prop="title"
+							              label="活动名称"
+							              width="180">
+							            </el-table-column>
+							            <el-table-column
+							              prop="volunteerhours"
+							              label="志愿时长"
+							              width="180">
+							            </el-table-column>
+							            <el-table-column
+							              prop="endtime"
+							              label="结束时间">
+							            </el-table-column>
+							          </el-table>
 							    </div>
 							  </el-card>
 
@@ -177,14 +211,19 @@
 					console.log(this.query.organizationid);
 					// 获取组织详细信息
 					this.selectByOID();
-					console.log(this.organizations);
+					// console.log(this.organizations);
 					// this.SelectadressByAreaID();
-					console.log(this.organizations.district)
-					this.ov.volunteerid=localStorage.getItem('vid')
-					this.ov.organizationid=this.query.organizationid
+					// console.log(this.organizations.district)
+					 this.ov.volunteerid=localStorage.getItem('vid')
+					
+					 console.log("我是"+localStorage.getItem('vid'))
+					this.formls.organizationid = this.formjxz.organizationid =this.ov.organizationid=this.query.organizationid
 					// 
-					this.SelectomamberByOVID();
-					this.SelectojoinByOVID();
+					// this.SelectomamberByOVID();
+					// this.SelectojoinByOVID();
+					this.selectpanduanshifoukeyjiaruzuzhi();
+					this.lshd();
+					this.jxz();
 				},
 				data(){		
 					return {
@@ -204,9 +243,20 @@
 							volunteerid:'',
 							organizationid:''
 						},
+						count:'',
 						omembers:'',
-						ojoins:''
-					      };
+						ojoins:'',
+						formls:{
+							organizationid:'',
+							activestatusid:4
+						},
+						tableDatajxz:[],
+						formjxz:{
+							organizationid:'',
+							activestatusid:3
+						},
+						tableDatals:[],
+					};
 				},
 				 methods: {
 					// selectByOID(){
@@ -285,44 +335,66 @@
 						    console.log(error.response);//可以拿到后端返回的信息
 						  });
 					},
-					//查找是否已加入组织或已退出组织或被拉黑,如果已退出组织查询是否有新的申请记录
-					SelectomamberByOVID(){
-						axios({
-						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/Omembers/selectByOVid",
-							// headers:headers,
-							headers:{
-								vtoken:localStorage.getItem('vtoken')
-							},
-							data:this.ov
-						  }).then((resp)=>{
-							console.log(resp.data)
-							this.omembers = resp.data[0]
-						  }).catch((error)=> {
-						    console.log(error.response);//可以拿到后端返回的信息
-						  });
-					},
+					// //查找是否已加入组织或已退出组织或被拉黑,如果已退出组织查询是否有新的申请记录
+					// SelectomamberByOVID(){
+					// 	axios({
+					// 	    method:"post",
+					// 	    url:"http://localhost:8080/Yzhiyuan365/Omembers/selectByOVid",
+					// 		// headers:headers,
+					// 		headers:{
+					// 			vtoken:localStorage.getItem('vtoken')
+					// 		},
+					// 		data:this.ov
+					// 	  }).then((resp)=>{
+					// 		console.log(resp.data)
+					// 		this.omembers = resp.data[0]
+					// 	  }).catch((error)=> {
+					// 	    console.log(error.response);//可以拿到后端返回的信息
+					// 	  });
+					// },
 					
-					// 查找是否已经在申请中
-					SelectojoinByOVID(){
+					// // 查找是否已经在申请中
+					// SelectojoinByOVID(){
+					// 	axios({
+					// 	    method:"post",
+					// 	    url:"http://localhost:8080/Yzhiyuan365/ojoin/selectByOVid",
+					// 		// headers:headers,
+					// 		headers:{
+					// 			vtoken:localStorage.getItem('vtoken')
+					// 		},
+					// 		data:this.ov
+					// 	  }).then((resp)=>{
+					// 		console.log(resp.data)
+					// 		this.ojoins = resp.data[0]
+					// 	  }).catch((error)=> {
+					// 	    console.log(error.response);//可以拿到后端返回的信息
+					// 	  });
+					// },
+					
+					selectpanduanshifoukeyjiaruzuzhi(){
 						axios({
-						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/ojoin/selectByOVid",
+							method:"post",
+							url:"http://localhost:8080/Yzhiyuan365/ojoin/selectpanduanshifoukeyjiaruzuzhi",
 							// headers:headers,
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},
 							data:this.ov
-						  }).then((resp)=>{
+						}).then((resp)=>{
 							console.log(resp.data)
-							this.ojoins = resp.data[0]
-						  }).catch((error)=> {
-						    console.log(error.response);//可以拿到后端返回的信息
-						  });
+							this.count = resp.data[0]
+							console.log(this.count)
+						}).catch((error)=> {
+							console.log(error.response);//可以拿到后端返回的信息
+						});
 					},
-
 					// 按钮事件
 					sqjr(){
+						if(!localStorage.getItem('vid')){
+							this.$message.error('未登录，请先登录');
+							window.open('./vlongin.html'); 
+							return
+						}
 						axios({
 						    method:"post",
 						    url:"http://localhost:8080/Yzhiyuan365/ojoin/insert",
@@ -341,6 +413,40 @@
 						  }).catch((error)=> {
 						    console.log(error.response);//可以拿到后端返回的信息
 							this.$message.error('出错了，请尝试再次申请');
+						  });
+					},
+					
+					lshd(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Activity/selectAcstylelimit3",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formls
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.tableDatals = resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					jxz(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Activity/selectAcstylelimit3",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formjxz
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.tableDatajxz = resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
 						  });
 					}
 					

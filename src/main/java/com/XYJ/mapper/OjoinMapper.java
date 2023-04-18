@@ -3,6 +3,7 @@ package com.XYJ.mapper;
 import com.XYJ.pojo.Activity;
 import com.XYJ.pojo.Ojoin;
 import com.XYJ.pojo.Omembers;
+import com.XYJ.pojo.ShenHeShuLiang;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -28,4 +29,5 @@ public interface OjoinMapper {
 
     int selectshifoujiaruhoushenhe(Ojoin ojoin);
 
+    List<ShenHeShuLiang>selectpanduanshifoukeyjiaruzuzhi(Ojoin ojoin);
 }

@@ -75,7 +75,7 @@
     <select id="selectALLBYOVIDJOINFY" resultMap="rs1">
         select * from ojoin
                           left join volunteer on ojoin.volunteerid = volunteer.volunteerid
-                          left join omembers on omembers.volunteerid =ojoin.volunteerid
+                          left join omembers on omembers.volunteerid =ojoin.volunteerid and omembers.applicationid = ojoin.applicationid
                           left join organization on organization.organizationid = ojoin.organizationid
                         left join auditstatus on auditstatus.auditstatusid = ojoin.auditstatusid
         <where>
@@ -94,7 +94,7 @@
     <select id="selectALLBYOVIDJOINFYCount" resultType="java.lang.Integer">
         select count(*) from ojoin
         left join volunteer on ojoin.volunteerid = volunteer.volunteerid
-        left join omembers on omembers.volunteerid = ojoin.volunteerid
+        left join omembers on omembers.volunteerid = ojoin.volunteerid and omembers.applicationid = ojoin.applicationid
         left join organization on organization.organizationid = ojoin.organizationid
         left join auditstatus on auditstatus.auditstatusid = ojoin.auditstatusid
         <where>
@@ -128,5 +128,11 @@
         left join omembers on omembers.volunteerid = ojoin.volunteerid
         where ((ojoin.auditstatusid = 2 and omembers.memberstatusid = 1) or ojoin.auditstatusid = 1)
           and ojoin.volunteerid = #{volunteerid} and ojoin.organizationid = #{organizationid}
+    </select>
+    <select id="selectpanduanshifoukeyjiaruzuzhi" resultType="com.XYJ.pojo.ShenHeShuLiang">
+        select
+            (select count(*) from omembers where memberstatusid = 1 and organizationid = #{organizationid} and volunteerid = #{volunteerid}) as zuzhiyiluq,
+            (select count(*) from ojoin where auditstatusid = 1 and organizationid = #{organizationid} and volunteerid = #{volunteerid}) as zuzhiluquzhong,
+            (select count(*) from omembers where memberstatusid = 3 and organizationid = #{organizationid} and volunteerid = #{volunteerid}) as zuzhiheimingdan
     </select>
 </mapper>

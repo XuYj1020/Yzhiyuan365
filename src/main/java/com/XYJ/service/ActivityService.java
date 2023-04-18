@@ -34,6 +34,14 @@ public class ActivityService {
         return activity;
     }
 
+    public List<Activity> selectAcstylelimit3(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        List<Activity> activitys = activitymapper.selectAcstylelimit3(activity);
+        sqlSession.close();
+        return activitys;
+    }
+
     public List<Activity> selectByAcstyleidAll(){
         SqlSession sqlSession = factory.openSession();
         ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);

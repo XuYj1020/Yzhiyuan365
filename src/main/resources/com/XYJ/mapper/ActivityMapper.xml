@@ -441,6 +441,7 @@
     </select>
 
 
+
     <update id="updateAinfo">
         update activity
        <set>
@@ -520,4 +521,8 @@
         </set>
             where activityid = #{activityid}
     </update>
+
+    <select id="selectAcstylelimit3" resultType="com.XYJ.pojo.Activity">
+        select * from activity where organizationid = #{organizationid} and activestatusid = #{activestatusid} ORDER BY RAND() LIMIT 3
+    </select>
 </mapper>

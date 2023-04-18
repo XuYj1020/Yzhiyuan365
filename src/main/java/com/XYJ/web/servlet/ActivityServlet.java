@@ -46,7 +46,21 @@ public class ActivityServlet extends BaseServlet{
 //        响应数据 发送给客户端
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write(jsonString);
+    }
 
+    public void selectAcstylelimit3(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String params = bufferedReader.readLine();
+        Activity activity = JSON.parseObject(params,Activity.class);
+
+        List<Activity> activitys = activityservice.selectAcstylelimit3(activity);
+//        将集合转换为JSON数据 序列化
+        String jsonString = JSON.toJSONString(activitys);
+        System.out.println(jsonString);
+//        响应数据 发送给客户端
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write(jsonString);
     }
 
     public void  selectByAcstyleid(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

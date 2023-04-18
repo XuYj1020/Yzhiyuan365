@@ -46,4 +46,5 @@ public interface ActivityMapper {
 
     void updateActivitynumberofenrolledvolunteer(Activity activity);
 
+    List<Activity> selectAcstylelimit3(Activity activity);
 }

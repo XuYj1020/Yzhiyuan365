@@ -7,6 +7,35 @@ public class ShenHeShuLiang {
 
     private int numberofrequiredvolunteer;
     private int numberofenrolledvolunteer;
+    private int zuzhiluquzhong;
+    private int zuzhiyiluq;
+    private int zuzhiheimingdan;
+
+
+    public int getZuzhiluquzhong() {
+        return zuzhiluquzhong;
+    }
+
+    public void setZuzhiluquzhong(int zuzhiluquzhong) {
+        this.zuzhiluquzhong = zuzhiluquzhong;
+    }
+
+    public int getZuzhiyiluq() {
+        return zuzhiyiluq;
+    }
+
+    public void setZuzhiyiluq(int zuzhiyiluq) {
+        this.zuzhiyiluq = zuzhiyiluq;
+    }
+
+    public int getZuzhiheimingdan() {
+        return zuzhiheimingdan;
+    }
+
+    public void setZuzhiheimingdan(int zuzhiheimingdan) {
+        this.zuzhiheimingdan = zuzhiheimingdan;
+    }
+
     public int getShenqingshu() {
         return shenqingshu;
     }
@@ -55,6 +84,9 @@ public class ShenHeShuLiang {
                 ", yiluqu=" + yiluqu +
                 ", numberofrequiredvolunteer=" + numberofrequiredvolunteer +
                 ", numberofenrolledvolunteer=" + numberofenrolledvolunteer +
+                ", zuzhiluquzhong=" + zuzhiluquzhong +
+                ", zuzhiyiluq=" + zuzhiyiluq +
+                ", zuzhiheimingdan=" + zuzhiheimingdan +
                 '}';
     }
 }

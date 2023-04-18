@@ -1,9 +1,6 @@
 package com.XYJ.web.servlet;
 
-import com.XYJ.pojo.Applicationreview;
-import com.XYJ.pojo.Ojoin;
-import com.XYJ.pojo.Omembers;
-import com.XYJ.pojo.PageFY;
+import com.XYJ.pojo.*;
 import com.XYJ.service.OjoinService;
 import com.XYJ.service.OmembersService;
 import com.XYJ.service.UserService;
@@ -88,6 +85,20 @@ public class OjoinServlet extends BaseServlet{
         int count =  ojoinservice.selectshifoujiaruhoushenhe(ojoin);
         //3. 返回数据
         String jsonString = String.valueOf(count);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectpanduanshifoukeyjiaruzuzhi(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+        req.setCharacterEncoding("UTF-8");
+        //        接收用户id和组织id
+        BufferedReader ac = req.getReader();
+        String params = ac.readLine();//获取json字符串
+        Ojoin ojoin = JSON.parseObject(params,Ojoin.class);
+//          2. 调用service
+        List<ShenHeShuLiang> count =  ojoinservice.selectpanduanshifoukeyjiaruzuzhi(ojoin);
+        //3. 返回数据
+        String jsonString = JSON.toJSONString(count);
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write(jsonString);
     }

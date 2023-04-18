@@ -3,10 +3,7 @@ package com.XYJ.service;
 import com.XYJ.mapper.AapplicationMapper;
 import com.XYJ.mapper.ActivityMapper;
 import com.XYJ.mapper.OjoinMapper;
-import com.XYJ.pojo.Aapplication;
-import com.XYJ.pojo.Activity;
-import com.XYJ.pojo.Ojoin;
-import com.XYJ.pojo.PageFY;
+import com.XYJ.pojo.*;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -62,6 +59,15 @@ public class OjoinService {
         SqlSession sqlSession = factory.openSession();
         OjoinMapper ojoinmapper = sqlSession.getMapper(OjoinMapper.class);
         int count= ojoinmapper.selectshifoujiaruhoushenhe(ojoin);
+        sqlSession.commit();
+        sqlSession.close();
+        return count;
+    }
+
+    public List<ShenHeShuLiang> selectpanduanshifoukeyjiaruzuzhi(Ojoin ojoin){
+        SqlSession sqlSession = factory.openSession();
+        OjoinMapper ojoinmapper = sqlSession.getMapper(OjoinMapper.class);
+        List<ShenHeShuLiang> count= ojoinmapper.selectpanduanshifoukeyjiaruzuzhi(ojoin);
         sqlSession.commit();
         sqlSession.close();
         return count;
