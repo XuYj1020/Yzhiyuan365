@@ -112,8 +112,14 @@
 
 
     <update id="updateauditstatusid">
-        update ojoin set
-            auditstatusid = #{auditstatusid}
+        update ojoin
+        <set>
+            <if test="feedback != null and feedback!= ''">
+                feedback = #{feedback},
+            </if>
+            auditstatusid = #{auditstatusid},
+            eta = now()
+        </set>
         where applicationid = #{applicationid}
     </update>
 

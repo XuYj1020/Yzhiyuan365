@@ -30,8 +30,13 @@
 					      :data="tableData"
 					      border
 					      style="width: 100%">
+						  <el-table-column
+						    fixed
+						    prop="organizations.organizationid"
+						    label="组织ID"
+						    align="center">
+						  </el-table-column>
 					      <el-table-column
-					        fixed
 					        prop="applicationid"
 					        label="申请ID"
 					        align="center">
@@ -56,6 +61,16 @@
 						    label="申请状态"
 						    align="center">
 						  </el-table-column>
+						  <el-table-column
+						    prop="eta"
+						    label="审核时间"
+						    align="center">
+						  </el-table-column>
+						  <el-table-column
+						    prop="feedback"
+						    label="审核意见"
+						    align="center">
+						  </el-table-column>
 					      <el-table-column
 					        fixed="right"
 					        label="操作"
@@ -63,10 +78,10 @@
 					        <template slot-scope="scope">
 					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
 					          <el-popconfirm
-					            title="取消申请后需要重新申请,是否确认？"
-					          								@confirm="qxsq(scope.row)"
+					            title="是否确认重新提交申请？"
+					          								@confirm="cxsq(scope.row)"
 					          								>
-					            <el-button type="text" size="small" slot="reference">取消申请</el-button>
+					            <el-button type="text" size="small" slot="reference">重新申请</el-button>
 					          </el-popconfirm>
 					        </template>
 					      </el-table-column>
@@ -112,7 +127,7 @@
 			new Vue({
 				el:"#app",
 				created() {
-					this.formInline.volunteerid = localStorage.getItem('vid')
+					this.formcxsq.volunteerid = this.formInline.volunteerid = localStorage.getItem('vid')
 					this.selectALLBYOVIDJOINFY()
 				},
 				data(){
@@ -124,17 +139,18 @@
 						dialogVisible:false,
 						formInline:{
 							volunteerid:'',
-							auditstatusid:'1'
+							auditstatusid:'3'
 						},
 						
 						dialogVisibleZZCK:false,
 						organizationid:'',
 						oinfos:'',
 						
-						formqxsq:{
-							applicationid:'',
-							auditstatusid: 4,
-						}
+						formcxsq:{
+							organizationid:'',
+							volunteerid:''
+						},
+						count:''
 					}
 					
 				},
@@ -186,29 +202,60 @@
 						  });
 					},
 					
-					qxsq(row){
-						this.formqxsq.applicationid = row.applicationid
-						this.formqxsq.auditstatusid = 4
-						this.updateauditstatusid()
-						console.log(this.formqxsq)
+					cxsq(row){
+						this.formcxsq.organizationid = row.organizationid
+						this.selectshifoujiaruhoushenhe()
+						// if(this.count == 0){
+						// 	this.insert()
+						// }else{
+						// 	this.$message.error('正在申请中或已加入')
+						// }
 					},
-					updateauditstatusid(){
+					
+					selectshifoujiaruhoushenhe(){
 						axios({
 						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/ojoin/updateauditstatusid",
+						    url:"http://localhost:8080/Yzhiyuan365/ojoin/selectshifoujiaruhoushenhe",
 							headers:{
 								vtoken:localStorage.getItem('otoken')
 							},
-							data:this.formqxsq
+							data:this.formcxsq
 						  }).then((resp)=>{
-							if(resp.data == 'success'){
-								this.$message.success('取消申请成功')
-								this.selectALLBYOVIDJOINFY()
-							}
+							  // this.count = resp.data
+							  if(resp.data == 0){
+							  	this.insert()
+							  }else{
+							  	this.$message.error('正在申请中或已加入')
+							  }
 						  }).catch((error)=> {
 						    console.log(error.resp);//可以拿到后端返回的信息
 						  });
-					}
+					},
+					
+					
+					
+					
+					insert(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/ojoin/insert",
+							// headers:headers,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formcxsq
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.$message({
+							  message: '成功发送加入申请',
+							  type: 'success'
+							});
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+							this.$message.error('出错了，请尝试再次申请');
+						  });
+					},
+					
 				}
 			})
 		</script>

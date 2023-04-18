@@ -28,7 +28,6 @@
 				  <div class="grid-content bg-purple-dark">
 					  <el-table
 					      :data="tableData"
-						  :span-method="objectSpanMethod"
 					      border
 					      style="width: 100%">
 						  <el-table-column
@@ -60,6 +59,11 @@
 						  <el-table-column
 						    prop="auditstatus.status"
 						    label="申请状态"
+						    align="center">
+						  </el-table-column>
+						  <el-table-column
+						    prop="eta"
+						    label="取消时间"
 						    align="center">
 						  </el-table-column>
 					      <el-table-column
@@ -126,6 +130,15 @@
 						currentPage:1,
 						pageSize:20,
 						total:null,
+						colFields: [
+						        "organizations.organizationid",
+						        "applicationid",
+						        "organizations.oname",
+						        "organizations.name",
+						        "applicationtime",
+						        "auditstatus.status",
+						      ],
+						spanArr: [], //存储合并单元格的开始位置
 						tableData:[],
 						dialogVisible:false,
 						formInline:{
@@ -247,23 +260,21 @@
 						  });
 					},
 					
-					
-					
-					 objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-					        if (columnIndex === 0) {
-					          if (rowIndex % 2 === 0) {
-					            return {
-					              rowspan: 2,
-					              colspan: 1
-					            };
-					          } else {
-					            return {
-					              rowspan: 0,
-					              colspan: 0
-					            };
-					          }
-					        }
-					      }
+					 // objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+					 //        if (columnIndex === 0) {
+					 //          if (rowIndex % 2 === 0) {
+					 //            return {
+					 //              rowspan: 2,
+					 //              colspan: 1
+					 //            };
+					 //          } else {
+					 //            return {
+					 //              rowspan: 0,
+					 //              colspan: 0
+					 //            };
+					 //          }
+					 //        }
+					 //      }
 				}
 			})
 		</script>
