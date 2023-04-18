@@ -99,7 +99,7 @@
 					        <template slot-scope="scope">
 					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
 								<el-button  type="text" size="small" @click="ckbmry(scope.row)">志愿时长发放明细</el-button>
-							
+								<el-button type="text" size="small" @click="ckpj(scope.row)" >查看评价</el-button>
 					        </template>
 					      </el-table-column>
 					    </el-table>
@@ -291,6 +291,46 @@
 				</el-descriptions>
 			</el-dialog>
 			
+			<el-dialog title="查看评价" :visible.sync="dialogFormVisibleCKPJ">
+				<el-table
+				    :data="tableDataCKPJ"
+				    border
+				    style="width: 100%"
+					max-height="250">
+					<el-table-column
+					      type="index"
+					      :index="index" >
+					    </el-table-column>
+					<el-table-column
+					  prop="volunteerid"
+					  label="志愿者编号"
+					  align="center">
+					</el-table-column>
+				    <el-table-column
+				      prop="evaluationtime"
+				      label="评价时间"
+				      align="center">
+				    </el-table-column>
+				    <el-table-column
+				      prop="score"
+				      label="评分"
+				      align="center">
+				    </el-table-column>
+				    <el-table-column
+				      prop="content"
+				      label="评价内容"
+				      align="center">
+				    </el-table-column>
+					<el-table-column
+					  fixed="right"
+					  label="操作"
+					  align="center">
+					  <template slot-scope="scope">
+					    <el-button @click="vinfo2(scope.row)" type="text" size="small">查看评价者</el-button>
+						</el-popconfirm>
+					  </template>
+					</el-table-column>
+			</el-dialog>
 		</div>
 		
 		<script>
@@ -350,6 +390,13 @@
 							volunteerid:''
 						},
 						
+						dialogFormVisibleCKPJ:false,
+						formCKPJ:{
+							activityid:'',
+							volunteerid:'',
+						},
+						index:1,
+						tableDataCKPJ:[]
 					}
 				},
 				methods:{
@@ -488,7 +535,11 @@
 					this.dialogTableVisibleVINFO = true
 					this.selectByVid()
 				},
-				
+				vinfo2(row){
+					this.vid = row.volunteerid
+					this.dialogTableVisibleVINFO = true
+					this.selectByVid()
+				},
 				selectByVid(){
 					axios({
 						method:"post",
@@ -501,6 +552,22 @@
 						this.vinfos = resp.data[0]
 					}).catch((error)=>{
 						console.log(error.resp)
+					})
+				},
+				
+				ckpj(row){
+					this.dialogFormVisibleCKPJ = true
+					this.selecteva()
+				},
+				selecteva(){
+					axios({
+						method:"post",
+						url:"http://localhost:8080/Yzhiyuan365/evaluation/selecteva",
+						data:this.formCKPJ
+					}).then((resp)=>{
+						this.tableDataCKPJ = resp.data
+					}).catch((error)=>{
+						console.log(error.response);
 					})
 				},
 
