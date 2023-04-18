@@ -417,4 +417,81 @@ public static Applicationreview auditid(String params){
         return distribute;
     }
 
+    public static Omembers stafid(String params){
+//        把数据转成map类型
+        Map mapTypes = JSON.parseObject(params);
+        String organizationid = (String) mapTypes.get("organizationid");
+//        判断原先是否已经有发放数据，如果没有则返回0001，如果有则返回最新的审核编号
+        OmembersService omembersService = new OmembersService();
+        String sid = omembersService.stafid(organizationid);
+        String stafid;
+//        审核ID规则  原始活动ID + 0001 编号
+        if(sid.equals("0001")){
+            stafid ="ZZRY"+ organizationid + sid;
+            System.out.println(stafid);
+        }else{
+//            先把前面的ZZRY去掉
+            String a = sid.substring(4);
+//            把去掉后的数字转成long类型  ，  转换完成后+1
+            long num =Long.parseLong(a.substring(a.length()-15))+1;
+//            int num = Integer.parseInt(a.substring(a.length()-10))+1;
+//            把前面被截掉的拿回来
+            String str = a.substring(0,a.length()-15);
+//            字符串重新拼接
+            stafid =  "ZZRY" + str + num;
+        }
+//        把生成的auditid封装进map集合中，然后再传出去
+        mapTypes.put("stafid", stafid);
+        System.out.println(stafid);
+        System.out.println(mapTypes);
+        String jsonString = JSON.toJSONString(mapTypes);
+        Omembers omembers = JSON.parseObject(jsonString,Omembers.class);
+        System.out.println("我是AUTO里面的"+omembers);
+        return omembers;
+    }
+
+
+
+    public static String stafid1(String params){
+//        把数据转成map类型
+//        Map mapTypes = JSON.parseObject(params);
+//        String organizationid = (String) mapTypes.get("organizationid");
+        String organizationid = params;
+//        判断原先是否已经有发放数据，如果没有则返回0001，如果有则返回最新的审核编号
+        OmembersService omembersService = new OmembersService();
+        String sid = omembersService.stafid(organizationid);
+        String stafid;
+//        审核ID规则  原始活动ID + 0001 编号
+        if(sid.equals("0001")){
+            stafid ="ZZRY"+ organizationid + sid;
+            System.out.println(stafid);
+        }else{
+//            先把前面的ZZRY去掉
+            String a = sid.substring(4);
+            System.out.println(a);
+            System.out.println(a.length());
+//            把去掉后的数字转成long类型  ，  转换完成后+1
+            long num =Long.parseLong(a.substring(a.length()-10))+1;
+            System.out.println(num);
+//            int num = Integer.parseInt(a.substring(a.length()-10))+1;
+//            把前面被截掉的拿回来
+            String str = a.substring(0,a.length()-10);
+            System.out.println(str);
+//            字符串重新拼接
+            stafid =  "ZZRY" + str + num;
+        }
+//        把生成的auditid封装进map集合中，然后再传出去
+//        mapTypes.put("stafid", stafid);
+        System.out.println(stafid);
+//        System.out.println(mapTypes);
+//        String jsonString = JSON.toJSONString(mapTypes);
+//        Omembers omembers = JSON.parseObject(jsonString,Omembers.class);
+//        System.out.println("我是AUTO里面的"+omembers);
+        return stafid;
+    }
+
+    public static void main(String[] args) {
+
+System.out.println(IdAutoCreateUtils.stafid1("1301040503284166"));
+    }
 }

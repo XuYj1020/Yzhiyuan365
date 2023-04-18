@@ -11,6 +11,43 @@ public class Omembers {
   private String applicationid;
   private String jointime;
 
+  private Organization organizations;
+  private User users;
+
+private Memberlevel memberlevels;
+private Memberstatus memberstatus;
+
+  public Memberlevel getMemberlevels() {
+    return memberlevels;
+  }
+
+  public void setMemberlevels(Memberlevel memberlevels) {
+    this.memberlevels = memberlevels;
+  }
+
+  public Memberstatus getMemberstatus() {
+    return memberstatus;
+  }
+
+  public void setMemberstatus(Memberstatus memberstatus) {
+    this.memberstatus = memberstatus;
+  }
+
+  public Organization getOrganizations() {
+    return organizations;
+  }
+
+  public void setOrganizations(Organization organizations) {
+    this.organizations = organizations;
+  }
+
+  public User getUsers() {
+    return users;
+  }
+
+  public void setUsers(User users) {
+    this.users = users;
+  }
 
   public String getStafid() {
     return stafid;
@@ -84,6 +121,10 @@ public class Omembers {
             ", mlevelid=" + mlevelid +
             ", applicationid='" + applicationid + '\'' +
             ", jointime='" + jointime + '\'' +
+            ", organizations=" + organizations +
+            ", users=" + users +
+            ", memberlevels=" + memberlevels +
+            ", memberstatus=" + memberstatus +
             '}';
   }
 }

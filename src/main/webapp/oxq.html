@@ -337,6 +337,7 @@
 							  message: '成功发送加入申请',
 							  type: 'success'
 							});
+							location.reload()
 						  }).catch((error)=> {
 						    console.log(error.response);//可以拿到后端返回的信息
 							this.$message.error('出错了，请尝试再次申请');

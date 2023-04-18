@@ -164,7 +164,9 @@
 						formSH:{
 							auditstatusid:'',
 							feedback:'',
-							applicationid:''
+							applicationid:'',
+							organizationid:'',
+							volunteerid:''
 						},
 						rulesSH:{
 							auditstatusid: [
@@ -226,6 +228,8 @@
 					shenh(row){
 						this.dialogFormVisibleSH=true
 						this.formSH.applicationid = row.applicationid
+						this.formSH.volunteerid = row.volunteerid
+						this.formSH.organizationid = row.organizationid
 					},
 					
 					tjSH(){
@@ -233,7 +237,30 @@
 						.validate()
 						// 验证通过
 						.then(()=>{
-							this.updateauditstatusid()
+							if(this.formSH.auditstatusid == 2){
+								Promise
+								.all([
+									this.updateauditstatusid(),
+									this.insert()
+								])
+								.then(res => {
+									this.$message.success('审核成功')
+									this.dialogFormVisibleSH = false
+									this.selectALLBYOVIDJOINFY()
+								})
+								.catch(err => console.log('error: ', err))
+							}else{
+								Promise
+								.all([
+									this.updateauditstatusid()
+								])
+								.then(res => {
+									this.$message.success('审核成功')
+									this.dialogFormVisibleSH = false
+									this.selectALLBYOVIDJOINFY()
+								})
+								.catch(err => console.log('error: ', err))
+							}	
 						})
 						.catch(()=>{
 							  console.log('error submit!!');
@@ -250,9 +277,23 @@
 							data:this.formSH
 						  }).then((resp)=>{
 							if(resp.data == 'success'){
-								this.$message.success('审核成功')
-								this.selectALLBYOVIDJOINFY()
+								// this.$message.success('审核成功')
+								// this.selectALLBYOVIDJOINFY()
 							}
+						  }).catch((error)=> {
+						    console.log(error.response);
+						  });
+					},
+					insert(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/Omembers/insert",
+							headers:{
+								vtoken:localStorage.getItem('otoken')
+							},
+							data:this.formSH
+						  }).then((resp)=>{
+
 						  }).catch((error)=> {
 						    console.log(error.response);
 						  });
