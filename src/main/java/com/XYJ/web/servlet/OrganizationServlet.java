@@ -169,6 +169,17 @@ public class OrganizationServlet extends BaseServlet{
         resp.getWriter().write("success");
     }
 
+    public void updateOpasd(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String param = bufferedReader.readLine();
+        Organization organization = JSON.parseObject(param,Organization.class);
+        System.out.println(param);
+        organizationservice.updateOpasd(organization);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
+    }
+
     public void updateOinfo(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
         req.setCharacterEncoding("UTF-8");
         BufferedReader bufferedReader = req.getReader();
@@ -178,5 +189,15 @@ public class OrganizationServlet extends BaseServlet{
         organizationservice.updateOinfo(organization);
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write("success");
+    }
+
+    public void selectPassword(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        String organizationid = req.getParameter("organizationid");
+        System.out.println(organizationid);
+        String pasd = organizationservice.selectPassword(organizationid);
+        resp.setContentType("text/json;charset=utf-8");
+//        传递组织信息
+        resp.getWriter().write(pasd);
     }
 }

@@ -20,12 +20,18 @@ public interface OrganizationMapper {
     List<Organization> selectByOIDAll(String origanizationID);
     List<Organization> selectOinfoByOID(String origanizationID);
 
+    @Select("select password from organization where organizationid = #{organizationid}")
+    String selectPassword(String origanizationID);
     int selectOraganizationVCount(Organization organization);
     List<Organization> selectOraganizationVFY(@Param("begin") int begin, @Param("size") int size, @Param("organization") Organization organization);
 
     @Update("update organization set phone = #{phone} where organization.organizationid = #{organizationid} ")
     void updateOphone(Organization organization);
 
+    @Update("update organization set password = #{password} where organization.organizationid = #{organizationid} ")
+    void updateOpasd(Organization organization);
+
     void updateOinfo(Organization organization);
+
 
 }

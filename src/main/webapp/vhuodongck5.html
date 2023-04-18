@@ -19,6 +19,10 @@
 			  .bg-purple-light {
 			    background: #e5e9f2;
 			  }
+			  
+			    .el-table .success-row {
+			      background: #f0f9eb;
+			    }
 		</style>
 	</head>
 	<body>
@@ -94,8 +98,8 @@
 					        <template slot-scope="scope">
 					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
 <!-- 					          <el-button type="text" size="small" @click="qd(scope.row)">签到</el-button>-->
-							  <el-button type="text" size="small" @click="pj(scope.row)" >评价</el-button> 
-							  
+							  <el-button type="text" size="small" @click="pj(scope.row)"  >评价</el-button> 
+							  <el-button type="text" size="small" @click="ckpj(scope.row)" >查看评价</el-button>
 					        </template>
 					      </el-table-column>
 					    </el-table>
@@ -180,6 +184,33 @@
 			  </div>
 			</el-dialog>
 			
+			<el-dialog title="查看评价" :visible.sync="dialogFormVisibleCKPJ">
+				<el-table
+				    :data="tableDataCKPJ"
+				    border
+				    style="width: 100%"
+					max-height="250"
+					:row-class-name="tableRowClassName">
+					<el-table-column
+					      type="index"
+					      :index="index" >
+					    </el-table-column>
+				    <el-table-column
+				      prop="evaluationtime"
+				      label="评价时间"
+				      align="center">
+				    </el-table-column>
+				    <el-table-column
+				      prop="score"
+				      label="评分"
+				      align="center">
+				    </el-table-column>
+				    <el-table-column
+				      prop="content"
+				      label="评价内容"
+				      align="center">
+				    </el-table-column>
+			</el-dialog>
 		</div>
 		
 		<script>
@@ -218,7 +249,14 @@
 							activityid:'',
 							score:5,
 							content:''
-						}
+						},
+						dialogFormVisibleCKPJ:false,
+						formCKPJ:{
+							activityid:'',
+							volunteerid:'',
+						},
+						index:1,
+						tableDataCKPJ:[]
 					}
 				},
 				methods:{
@@ -332,7 +370,34 @@
 						}).catch((error)=>{
 							console.log(error.response);
 						})
-					}
+					},
+					
+					
+					ckpj(row){
+						console.log(row.areanews.lon)
+						this.selectActivityBYVIDFY()
+						this.formCKPJ.activityid= row.activityid
+						console.log(row.areanews.pinYin)
+						this.dialogFormVisibleCKPJ = true
+						this.selecteva()
+					},
+					selecteva(){
+						axios({
+							method:"post",
+							url:"http://localhost:8080/Yzhiyuan365/evaluation/selecteva",
+							data:this.formCKPJ
+						}).then((resp)=>{
+							this.tableDataCKPJ = resp.data
+						}).catch((error)=>{
+							console.log(error.response);
+						})
+					},
+					 tableRowClassName({row, rowIndex}) {
+					        if (row.volunteerid == localStorage.getItem('vid')) {
+					          return 'success-row';
+					        } 
+					        return '';
+					      }
 						  
 				},
 				

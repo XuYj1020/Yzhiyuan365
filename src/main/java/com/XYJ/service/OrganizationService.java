@@ -50,6 +50,14 @@ public class OrganizationService {
         return organizations;
     }
 
+    public String selectPassword(String origanizationID){
+        SqlSession sqlSession = factory.openSession();
+        OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
+        String organizatios =organizationmapper.selectPassword(origanizationID);
+        sqlSession.close();
+        return organizatios;
+    }
+
     public List<Organization> selectByOIDAll(String organization){
         SqlSession sqlSession = factory.openSession();
         OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
@@ -82,6 +90,13 @@ public class OrganizationService {
         SqlSession sqlSession = factory.openSession();
         OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
         organizationmapper.updateOphone(organization);
+        sqlSession.close();
+    }
+
+    public void updateOpasd(Organization organization){
+        SqlSession sqlSession = factory.openSession();
+        OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
+        organizationmapper.updateOpasd(organization);
         sqlSession.close();
     }
     public void updateOinfo(Organization organization){

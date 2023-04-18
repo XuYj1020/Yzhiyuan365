@@ -7,6 +7,8 @@ import com.XYJ.pojo.Evaluation;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
+import java.util.List;
+
 import static com.XYJ.util.SqlSessionFactoryUtils.getSqlSessionFactory;
 
 public class EvaluationService {
@@ -16,6 +18,14 @@ public class EvaluationService {
         EvaluationMapper evaluationMapper = sqlSession.getMapper(EvaluationMapper.class);
         evaluationMapper.insert(evaluation);
         sqlSession.close();
+    }
+
+    public List<Evaluation> selecteva(Evaluation evaluation){
+        SqlSession sqlSession = factory.openSession();
+        EvaluationMapper evaluationMapper = sqlSession.getMapper(EvaluationMapper.class);
+        List<Evaluation> evaluations = evaluationMapper.selecteva(evaluation);
+        sqlSession.close();
+        return evaluations;
     }
 
     public String selectByAID(String activityid){

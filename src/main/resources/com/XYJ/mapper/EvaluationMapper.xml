@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace名称空间-->
+<!--<mapper namespace="test">-->
+<mapper namespace="com.XYJ.mapper.EvaluationMapper">
+
+    <select id="selecteva" resultType="com.XYJ.pojo.Evaluation">
+        select * from evaluation
+<where>
+    <if test="volunteerid != null and volunteerid != ''">
+      and  volunteerid = #{volunteerid}
+    </if>
+    <if test="activityid != null and activityid != ''">
+      and  activityid = #{activityid}
+    </if>
+</where>
+    </select>
+</mapper>
