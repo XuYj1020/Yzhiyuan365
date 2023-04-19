@@ -51,10 +51,19 @@ public class Activity {
 
   private String volunteerid;
   private String applicationstatusid;
-
+private int credit;
   private Applicationreview applicationreviews;
 
   private Activityreview activityreview;
+
+
+  public int getCredit() {
+    return credit;
+  }
+
+  public void setCredit(int credit) {
+    this.credit = credit;
+  }
 
   public int getAuditstatusid() {
     return auditstatusid;
@@ -441,6 +450,7 @@ public class Activity {
             ", isaleava=" + isaleava +
             ", volunteerid='" + volunteerid + '\'' +
             ", applicationstatusid='" + applicationstatusid + '\'' +
+            ", credit=" + credit +
             ", applicationreviews=" + applicationreviews +
             ", activityreview=" + activityreview +
             '}';

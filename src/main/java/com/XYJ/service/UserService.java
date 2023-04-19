@@ -162,6 +162,18 @@ public class UserService {
         usermapper.updatehourse(activity);
         sqlSession.close();
     }
+    public void updateCreditjia(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        UserMapper usermapper = sqlSession.getMapper(UserMapper.class);
+        usermapper.updateCreditjia(activity);
+        sqlSession.close();
+    }
+    public void updateCreditjian(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        UserMapper usermapper = sqlSession.getMapper(UserMapper.class);
+        usermapper.updateCreditjian(activity);
+        sqlSession.close();
+    }
 
     public PageFY<User> baomingyanz(String volunteerid, Activity activity){
         SqlSession sqlSession = factory.openSession();

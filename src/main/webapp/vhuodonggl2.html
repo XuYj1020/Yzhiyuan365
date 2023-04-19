@@ -510,7 +510,8 @@
 							activityid:'',
 							volunteerid:'',
 							volunteerhours:'',
-							activestatusid:''
+							activestatusid:'',
+							credit:0
 						},
 						ztyqd:'',
 						ztwqd:'',
@@ -742,16 +743,16 @@
 						})
 					},
 					wchd(row){
-						let endtime =new Date(row.endtime)
+						let endtime =new Date(row.activitys.endtime)
 						let now = new Date()
 						if(row.areanews.cityCode == 0){
 							this.$message.error("未生成签到码")
-						}else if(endtime > now){
+						}else if(activitys.endtime > now){
 							this.$message.error("还没到活动结束时间")
 						}else{
 							this.formZT.activityid = row.activityid
 							this.formWC.activityid = row.activityid
-							this.formWC.volunteerhours = row.volunteerhours
+							this.formWC.volunteerhours = row.activitys.volunteerhours
 							this.formWC.activestatusid = 4
 							this.selectVinfoByAIDFYstatus()
 							this.dialogTableVisibleZTshow=true,
@@ -777,6 +778,7 @@
 					// 2 修改志愿者志愿时长   前台传出  志愿时长           后台   修改     获取志愿者ID applicationstatusid =4    时长 = 原时长+志愿时长
 					yqd(){
 						this.formWC.applicationstatusid =4
+						this.formWC.credit = 1
 						console.log(this.formWC.applicationstatusid)
 						axios({
 							method:"post",
@@ -796,6 +798,7 @@
 					// 1 新增志愿时长发放表   前台传出  活动ID，志愿时长    后台  生成记录ID  获取志愿者ID applicationstatusid =5   时长 = 0
 					wqd(){
 						this.formWC.applicationstatusid =5
+						this.formWC.credit = -2
 						axios({
 							method:"post",
 							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
@@ -814,6 +817,7 @@
 					// 1 新增志愿时长发放表   前台传出  活动ID，志愿时长    后台  生成记录ID  获取志愿者ID applicationstatusid =3 时长 = 0
 					qj(){
 						this.formWC.applicationstatusid =3
+						this.formWC.credit = 0
 						axios({
 							method:"post",
 							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',

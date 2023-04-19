@@ -211,16 +211,14 @@ public class ActivityServlet extends BaseServlet{
         BufferedReader bufferedReader = req.getReader();
         String params = bufferedReader.readLine();
         Activity activity = JSON.parseObject(params,Activity.class);
+        User user = JSON.parseObject(params,User.class);
 //      1根据传入的 applicationstatusid 判断是否已签到 是否为4  已签到调用 yqs  未签到调用wqd  完成时长记录新增
         Map mapTypes = JSON.parseObject(params);
         int applicationstatusid = (int)mapTypes.get("applicationstatusid");
-        System.out.println("--------------------------");
-        System.out.println(applicationstatusid);
-        System.out.println("--------------------------");
+
         String applicationstatusids = String.valueOf(applicationstatusid);
-        System.out.println("--------------------------");
-        System.out.println(applicationstatusids);
-        System.out.println("--------------------------");
+        int creditss = (int)mapTypes.get("credit");
+        String credit = String.valueOf(creditss);
         if(applicationstatusids.equals("4")){
 //            调用方法获取志愿者ID数组
             Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
@@ -235,10 +233,17 @@ public class ActivityServlet extends BaseServlet{
                 Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
                 DistributeService distributeService = new DistributeService();
                 distributeService.insertyqd(distribute);
+                String jsonString = JSON.toJSONString(mapTypes);
+                Credits credits = JSON.parseObject(jsonString,Credits.class);
+                CreditsService creditsService = new CreditsService();
+                creditsService.insert(credits);
                 System.out.println("--------------------------");
                 System.out.println(distribute);
                 System.out.println("--------------------------");
             }
+            UserService userService = new UserService();
+            userService.updatehourse(activity);
+            userService.updateCreditjia(activity);
         } else if (applicationstatusids.equals("3")) {
             Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
             AapplicationService aapplicationService = new AapplicationService();
@@ -249,9 +254,13 @@ public class ActivityServlet extends BaseServlet{
                 Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
                 DistributeService distributeService = new DistributeService();
                 distributeService.insertwqd(distribute);
+                String jsonString = JSON.toJSONString(mapTypes);
+                Credits credits = JSON.parseObject(jsonString,Credits.class);
+                CreditsService creditsService = new CreditsService();
+                creditsService.insert(credits);
+
             }
-            UserService userService = new UserService();
-            userService.updatehourse(activity);
+
         } else{
             Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
             AapplicationService aapplicationService = new AapplicationService();
@@ -262,7 +271,13 @@ public class ActivityServlet extends BaseServlet{
                 Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
                 DistributeService distributeService = new DistributeService();
                 distributeService.insertwqd(distribute);
+                String jsonString = JSON.toJSONString(mapTypes);
+                Credits credits = JSON.parseObject(jsonString,Credits.class);
+                CreditsService creditsService = new CreditsService();
+                creditsService.insert(credits);
             }
+            UserService userService = new UserService();
+            userService.updateCreditjian(activity);
         }
 
         activityservice.updateActivityActivestatusid4(activity);

@@ -62,7 +62,7 @@
         </if>
                     0,
                     0,
-                    100,
+                    90,
                     now(),
                     1,
                     #{lastlogintime     },
@@ -227,6 +227,12 @@
     </update>
     <update id="updatehourse">
         update volunteer set volunteerhours = volunteerhours + #{volunteerhours} , volunteercoins = volunteercoins + #{volunteerhours} WHERE volunteerid in (select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = 4 GROUP BY volunteerid)
+    </update>
+    <update id="updateCreditjia">
+        update volunteer set credit = credit + #{credit} WHERE volunteerid in (select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = 4 GROUP BY volunteerid) and credit &lt; 100
+    </update>
+    <update id="updateCreditjian">
+        update volunteer set credit = credit + #{credit} WHERE volunteerid in (select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = 5 GROUP BY volunteerid)
     </update>
 
     <select id="selectActivityCount" resultType="java.lang.Integer">

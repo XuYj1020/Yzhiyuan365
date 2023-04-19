@@ -35,6 +35,8 @@ public interface UserMapper {
 //    志愿者时长和活动ID刚好活动有
     void updatehourse(Activity activity);
 
+    void updateCreditjia(Activity activity);
+    void updateCreditjian(Activity activity);
     int selectActivityCount(@Param("volunteerid") String volunteerid, @Param("activity") Activity activity);
     List<User> selectVCredit(String volunteerid);
 
