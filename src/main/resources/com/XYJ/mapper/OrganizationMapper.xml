@@ -118,7 +118,17 @@
         </association>
         <association property="userststus" javaType="com.XYJ.pojo.Userststus">
             <result column="userstatusid" property="userstatusid"></result>
-            <result column="status" property="status"></result>
+            <result column="usstatus" property="status"></result>
+        </association>
+        <association property="organizeaudits" javaType="com.XYJ.pojo.Organizeaudit">
+            <id column="auditid" property="auditid"></id>
+            <result column="reviewerid" property="reviewerid"></result>
+            <result column="eta" property="eta"></result>
+            <result column="feedback" property="feedback"></result>
+        </association>
+        <association property="auditstatus" javaType="com.XYJ.pojo.Auditstatus">
+            <id column="auditstatusid" property="auditstatusid"></id>
+            <result column="shstatus" property="status"></result>
         </association>
     </resultMap>
 
@@ -135,7 +145,7 @@
     </select>
 
     <select id="selectByOIDAll" resultMap="rs1">
-        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr,(select count(*) from omembers where omembers.organizationid = organization.organizationid and omembers.memberstatusid = 1) as count
+        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr,userststus.status as usstatus,(select count(*) from omembers where omembers.organizationid = organization.organizationid and omembers.memberstatusid = 1) as count
         from organization,otype,registrationstatus,areanew,userststus
         where organization.otype = otype.otypeid
           and organization.registrationstatus = registrationstatus.registrationstatusid
@@ -184,6 +194,7 @@
         </where>
     </select>
 
+
     <update id="updateOinfo">
         update organization
         <set>
@@ -227,4 +238,43 @@
         </set>
         where organizationid = #{organizationid}
     </update>
+
+
+    <select id="selectOraganizationAdminCount" resultType="java.lang.Integer">
+        select count(*) from organization
+        left join otype on otype.otypeid = organization.otype
+        left join registrationstatus on registrationstatus.registrationstatusid = organization.registrationstatus
+        left join areanew on areanew.area_code = organization.district
+        left join userststus on userststus.userstatusid = organization.userstatusid
+        left join organizeaudit on organizeaudit.organizationid = organization.organizationid
+        left join auditstatus on auditstatus.auditstatusid = organizeaudit.auditstatusid
+<where>
+    <if test="organizationid != null and organizationid != '' ">
+        and organization.organizationid = #{organizationid}
+    </if>
+    <if test="userstatusid != null and userstatusid != '' ">
+        and organization.userstatusid = #{userstatusid}
+    </if>
+</where>
+
+    </select>
+    <select id="selectOraganizationAdminFY" resultMap="rs1">
+        select *,auditstatus.status as shstatus,userststus.status as usstatus from organization
+        left join otype on otype.otypeid = organization.otype
+        left join registrationstatus on registrationstatus.registrationstatusid = organization.registrationstatus
+        left join areanew on areanew.area_code = organization.district
+        left join userststus on userststus.userstatusid = organization.userstatusid
+        left join organizeaudit on organizeaudit.organizationid = organization.organizationid
+        left join auditstatus on auditstatus.auditstatusid = organizeaudit.auditstatusid
+        <where>
+            <if test="organization.organizationid != null and organization.organizationid != '' ">
+                and organization.organizationid = #{organization.organizationid}
+            </if>
+            <if test="organization.userstatusid != null and organization.userstatusid != '' ">
+                and organization.userstatusid = #{organization.userstatusid}
+            </if>
+        </where>
+        order by organization.registrationtime limit #{begin},#{size};
+    </select>
+
 </mapper>

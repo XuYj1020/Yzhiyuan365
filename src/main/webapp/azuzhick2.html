@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<style>
+			 .bg-purple-dark {
+			    background: #99a9bf;
+			  }
+			  .bg-purple {
+			    background: #d3dce6;
+			  }
+			  .bg-purple-light {
+			    background: #e5e9f2;
+			  }
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-row type="flex" justify="center">
+				<!--  activity, organization,areanew,aapplication,activestatus-->
+			  <el-col :span="22">
+				  <div class="grid-content bg-purple-dark">
+					  <el-table
+					      :data="tableData"
+					      border
+					      style="width: 100%">
+					      <el-table-column
+					        fixed
+					        prop="organizeaudits.auditid"
+					        label="申请ID"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="oname"
+					        label="组织名称"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="name"
+					        label="组织负责人"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="registrationtime"
+					        label="申请时间"
+					        align="center">
+					      </el-table-column>
+						  <el-table-column
+						    prop="userststus.status"
+						    label="组织状态"
+						    align="center">
+						  </el-table-column>
+					  	  <el-table-column
+					  	    prop="auditstatus.status"
+					  	    label="审核意见"
+					  	    align="center">
+					  	  </el-table-column>
+					      <el-table-column
+					        fixed="right"
+					        label="操作"
+					        align="center">
+					        <template slot-scope="scope">
+					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+							  <el-button @click="handleClickCYCK(scope.row)" type="text" size="small">查看组织成员</el-button>
+					        </template>
+					      </el-table-column>
+					    </el-table>
+				  </div>
+				  
+				  <div class="block">
+				    <el-pagination
+				      @size-change="handleSizeChange"
+				      @current-change="handleCurrentChange"
+				      :current-page="currentPage"
+				      :page-sizes="[20, 50, 100]"
+				      :page-size="pageSize"
+				      layout="total, sizes, prev, pager, next, jumper"
+				      :total="total">
+				    </el-pagination>
+				  </div>
+			  </el-col>
+			</el-row>
+			
+			<el-dialog title="组织详情" :visible.sync="dialogVisibleZZCK">
+				<div>
+					<el-descriptions :column="2" border>
+					  <el-descriptions-item label="组织id" >{{oinfos.organizationid}}</el-descriptions-item>
+					  <el-descriptions-item label="组织名称">{{oinfos.oname}}</el-descriptions-item>
+					  <el-descriptions-item label="组织状态" v-if="oinfos.userststus">{{oinfos.userststus.status}}</el-descriptions-item>
+					  <el-descriptions-item label="负责人手机号">{{oinfos.phone}}</el-descriptions-item>
+					  <el-descriptions-item label="负责人名字">{{oinfos.name}}</el-descriptions-item>
+					  <el-descriptions-item label="所在地区" v-if="oinfos.areanews">{{oinfos.areanews.wholeName}}</el-descriptions-item>
+					  <el-descriptions-item label="组织类型"v-if="oinfos.otypes">{{oinfos.otypes.otype}}</el-descriptions-item>
+					  <el-descriptions-item label="登记状况"v-if="oinfos.registrationstatuss">{{oinfos.registrationstatuss.registrationstatus}}</el-descriptions-item>
+					  <el-descriptions-item label="统一信用代码">{{oinfos.unifiedcode}}</el-descriptions-item>
+					  <el-descriptions-item label="组织人数"v-if="oinfos.areanews">{{oinfos.areanews.pinYin}}人</el-descriptions-item>
+					  <el-descriptions-item label="邮箱地址">{{oinfos.oemail}}</el-descriptions-item>
+					  <el-descriptions-item label="详细地址">{{oinfos.oaddress}}</el-descriptions-item>
+					  <el-descriptions-item label="组织介绍">{{oinfos.ointroduce}}</el-descriptions-item>
+					</el-descriptions>
+				</div>
+			</el-dialog>
+			
+			<el-dialog title="组织成员" :visible.sync="dialogVisibleCYCK">
+				<el-table
+				    :data="tableDataCYCK"
+				    border
+				    style="width: 100%">
+				    <el-table-column
+				      fixed
+				      prop="stafid"
+				      label="成员ID"
+				      align="center">
+				    </el-table-column>
+				    <el-table-column
+				      prop="users.name"
+				      label="志愿者名字"
+				      align="center">
+				    </el-table-column>
+				    <el-table-column
+				      prop="users.phone"
+				      label="成员手机号"
+				      align="center">
+				    </el-table-column>
+				    <el-table-column
+				      prop="jointime"
+				      label="加入时间"
+				      align="center">
+				    </el-table-column>
+					<el-table-column
+					  prop="memberlevels.mlevel"
+					  label="成员类别"
+					  align="center">
+					</el-table-column>
+				</el-table>
+				<div class="block">
+				  <el-pagination
+				    @size-change="handleSizeChangeCYCK"
+				    @current-change="handleCurrentChangeCYCK"
+				    :current-page="currentPageCYCK"
+				    :page-sizes="[20, 50, 100]"
+				    :page-size="pageSizeCYCK"
+				    layout="total, sizes, prev, pager, next, jumper"
+				    :total="totalCYCK">
+				  </el-pagination>
+				</div>
+			</el-dialog>
+			
+			
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created() {
+					this.formInline.daminid = localStorage.getItem('aid')
+					this.selectOraganizationAdminFY()
+				},
+				data(){
+					return{
+						currentPage:1,
+						pageSize:20,
+						total:null,
+						tableData:[],
+						dialogVisible:false,
+						formInline:{
+							daminid:'',
+							userstatusid:1
+						},
+
+						dialogVisibleZZCK:false,
+						organizationid:'',
+						oinfos:'',
+						
+						formInlineCYCK:{
+							organizationid:'',
+							memberstatusid:1
+						},
+						currentPageCYCK:1,
+						pageSizeCYCK:20,
+						totalCYCK:null,
+						tableDataCYCK:[],
+						dialogVisibleCYCK:false,
+					}
+				},
+				methods:{
+					handleSizeChange(val) {
+					  // console.log(`每页 ${val} 条`);
+					  this.pageSize = val
+					  this.selectOraganizationAdminFY()
+					},
+					handleCurrentChange(val) {
+					  // console.log(`当前页: ${val}`);
+					  this.currentPage = val
+					  this.selectOraganizationAdminFY()
+					},
+					selectOraganizationAdminFY(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/organization/selectOraganizationAdminFY?begin='+this.currentPage + '&size='+this.pageSize,
+							headers:{
+								vtoken:localStorage.getItem('atoken')
+							},
+							data:this.formInline
+						}).then((resp)=>{
+							this.total = resp.data['total']
+							this.tableData=resp.data['shuju']
+							console.log(resp.data['shuju'])
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					},
+					
+					handleClick(row){
+						this.dialogVisibleZZCK = true
+						this.organizationid = row.organizationid
+						this.selectByOIDAll()
+					},
+					selectByOIDAll(){
+						axios({
+						    method:"post",
+						    url:"http://localhost:8080/Yzhiyuan365/organization/selectByOIDAll?organizationid="+this.organizationid,
+							headers:{
+								vtoken:localStorage.getItem('otoken')
+							},
+						  }).then((resp)=>{
+							console.log(resp.data)
+							this.oinfos=resp.data
+						  }).catch((error)=> {
+						    console.log(error.response);//可以拿到后端返回的信息
+						  });
+					},
+					
+					handleSizeChangeCYCK(val) {
+					  // console.log(`每页 ${val} 条`);
+					  this.pageSizeCYCK = val
+					  this.selectALLBYOVIDJOINFY()
+					},
+					handleCurrentChangeCYCK(val) {
+					  // console.log(`当前页: ${val}`);
+					  this.currentPageCYCK = val
+					  this.selectALLBYOVIDJOINFY()
+					},
+					selectALLBYOVIDJOINFY(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/Omembers/selectALLBYOVIDJOINFY?begin='+this.currentPageCYCK + '&size='+this.pageSizeCYCK,
+							headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+							data:this.formInlineCYCK
+						}).then((resp)=>{
+							console.log(resp.data)
+							this.totalCYCK = resp.data['total']
+							this.tableDataCYCK=resp.data['shuju']
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					},
+					
+					handleClickCYCK(row){
+						this.dialogVisibleCYCK = true
+						this.formInlineCYCK.organizationid = row.organizationid
+						this.selectALLBYOVIDJOINFY()
+					},
+				}
+			})
+		</script>
+	</body>
+</html>

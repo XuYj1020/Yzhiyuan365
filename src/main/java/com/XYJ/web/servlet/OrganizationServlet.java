@@ -1,9 +1,11 @@
 package com.XYJ.web.servlet;
 
 import com.XYJ.pojo.Organization;
+import com.XYJ.pojo.Organizeaudit;
 import com.XYJ.pojo.PageFY;
 import com.XYJ.pojo.User;
 import com.XYJ.service.OrganizationService;
+import com.XYJ.service.OrganizeauditService;
 import com.XYJ.util.CCTokenUtil;
 import com.XYJ.util.IdAutoCreateUtils;
 import com.alibaba.fastjson.JSON;
@@ -199,5 +201,36 @@ public class OrganizationServlet extends BaseServlet{
         resp.setContentType("text/json;charset=utf-8");
 //        传递组织信息
         resp.getWriter().write(pasd);
+    }
+
+    public void selectOraganizationAdminFY(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        String currentPage = req.getParameter("begin");
+        String pageSize = req.getParameter("size");
+        System.out.println(pageSize);
+        int begin = Integer.parseInt(currentPage);
+        System.out.println(begin);
+        int size = Integer.parseInt(pageSize);
+        BufferedReader oinfo = req.getReader();
+        String param = oinfo.readLine();
+        Organization organization = JSON.parseObject(param,Organization.class);
+        PageFY<Organization> organizations = organizationservice.selectOraganizationAdminFY(begin,size,organization);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(organizations);
+        resp.getWriter().write(jsonString);
+    }
+
+
+    public void updateuserstatusid(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String param = bufferedReader.readLine();
+        Organization organization = JSON.parseObject(param,Organization.class);
+        organizationservice.updateuserstatusid(organization);
+        Organizeaudit organizeaudit = JSON.parseObject(param,Organizeaudit.class);
+        OrganizeauditService organizeauditService = new OrganizeauditService();
+        organizeauditService.update(organizeaudit);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
     }
 }

@@ -32,17 +32,17 @@
 		
 		<div id="app">
 			<el-row id="elrow1">
-				<el-col :span="4">
+<!-- 				<el-col :span="4">
 					这里是logo
-				</el-col>
-				<el-col :span="18">
+				</el-col> -->
+				<el-col :span="18" :offset="4">
 					<div>
 						<el-row>
 							<el-col :span="3" :offset="16">
 								<!-- <span><el-link :underline="false" type="primary">您好，请登录</el-link></span> -->
 								<span v-if="!vname"><el-link :underline="false" type="primary" :href='vlongin'>您好，请登录</el-link></span>
-								<span v-if="vname"><el-link :underline="false" type="primary">您好，{{vname}}</el-link></span>
-								<p v-text="vlongin"></p>
+								<span v-if="vname"><el-link :underline="false" :href="vhomenew1" type="primary">您好，{{vname}}</el-link></span>
+								<!-- <p v-text="vlongin"></p> -->
 							</el-col>
 							<el-col :span="2">
 								<span v-if="!vname"><el-link :underline="false" type="primary" :href='vsignupnew'>个人注册</el-link></span>
@@ -50,36 +50,37 @@
 								<el-link :underline="false" type="primary" href='#'>退出登录</el-link></span>
 							</el-col>
 							<el-col :span="2">
-								<span><el-link :underline="false" type="primary">组织注册</el-link></span>
+								<span><el-link :underline="false" type="primary" :href='osignupup'>组织注册</el-link></span>
 							</el-col>
-<!-- 							<el-col :span="2">
+						<!--	<el-col :span="2">
 								<span><el-link :underline="false" type="primary">主要链接</el-link></span>
-							</el-col> --> 
+							</el-col> -->
 						</el-row>
 					</div>
 					<!-- 导航栏 -->
 					<div class="grid-content bg-purple daohang"> 
 					<!-- select	菜单激活回调	index: 选中菜单项的 index, indexPath: 选中菜单项的 index path -->
 						<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect"  id="elmeun">
-							<el-menu-item index="1">首页</el-menu-item>
-							<el-submenu index="2">
-								<template slot="title">志愿者</template>
-								<el-menu-item index="2-1">选项1</el-menu-item>
-								<el-menu-item index="2-2">选项2</el-menu-item>
-								<el-menu-item index="2-3">选项3</el-menu-item>
-								<el-submenu index="2-4">
-									<template slot="title">选项4</template>
-										<el-menu-item index="2-4-1">选项1</el-menu-item>
-										<el-menu-item index="2-4-2">选项2</el-menu-item>
-										<el-menu-item index="2-4-3">选项3</el-menu-item>
-								</el-submenu>
-							</el-submenu>
-							<el-menu-item index="3"><a :href="searchzuzhi" target="_blank" style="text-decoration : none">志愿组织</a></el-menu-item>
-							<el-menu-item index="4"><a :href="searchhuodong" target="_blank" style="text-decoration : none">活动招募</a></el-menu-item>
-							<el-menu-item index="5">志愿者培训</el-menu-item>
-							<el-menu-item index="6">志愿文化</el-menu-item>
-							<el-menu-item index="7">资料中心</el-menu-item>
-							<el-menu-item index="8"><el-link :underline="false" type="primary">关于我们</el-link></el-menu-item>
+						  <el-menu-item index="1">首页</el-menu-item>
+						  <el-menu-item index="2"><a :href="vhomenew1" target="_blank" style="text-decoration : none">个人中心</a></el-menu-item>
+						  <el-submenu index="3">
+						    <template slot="title">志愿组织</template>
+						    <el-menu-item index="2-1"><a :href="searchzuzhi" target="_blank" style="text-decoration : none">加入组织</a></el-menu-item>
+						    <el-menu-item index="2-2"><a :href="osignupup" target="_blank" style="text-decoration : none">组织入驻</a></el-menu-item>
+						    <el-menu-item index="2-3"><a :href="olongin" target="_blank" style="text-decoration : none">组织登录</a></el-menu-item>
+						    <!-- <el-submenu index="2-4">
+						      <template slot="title">选项4</template>
+						      <el-menu-item index="2-4-1">选项1</el-menu-item>
+						      <el-menu-item index="2-4-2">选项2</el-menu-item>
+						      <el-menu-item index="2-4-3">选项3</el-menu-item>
+						    </el-submenu> -->
+						  </el-submenu>
+						  <!-- <el-menu-item index="3"><a :href="searchzuzhi" target="_blank" style="text-decoration : none">志愿组织</a></el-menu-item> -->
+						  <el-menu-item index="4"><a :href="searchhuodong" target="_blank" style="text-decoration : none">活动招募</a></el-menu-item>
+						  <el-menu-item index="5"><a :href="alongin" target="_blank" style="text-decoration : none">管理员登录</a></el-menu-item>
+						  <!-- <el-menu-item index="6">志愿文化</el-menu-item>
+						  <el-menu-item index="7">资料中心</el-menu-item>
+						  <el-menu-item index="8"><el-link :underline="false" type="primary">关于我们</el-link></el-menu-item> -->
 						</el-menu>
 					</div>
 				</el-col>
@@ -124,11 +125,12 @@
 					<el-card class="box-card" shadow="never">
 						<!-- 小card -->
 						<el-card class="box-card"  shadow="hover" :body-style="{padding: '10px'}" v-for="organizations in Organizations">
-							<el-row type="flex" justify="center" style="margin: 0px">
+							<el-row :gutter="20">
 								<!-- 图片 -->
 								<el-col :span="4" >
 									<div>
-									<el-avatar shape="square" :size="150" :fit="fit" src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"></el-avatar>
+										<!-- <img src="upload/1680266431674.jpg" class="image"> -->
+									<el-avatar shape="square" :size="150"  src="upload/1680266431674.jpg"></el-avatar>
 									</div>
 								</el-col>
 								<!-- 描述信息 -->
@@ -169,21 +171,27 @@
 				</div>
 			</el-row>
 			<!-- 尾 -->
-			<el-row>
+<!-- 			<el-row>
 				<el-col :span="24"><div class="grid-content bg-purple">这里是尾部</div></el-col>
-			</el-row>
+			</el-row> -->
 		</div>
 		<script>
 			new Vue({
 				el:'#app',
 				created() {
-					this.vname=localStorage.getItem('vname')
 					this.local = window.location.pathname.substring(0,window.location.pathname.lastIndexOf('/'))
-					this.oxq = this.local + '/oxq.html'
-					this.vlongin = this.local + '/vlongin.html',
+					this.vlongin = this.local + '/vlongin.html'
 					this.vsignupnew = this.local + '/vsignupnew.html'
-					this.searchhuodong = this.local + '/searchhuodong.html'
+					this.vhomenew1 = this.local + '/vhomenew1.html'
+					this.osignupup = this.local + '/osignupup.html'
 					this.searchzuzhi = this.local + '/searchzuzhi.html'
+					this.olongin = this.local + '/olongin.html'
+					this.searchhuodong = this.local + '/searchhuodong.html'
+					this.alongin = this.local + '/alongin.html'
+					this.acivexq = this.local + '/acivexq.html'
+					this.vname=localStorage.getItem('vname')
+					this.oxq = this.local + '/oxq.html'
+					
 					this.selectOtypes();
 					this.selectOraganizationVFY();
 					// this.selectActivity();
@@ -191,15 +199,23 @@
 				},
 				data(){
 					return{
+						local:'',
+						vlongin : '',
+						vsignupnew:'',
+						vhomenew1:'',
+						osignupup:'',
+						index:'',
+						searchzuzhi:'',
+						olongin:'',
+						searchhuodong:'',
+						alongin:'',
 						activeIndex: '3',
+						
 						currentPage:1,
 						pageSize:20,
 						total:null,
 						vname:'',
-						vlongin : '',
-						vsignupnew:'',
-						searchhuodong:'',
-						searchzuzhi:'',
+
 						acivexq:'',
 						fit: 'contain',
 						Organizations:[],
@@ -274,6 +290,7 @@
 						localStorage.removeItem('vname')
 						localStorage.removeItem('vphone')
 						localStorage.removeItem('vid')
+						location.reload()
 					}
 				}
 			})

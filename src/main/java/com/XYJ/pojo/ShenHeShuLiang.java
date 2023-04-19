@@ -11,6 +11,61 @@ public class ShenHeShuLiang {
     private int zuzhiyiluq;
     private int zuzhiheimingdan;
 
+    private int zhiyuanzsl;
+    private int jinrzhuczhiyzshul;
+    private int zuzhishul;
+    private int jinrzhucezuzhishul;
+    private int huodongshu;
+    private int jinrifabuhuodongshu;
+
+
+    public int getZhiyuanzsl() {
+        return zhiyuanzsl;
+    }
+
+    public void setZhiyuanzsl(int zhiyuanzsl) {
+        this.zhiyuanzsl = zhiyuanzsl;
+    }
+
+    public int getJinrzhuczhiyzshul() {
+        return jinrzhuczhiyzshul;
+    }
+
+    public void setJinrzhuczhiyzshul(int jinrzhuczhiyzshul) {
+        this.jinrzhuczhiyzshul = jinrzhuczhiyzshul;
+    }
+
+    public int getZuzhishul() {
+        return zuzhishul;
+    }
+
+    public void setZuzhishul(int zuzhishul) {
+        this.zuzhishul = zuzhishul;
+    }
+
+    public int getJinrzhucezuzhishul() {
+        return jinrzhucezuzhishul;
+    }
+
+    public void setJinrzhucezuzhishul(int jinrzhucezuzhishul) {
+        this.jinrzhucezuzhishul = jinrzhucezuzhishul;
+    }
+
+    public int getHuodongshu() {
+        return huodongshu;
+    }
+
+    public void setHuodongshu(int huodongshu) {
+        this.huodongshu = huodongshu;
+    }
+
+    public int getJinrifabuhuodongshu() {
+        return jinrifabuhuodongshu;
+    }
+
+    public void setJinrifabuhuodongshu(int jinrifabuhuodongshu) {
+        this.jinrifabuhuodongshu = jinrifabuhuodongshu;
+    }
 
     public int getZuzhiluquzhong() {
         return zuzhiluquzhong;
@@ -87,6 +142,12 @@ public class ShenHeShuLiang {
                 ", zuzhiluquzhong=" + zuzhiluquzhong +
                 ", zuzhiyiluq=" + zuzhiyiluq +
                 ", zuzhiheimingdan=" + zuzhiheimingdan +
+                ", zhiyuanzsl=" + zhiyuanzsl +
+                ", jinrzhuczhiyzshul=" + jinrzhuczhiyzshul +
+                ", zuzhishul=" + zuzhishul +
+                ", jinrzhucezuzhishul=" + jinrzhucezuzhishul +
+                ", huodongshu=" + huodongshu +
+                ", jinrifabuhuodongshu=" + jinrifabuhuodongshu +
                 '}';
     }
 }

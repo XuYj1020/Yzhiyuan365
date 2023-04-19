@@ -34,4 +34,10 @@ public interface OrganizationMapper {
     void updateOinfo(Organization organization);
 
 
+    int selectOraganizationAdminCount(Organization organization);
+    List<Organization> selectOraganizationAdminFY(@Param("begin") int begin, @Param("size") int size, @Param("organization") Organization organization);
+
+    @Update("update organization set userstatusid = #{userstatusid} where organizationid = #{organizationid}")
+    void updateuserstatusid(Organization organization);
+
 }

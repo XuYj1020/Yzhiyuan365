@@ -33,6 +33,25 @@ public class Organization {
 
     private Userststus userststus;
 
+    private Organizeaudit organizeaudits;
+    private Auditstatus auditstatus;
+
+    public Auditstatus getAuditstatus() {
+        return auditstatus;
+    }
+
+    public void setAuditstatus(Auditstatus auditstatus) {
+        this.auditstatus = auditstatus;
+    }
+
+    public Organizeaudit getOrganizeaudits() {
+        return organizeaudits;
+    }
+
+    public void setOrganizeaudits(Organizeaudit organizeaudits) {
+        this.organizeaudits = organizeaudits;
+    }
+
     public Userststus getUserststus() {
         return userststus;
     }
@@ -280,6 +299,8 @@ public class Organization {
                 ", registrationstatuss=" + registrationstatuss +
                 ", areanews=" + areanews +
                 ", userststus=" + userststus +
+                ", organizeaudits=" + organizeaudits +
+                ", auditstatus=" + auditstatus +
                 '}';
     }
 }

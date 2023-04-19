@@ -94,7 +94,35 @@ public class CCTokenUtil {
         return tokenString;
     }
 
+    public static String CreateAToken(String adminrs){
+//        1.序列化后的list结果集  json
+        String adminr = adminrs;
+//        2.转成Mao
+        adminrs = adminrs.substring(1,adminrs.length()-1);
+        Map adminrsinfo = JSON.parseObject(adminrs);
 
+//        3.把管理员的id提取出来
+        Map<String,Object> claims = new HashMap<>();
+        claims.put("daminid",adminrsinfo.get("daminid"));
+
+//        4.生成token
+        System.out.println("我是cc里面的organization"+claims);
+        String Token = Jwts.builder()
+                .signWith(SignatureAlgorithm.HS256, "XYJDSG") //签名算法HS256和令牌类型XYJDSG（会生成最后一部分的密钥，不可逆编码）
+                .setClaims(claims) //自定义内容(载荷)
+                .setExpiration(new Date(System.currentTimeMillis() + 12*3600*1000)) //有效期  12小时有效
+                .compact();
+        System.out.println(Token);
+
+        //        新建一个map，把用户id,用户手机号，用户姓名，用户token传出去
+        Map<String,Object> ainfo = new HashMap<>();
+        ainfo.put("daminid",adminrsinfo.get("daminid"));
+        ainfo.put("atoken",Token);
+
+//        5.转成json格式后返回
+        String tokenString = JSON.toJSONString(ainfo);
+        return tokenString;
+    }
 
 
 

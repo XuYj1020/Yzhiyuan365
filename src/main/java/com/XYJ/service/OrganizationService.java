@@ -106,6 +106,25 @@ public class OrganizationService {
         sqlSession.close();
     }
 
+    public PageFY<Organization> selectOraganizationAdminFY(int begin,int size,Organization organization){
+        SqlSession sqlSession = factory.openSession();
+        OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
+        int total = organizationmapper.selectOraganizationAdminCount(organization);
+        System.out.println(total);
+        begin = (begin - 1) * size;
+        List<Organization> organizations = organizationmapper.selectOraganizationAdminFY(begin, size, organization);
+        PageFY<Organization> page = new PageFY<>();
+        page.setShuju(organizations);
+        page.setTotal(total);
+        return page;
+    }
+
+    public void updateuserstatusid(Organization organization){
+        SqlSession sqlSession = factory.openSession();
+        OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
+        organizationmapper.updateuserstatusid(organization);
+        sqlSession.close();
+    }
     public static void main(String[] args) {
         OrganizationService o = new OrganizationService();
         System.out.println(o.selectByOID("1301040503284166"));
@@ -118,5 +137,7 @@ public class OrganizationService {
         System.out.println(o.selectByPhone("13698563255"));
 
     }
+
+
 
 }
