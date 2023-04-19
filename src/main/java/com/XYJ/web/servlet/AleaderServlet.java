@@ -3,6 +3,7 @@ package com.XYJ.web.servlet;
 import com.XYJ.pojo.Activity;
 import com.XYJ.pojo.Aleader;
 import com.XYJ.pojo.Organization;
+import com.XYJ.pojo.PageFY;
 import com.XYJ.service.ActivityService;
 import com.XYJ.service.AleaderService;
 import com.XYJ.util.IdAutoCreateUtils;
@@ -76,5 +77,24 @@ public class AleaderServlet extends BaseServlet{
 //        aleaderservice.insert(aleader);
         //3. 响应成功的标识
         resp.getWriter().write("success");
+    }
+
+    public void selectActivityByVAleadIDFYSQ(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        String begin = req.getParameter("begin");
+        int currentpage = Integer.parseInt(begin);
+
+        String size = req.getParameter("size");
+        int pagesize = Integer.parseInt(size);
+
+        Aleader aleader = JSON.parseObject(params,Aleader.class);
+
+        PageFY<Aleader> aleaders = aleaderservice.selectActivityByVAleadIDFYSQ(currentpage,pagesize,aleader);
+
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(aleaders);
+        resp.getWriter().write(jsonString);
     }
 }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.XYJ.mapper.AleaderMapper">
+    <resultMap id="rs1" type="com.XYJ.pojo.Aleader" >
+        <id column="leaderid" property="leaderid" ></id>
+        <result column="activityid" property="activityid" ></result>
+        <result column="stafid" property="stafid" ></result>
+        <association property="acstyles" javaType="com.XYJ.pojo.Acstyle">
+            <id column="acstyleid" property="acstyleid"></id>
+            <result column="aa" property="acstyle"></result>
+        </association>
+        <association property="areanews" javaType="com.XYJ.pojo.Areanew">
+            <result column="whole_name" property="wholeName"></result>
+            <result column="lon1" property="lon"></result>
+            <result column="lat1" property="lat"></result>
+            <result column="cc" property="cityCode"></result>
+            <result column="zip" property="zipCode"></result>
+            <result column="pp" property="pinYin"></result>
+        </association>
+        <association property="admissionpolicys" javaType="com.XYJ.pojo.Admissionpolicy">
+            <id column="admissionpolicyid" property="admissionpolicyid"></id>
+            <result column="admissionpolicys" property="admissionpolicy"></result>
+        </association>
+        <association property="aapplications" javaType="com.XYJ.pojo.Aapplication">
+            <id column="applicationid" property="applicationid"></id>
+            <result column="atime" property="atime"></result>
+        </association>
+        <association property="activestatus" javaType="com.XYJ.pojo.Activestatus">
+            <result column="acstatus" property="status"></result>
+        </association>
+        <association property="signrecords" javaType="com.XYJ.pojo.Signrecord">
+            <id column="recordid" property="recordid"></id>
+            <result column="signintime" property="signintime"></result>
+        </association>
+        <association property="applicationreviews" javaType="com.XYJ.pojo.Applicationreview">
+            <id column="auditid" property="auditid"></id>
+            <result column="leaderid" property="leaderid"></result>
+            <result column="etd" property="etd"></result>
+            <result column="eta" property="eta"></result>
+            <result column="feedback" property="feedback"></result>
+        </association>
+        <association property="activityreview" javaType="com.XYJ.pojo.Activityreview">
+            <id column="acreviewsauditid" property="auditid"></id>
+            <result column="id" property="id"></result>
+            <result column="acreviewsauditstatusid" property="auditstatusid"></result>
+            <result column="acreviewseta" property="eta"></result>
+            <result column="acreviewsfeedback" property="feedback"></result>
+        </association>
+        <association property="activitys" javaType="com.XYJ.pojo.Activity">
+            <id column="activityid" property="activityid"></id>
+            <result column="organizationid" property="organizationid" ></result>
+            <result column="title" property="title" ></result>
+            <result column="introduction" property="introduction" ></result>
+            <result column="starttime" property="starttime" ></result>
+            <result column="endtime" property="endtime" ></result>
+            <result column="province" property="province" ></result>
+            <result column="city" property="city" ></result>
+            <result column="district" property="district" ></result>
+            <result column="place" property="place" ></result>
+            <result column="numberofrequiredvolunteer" property="numberofrequiredvolunteer" ></result>
+            <result column="numberofenrolledvolunteer" property="numberofenrolledvolunteer" ></result>
+            <result column="activestatusid" property="activestatusid" ></result>
+            <result column="creationtime" property="creationtime" ></result>
+            <result column="enrolmentopeningtime" property="enrolmentopeningtime" ></result>
+            <result column="enrolmentdeadline" property="enrolmentdeadline" ></result>
+            <result column="volunteerhours" property="volunteerhours" ></result>
+            <result column="pictureaddress" property="pictureaddress" ></result>
+            <result column="admissionpolicy" property="admissionpolicy" ></result>
+            <result column="creditscorerequirement" property="creditscorerequirement" ></result>
+            <result column="leaveapproval" property="leaveapproval" ></result>
+            <result column="acstyle" property="acstyle" ></result>
+            <result column="havealeader" property="havealeader" ></result>
+            <result column="isaleava" property="isaleava" ></result>
+            <result column="auditstatusid" property="auditstatusid" ></result>
+        </association>
+        <association property="organizations" javaType="com.XYJ.pojo.Organization"  >
+            <result column="oname"  property="oname" ></result>
+        </association>
+    </resultMap>
+    <select id="selectActivityByVAleadIDFYSQ" resultMap="rs1">
+        select *,
+               admissionpolicy.admissionpolicy as admissionpolicys,
+               activestatus.status as acstatus,
+                 (select count(*) from signcode where signcode.activityid = activity.activityid) as cc,
+                 (select signinid from signcode where signcode.activityid = activity.activityid) as lat1 from aleader
+                          LEFT JOIN activity on activity.activityid = aleader.activityid
+                          LEFT JOIN volunteer on volunteer.volunteerid = aleader.stafid
+                          left join organization on organization.organizationid = activity.organizationid
+                          LEFT JOIN areanew on areanew.area_code = activity.district
+                          Left join activestatus on activestatus.activestatusid = activity.activestatusid
+                          left join acstyle on acstyle.acstyleid = activity.acstyle
+                          left join admissionpolicy on admissionpolicy.admissionpolicyid = activity.admissionpolicy
+        where aleader.stafid = #{aleader.stafid} and activity.activestatusid = #{aleader.activestatusid}
+        order by activity.starttime limit #{begin},#{size};
+    </select>
+    <select id="selectActivityByVAleadIDCountSQ" resultType="java.lang.Integer">
+        select count(*) from aleader
+                          LEFT JOIN activity on activity.activityid = aleader.activityid
+                          LEFT JOIN volunteer on volunteer.volunteerid = aleader.stafid
+                          left join organization on organization.organizationid = activity.organizationid
+                          LEFT JOIN areanew on areanew.area_code = activity.district
+                          Left join activestatus on activestatus.activestatusid = activity.activestatusid
+                          left join acstyle on acstyle.acstyleid = activity.acstyle
+                          left join admissionpolicy on admissionpolicy.admissionpolicyid = activity.admissionpolicy
+        where aleader.stafid = #{stafid} and activity.activestatusid = #{activestatusid}
+    </select>
+
+
+</mapper>
