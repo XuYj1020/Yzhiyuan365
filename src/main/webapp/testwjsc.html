@@ -52,6 +52,7 @@
 				<img :src="success"/>
 				<img src="./upload/huodong/Snipaste_2022-12-20_14-58-17.png"/>
 						 <!-- ./upload/huodong/Snipaste_2022-12-20_14-58-17.png -->
+				<!-- <img src="./upload/huodong/Snipaste_2022-12-20_14-58-17.png"/> -->
 		</div>
 		
 		<script>
@@ -74,6 +75,7 @@
 					  success2(res, file) {
 					      // 将服务器返回的文件url地址赋值给表单的success1，这样就可以在表单提交时将图片地址提交到服务器
 					      this.success = res
+						  console.log(res)
 						  // 
 						   console.log(res)
 				}

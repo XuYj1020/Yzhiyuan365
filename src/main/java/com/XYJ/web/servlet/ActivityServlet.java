@@ -302,4 +302,19 @@ public class ActivityServlet extends BaseServlet{
         resp.getWriter().write("success");
     }
 
+    public void selectCOUNTbyacstyleecharts(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        List<Activity> activity = activityservice.selectCOUNTbyacstyleecharts();
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(activity);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectcountbyacstatusecharts(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        List<echars> echars = activityservice.selectcountbyacstatusecharts();
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(echars);
+        resp.getWriter().write(jsonString);
+    }
 }

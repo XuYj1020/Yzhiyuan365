@@ -13,8 +13,17 @@
 		<script src="element-china-area-data/dist/app.js"></script>
 		
 		<div id="app">
+			<!-- {{osid}} -->
+			 
 			<el-row>
-				<el-col :span="24"><div class="grid-content bg-purple-dark">Y志愿</div></el-col>
+				 <el-alert
+			    title="当前状态不可发布活动"
+			    type="error
+				center"
+			    :closable="false"
+				v-if="osid != 1">
+			  </el-alert>
+				<!-- <el-col :span="24"><div class="grid-content bg-purple-dark">Y志愿</div></el-col> -->
 			</el-row>
 			<el-row type="flex" justify="center">
 				<el-col :span="16">
@@ -186,7 +195,7 @@
 									</el-form-item>
 									<!-- <p>{{ruleForm.leader}}</p> -->
 									<el-form-item>
-										<el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+										<el-button type="primary" @click="submitForm('ruleForm')" :disabled = "osid != 1">提交</el-button>
 										<el-button @click="resetForm('ruleForm')">重置</el-button>
 									</el-form-item>
 								</el-form>
@@ -209,9 +218,11 @@
 					this.ruleForm.organizationid = localStorage.getItem('oid')
 					this.ruleForm.oname = localStorage.getItem('oname')
 					this.selectmembersByOID();
+					this.osid = localStorage.getItem('osid')
 				},
 				data() {
 				    return {
+						osid:'',
 						// 地址选择
 						ads: regionData,
 						// 活动类别
@@ -390,6 +401,10 @@
 					  .validate()
 					  // 验证通过
 					  .then(()=>{
+						  if(this.osid != 1){
+							  this.$message.error('当前状态不可发布活动')
+							  return
+						  }
 						  // alert('submit!');
 						  let nowday = new Date().getDate() >= 10 ? new Date().getDate() : '0' + new Date().getDate()
 						  let Month = new Date().getMonth() + 1 >=10 ? new Date().getMonth() + 1 : '0' + (new Date().getMonth() + 1)

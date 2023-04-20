@@ -33,7 +33,10 @@
 								<div>
 									<el-descriptions title="组织信息" :column="2" border>
 										    <template slot="extra">
-										      <el-button type="primary" size="small" @click="dialogFormVisible = true">修改组织信息</el-button>
+												<!-- <div v-if="oinfos.userststus"> -->
+													<el-button type="primary" size="small" @click="dialogFormVisible = true" v-if="oinfos.userstatusid == '5'">修改组织信息</el-button>
+												<!-- </div> -->
+										      
 										    </template>
 									  <el-descriptions-item label="组织id" >{{oinfos.organizationid}}</el-descriptions-item>
 									  <el-descriptions-item label="组织名称">{{oinfos.oname}}</el-descriptions-item>
@@ -59,6 +62,11 @@
 									  <el-descriptions-item label="注册时间">{{oinfos.registrationtime}}</el-descriptions-item>
 									  <el-descriptions-item label="详细地址">{{oinfos.oaddress}}</el-descriptions-item>
 									  <el-descriptions-item label="组织介绍">{{oinfos.ointroduce}}</el-descriptions-item>
+									</el-descriptions>
+									<el-descriptions title="审核信息" :column="3" border>
+										<el-descriptions-item label="审核状态"v-if="oinfos.auditstatus">{{oinfos.auditstatus.status}}</el-descriptions-item>
+										  <el-descriptions-item label="审核意见"v-if="oinfos.organizeaudits">{{oinfos.organizeaudits.feedback}}</el-descriptions-item>
+										  <el-descriptions-item label="审核时间"v-if="oinfos.organizeaudits">{{oinfos.organizeaudits.eta}}</el-descriptions-item>
 									</el-descriptions>
 								</div>
 							</el-col>
@@ -208,9 +216,9 @@
 							ointroduce:'',
 							province:'',
 							city:'',
-							district:''					
+							district:''	,
+							
 						},
-						
 						
 						dialogFormVisible1: false,
 						checkstate1:false,
@@ -228,7 +236,8 @@
 						rules:{
 							phone:[
 								{required: true, message: '请输入手机号', trigger: 'blur'},
-								{pattern:/^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/,message: '手机号格式错误', trigger: 'blur'}
+								{pattern:/^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/,message: '手机号格式错误', trigger: 'blur'},
+								{ validator: this.ValidatorPhone, trigger: 'blur' }
 							],
 														
 							unifiedcode:[
@@ -259,6 +268,7 @@
 						  }).then((resp)=>{
 							console.log(resp.data)
 							this.oinfos=resp.data
+							
 						  }).catch((error)=> {
 						    console.log(error.response);//可以拿到后端返回的信息
 						  });
@@ -355,7 +365,30 @@
 						  	},1000)
 					  })
 					},
-
+					
+					// 手机号是否已注册
+					ValidatorPhone(rule, value, callback) {
+						  headers = {
+						  	vtoken:localStorage.getItem('vtoken')
+						  },
+						axios({
+						    method:"post",						
+						    url:"http://localhost:8080/Yzhiyuan365/organization/selectByPhone",
+						    data:value,
+							headers:{
+								'vtoken':localStorage.getItem('otoken')
+							  },
+						  }).then(resp =>{
+							  if(!resp.data){
+								  callback(new Error('手机号已注册'));
+							  }
+							  callback()
+						  }).catch(error =>{
+						    console.log(error.response);//可以拿到后端返回的信息
+							callback(new Error(error));
+						  });
+					},
+					
 					qx(){
 						this.dialogFormVisible1 = false
 						location.reload()

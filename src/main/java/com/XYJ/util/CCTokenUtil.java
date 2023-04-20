@@ -87,6 +87,7 @@ public class CCTokenUtil {
         oinfo.put("oname",organizationinfo.get("oname"));
         oinfo.put("phone",organizationinfo.get("phone"));
         oinfo.put("organizationid",organizationinfo.get("organizationid"));
+        oinfo.put("ouserstatusid",organizationinfo.get("userstatusid"));
         oinfo.put("otoken",Token);
 
 //        5.转成json格式后返回

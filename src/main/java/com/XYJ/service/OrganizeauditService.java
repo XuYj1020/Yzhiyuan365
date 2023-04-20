@@ -18,4 +18,12 @@ public class OrganizeauditService {
         sqlSession.commit();
         sqlSession.close();
     }
+
+    public void updatexiugai(Organization organization){
+        SqlSession sqlSession = factory.openSession();
+        OrganizeauditMapper organizeauditmapper = sqlSession.getMapper(OrganizeauditMapper.class);
+        organizeauditmapper.updatexiugai(organization);
+        sqlSession.commit();
+        sqlSession.close();
+    }
 }

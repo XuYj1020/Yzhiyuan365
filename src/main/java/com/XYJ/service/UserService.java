@@ -191,7 +191,21 @@ public class UserService {
         return yanzheng;
     }
 
+    public PageFY<User> selectAllFY(int begin,int size,User user){
+        SqlSession sqlSession = factory.openSession();
+        UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
 
+//        总记录数
+        int total = userMapper.selectAllFYCount(user);
+        System.out.println(total);
+        List<User> users= userMapper.selectAllFY(begin,size,user);
+
+        PageFY<User> userinfo = new PageFY<>();
+        userinfo.setTotal(total);
+        userinfo.setShuju(users);
+        sqlSession.close();
+        return userinfo;
+    }
 
 
 

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/axios/dist/axios.js"></script>
+		<script src="js/vue.js"></script>
+		<script src="element-ui/lib/index.js"></script>
+		<link rel="stylesheet" href="element-ui/lib/theme-chalk/index.css">
+		<script src="element-china-area-data/dist/app.js"></script>
+		
+		<style>
+			 .bg-purple-dark {
+			    background: #99a9bf;
+			  }
+			  .bg-purple {
+			    background: #d3dce6;
+			  }
+			  .bg-purple-light {
+			    background: #e5e9f2;
+			  }
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<el-row type="flex" justify="center">
+				<!--  activity, organization,areanew,aapplication,activestatus-->
+			  <el-col :span="22">
+				  <div class="grid-content bg-purple-dark">
+					  <el-table
+					      :data="tableData"
+					      border
+					      style="width: 100%">
+					      <el-table-column
+					        fixed
+					        prop="volunteerid"
+					        label="志愿者ID"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="name"
+					        label="志愿者名字"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="phone"
+					        label="志愿者手机号"
+					        align="center">
+					      </el-table-column>
+					      <el-table-column
+					        prop="registrationtime"
+					        label="注册时间"
+					        align="center">
+					      </el-table-column>
+					  						  <el-table-column
+					  						    prop="volunteerhours"
+					  						    label="志愿时长"
+					  						    align="center">
+					  						  </el-table-column>
+					  						  <el-table-column
+					  						    prop="credit"
+					  						    label="信用分"
+					  						    align="center">
+					  						  </el-table-column>
+					      <el-table-column
+					        fixed="right"
+					        label="操作"
+					        align="center">
+					        <template slot-scope="scope">
+					          <el-button @click="vinfo(scope.row)" type="text" size="small">查看</el-button>
+					        </template>
+					      </el-table-column>
+					    </el-table>
+				  </div>
+				  
+				  <div class="block">
+				    <el-pagination
+				      @size-change="handleSizeChange"
+				      @current-change="handleCurrentChange"
+				      :current-page="currentPage"
+				      :page-sizes="[20, 50, 100]"
+				      :page-size="pageSize"
+				      layout="total, sizes, prev, pager, next, jumper"
+				      :total="total">
+				    </el-pagination>
+				  </div>
+			  </el-col>
+			</el-row>
+			
+			<el-dialog title="查看用户信息" :visible.sync="dialogTableVisibleVINFO">
+				<el-descriptions title="个人信息" :column="2" border>
+				  <el-descriptions-item label="志愿者id" >{{vinfos.volunteerid}}</el-descriptions-item>
+				  <el-descriptions-item label="姓名">{{vinfos.name}}</el-descriptions-item>
+				  <el-descriptions-item label="手机号">{{vinfos.phone}}</el-descriptions-item>
+				  <el-descriptions-item label="所在地区" v-if="vinfos.areanews">{{vinfos.areanews.wholeName}}</el-descriptions-item>
+				  <el-descriptions-item label="生日">{{vinfos.birthday}}</el-descriptions-item>
+				  <el-descriptions-item label="性别">{{vinfos.gender == 1 ? '男': '女'}}</el-descriptions-item>
+				  <el-descriptions-item label="职业" v-if="vinfos.occupations">{{vinfos.occupations.occupation}}</el-descriptions-item>
+				  <el-descriptions-item label="教育程度" v-if="vinfos.educations">{{vinfos.educations.education}}</el-descriptions-item>
+				  <el-descriptions-item label="政治面貌" v-if="vinfos.politicaliandscapes">{{vinfos.politicaliandscapes.politicaliandscape}}</el-descriptions-item>
+				  <el-descriptions-item label="邮箱地址">{{vinfos.email}}</el-descriptions-item>
+				  <el-descriptions-item label="志愿时长">{{vinfos.volunteerhours}}小时</el-descriptions-item>
+				  <el-descriptions-item label="志愿币">{{vinfos.volunteercoins}}个</el-descriptions-item>
+				  <el-descriptions-item label="信用分">{{vinfos.credit}}</el-descriptions-item>
+				  <el-descriptions-item label="注册时间">{{vinfos.registrationtime}}</el-descriptions-item>
+				</el-descriptions>
+			</el-dialog>
+
+<!-- 			<el-dialog title="审核意见" :visible.sync="dialogFormVisibleSH1">
+			  <el-form :model="formSH1" ref="formSH1" :rules="rulesSH1">
+				<el-form-item label="审核状态" prop="auditstatusid">
+				<el-select v-model="formSH1.auditstatusid" placeholder="请选择">
+				    <el-option
+				      v-for="item in auditstatus"
+				      :key="item.auditstatusid"
+				      :label="item.auditstatus"
+				      :value="item.auditstatusid">
+				    </el-option>
+				  </el-select>
+			    <el-form-item label="审核意见">
+				  <el-input
+				  type="textarea"
+				  placeholder="请输入审核意见"
+				  v-model.trim="formSH1.feedback"
+				  maxlength="300"
+				  show-word-limit
+				  autocomplete="off"></el-input>
+			    </el-form-item>
+			  </el-form>
+			  <div slot="footer" class="dialog-footer">
+			    <el-button @click="dialogFormVisibleSH1 = false">取 消</el-button>
+			    <el-button type="primary" @click="tjSH()">确 定</el-button>
+			  </div>
+			</el-dialog>
+			 -->
+			
+			
+		</div>
+		
+		<script>
+			new Vue({
+				el:"#app",
+				created() {
+					this.formInline.daminid = localStorage.getItem('aid')
+					this.selectAllFY()
+				},
+				data(){
+					return{
+						currentPage:1,
+						pageSize:20,
+						total:null,
+						tableData:[],
+						dialogVisible:false,
+						formInline:{
+							daminid:'',
+							userstatusid:5
+						},
+
+						dialogTableVisibleVINFO:false,
+						vid:'',
+						vinfos:'',
+					}
+				},
+				methods:{
+					handleSizeChange(val) {
+					  // console.log(`每页 ${val} 条`);
+					  this.pageSize = val
+					  this.selectAllFY()
+					},
+					handleCurrentChange(val) {
+					  // console.log(`当前页: ${val}`);
+					  this.currentPage = val
+					  this.selectAllFY()
+					},
+					selectAllFY(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/user/selectAllFY?begin='+this.currentPage + '&size='+this.pageSize,
+							headers:{
+								vtoken:localStorage.getItem('atoken')
+							},
+							data:this.formInline
+						}).then((resp)=>{
+							this.total = resp.data['total']
+							this.tableData=resp.data['shuju']
+							console.log(resp.data['shuju'])
+						}).catch((error)=>{
+							console.log(error.response)
+						})
+					},
+					
+					vinfo(row){
+						this.vid = row.volunteerid
+						this.dialogTableVisibleVINFO = true
+						this.selectByVid()
+					},
+					
+					selectByVid(){
+						axios({
+							method:"post",
+							url:'http://localhost:8080/Yzhiyuan365/user/selectByVid?vid='+this.vid,
+							Headers:{
+								vtoken:localStorage.getItem('vtoken')
+							},
+						}).then((resp)=>{
+							console.log(resp.data)
+							this.vinfos = resp.data[0]
+						}).catch((error)=>{
+							console.log(error.resp)
+						})
+					},
+
+				}
+			})
+		</script>
+	</body>
+</html>

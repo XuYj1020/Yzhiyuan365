@@ -1,11 +1,8 @@
 package com.XYJ.service;
 
 import com.XYJ.mapper.ActivityMapper;
-import com.XYJ.pojo.Acstyle;
-import com.XYJ.pojo.Activity;
+import com.XYJ.pojo.*;
 
-import com.XYJ.pojo.Applicationreview;
-import com.XYJ.pojo.PageFY;
 import com.alibaba.fastjson.JSON;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -178,8 +175,20 @@ public class ActivityService {
         sqlSession.close();
     }
 
-
-
+    public List<Activity> selectCOUNTbyacstyleecharts(){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        List<Activity> activitys = activitymapper.selectCOUNTbyacstyleecharts();
+        sqlSession.close();
+        return activitys;
+    }
+    public List<echars> selectcountbyacstatusecharts(){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        List<echars> echars = activitymapper.selectcountbyacstatusecharts();
+        sqlSession.close();
+        return echars;
+    }
 
     public static void main(String[] args) {
         ActivityService activityService = new ActivityService();

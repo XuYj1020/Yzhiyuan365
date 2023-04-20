@@ -10,6 +10,7 @@ import com.XYJ.util.IdAutoCreateUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -314,6 +315,25 @@ public class UserServlet extends BaseServlet{
         PageFY<User> users = userservice.baomingyanz(volunteerid,activity);
         resp.setContentType("text/json;charset=utf-8");
         String jsonString = JSON.toJSONString(users);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectAllFY(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        String begin = req.getParameter("begin");
+        int currentpage = Integer.parseInt(begin);
+        System.out.println(currentpage);
+        String size = req.getParameter("size");
+        int pagesize = Integer.parseInt(size);
+        System.out.println(pagesize);
+        User user = JSON.parseObject(params,User.class);
+
+        PageFY<User> userPageFY = userservice.selectAllFY(currentpage,pagesize,user);
+
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(userPageFY);
         resp.getWriter().write(jsonString);
     }
 }

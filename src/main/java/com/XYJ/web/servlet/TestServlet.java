@@ -84,7 +84,8 @@ public class TestServlet extends BaseServlet {
 
 //                    自定义文件夹 文件储存路径
 //                    String path="E:\\code\\ideaProjects\\Yzhiyuan365\\src\\main\\webapp\\upload\\huodong\\";
-                    String path="E:\\code\\ideaProjects\\Yzhiyuan365\\target\\Yzhiyuan365\\upload\\huodong\\";
+//                    String path="E:\\code\\ideaProjects\\Yzhiyuan365\\target\\Yzhiyuan365\\upload\\huodong\\";
+                    String path = "E:\\uploda\\huodong\\";
                     File file=new File(path+fileName);
                     file.getParentFile().mkdirs();
                     file.createNewFile();
@@ -102,7 +103,7 @@ public class TestServlet extends BaseServlet {
                     out.close();
 //                    //删除fileItem对象
 //                    fileItem.delete();
-                    String rePath = "./upload/huodong/"+fileName;
+                    String rePath = "/huodong/"+fileName;
 //                    String jsonString = JSON.toJSONString(path);
 //                    System.out.println("我是"+jsonString);
                     String jsonString = JSON.toJSONString(rePath);

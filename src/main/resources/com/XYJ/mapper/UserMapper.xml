@@ -252,5 +252,20 @@
     <select id="selectVCredit" resultType="com.XYJ.pojo.User">
         select credit from volunteer where volunteerid = #{volunteerid}
     </select>
+    <select id="selectAllFY" resultMap="rs1">
+        select * from volunteer
+                          left join areanew on areanew.area_code = volunteer.district
+                          left join education on education.educationid = volunteer.education
+                          left join occupation on occupation.occupationid = volunteer.occupation
+                          left join politicaliandscape on politicaliandscape.politicaliandscapeid = volunteer.politicaliandscape
+order by volunteer.registrationtime limit #{begin},#{size};
+    </select>
+    <select id="selectAllFYCount" resultType="java.lang.Integer">
+        select count(*) from volunteer
+                          left join areanew on areanew.area_code = volunteer.district
+                          left join education on education.educationid = volunteer.education
+                          left join occupation on occupation.occupationid = volunteer.occupation
+                          left join politicaliandscape on politicaliandscape.politicaliandscapeid = volunteer.politicaliandscape
+    </select>
 
 </mapper>

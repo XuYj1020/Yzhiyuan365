@@ -41,7 +41,7 @@
 		
 		<div id="app">
 			<el-row>
-				<el-col :span="24"><div class="grid-content bg-purple-dark">Y志愿</div></el-col>
+				<!-- <el-col :span="24"><div class="grid-content bg-purple-dark">Y志愿</div></el-col> -->
 			</el-row>
 			<el-row type="flex" justify="center">
 				<el-col :span="16">
@@ -161,10 +161,13 @@
 				created() {
 					this.selectRegistrationstatuses();
 					this.selectOtype()
+					this.local = window.location.pathname.substring(0,window.location.pathname.lastIndexOf('/'))
+					this.olongin = this.local + '/olongin.html'
 				},
 				data() {
 				    return {
-						
+						local:'',
+						olongin:'',
 						//登记状态选择
 						Registrationstatuses:[],
 						// 组织类型
@@ -283,7 +286,12 @@
 							  url:"http://localhost:8080/Yzhiyuan365/organization/insert",
 							  data:this.ruleForm
 						  }).then((resp)=>{
-							  console.log(resp.data);
+							  // console.log(resp.data);
+							  if(resp.data == "success"){
+								  this.$message.success('提交成功，请等待审核')
+								  this.resetForm(ruleForm)
+								  location.href=this.olongin
+							  }
 						  }).catch((error)=>{
 							  console.log(error.response);
 						  })

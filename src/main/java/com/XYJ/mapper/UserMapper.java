@@ -40,5 +40,9 @@ public interface UserMapper {
     int selectActivityCount(@Param("volunteerid") String volunteerid, @Param("activity") Activity activity);
     List<User> selectVCredit(String volunteerid);
 
+    List<User> selectAllFY(@Param("begin") int begin, @Param("size") int size, @Param("user") User user);
+
+    int selectAllFYCount(User user);
+
 
 }

@@ -145,13 +145,15 @@
     </select>
 
     <select id="selectByOIDAll" resultMap="rs1">
-        select *,otype.otype as oo ,registrationstatus.registrationstatus as rr,userststus.status as usstatus,(select count(*) from omembers where omembers.organizationid = organization.organizationid and omembers.memberstatusid = 1) as count
-        from organization,otype,registrationstatus,areanew,userststus
-        where organization.otype = otype.otypeid
-          and organization.registrationstatus = registrationstatus.registrationstatusid
-          and areanew.area_code = organization.district
-          and userststus.userstatusid = organization.userstatusid
-          and organizationid =#{organizationid};
+        select *,auditstatus.status as shstatus,otype.otype as oo ,registrationstatus.registrationstatus as rr,userststus.status as usstatus,(select count(*) from omembers where omembers.organizationid = organization.organizationid and omembers.memberstatusid = 1) as count
+        from organization
+        left join otype on  organization.otype = otype.otypeid
+        left join registrationstatus on organization.registrationstatus = registrationstatus.registrationstatusid
+        left join areanew on areanew.area_code = organization.district
+        left join userststus on userststus.userstatusid = organization.userstatusid
+        left join organizeaudit on organizeaudit.organizationid = organization.organizationid
+        left join auditstatus on organizeaudit.auditstatusid = auditstatus.auditstatusid
+        where organization.organizationid =#{organizationid};
     </select>
 
     <select id="selectOinfoByOID" resultType="com.XYJ.pojo.Organization">

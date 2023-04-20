@@ -189,6 +189,8 @@ public class OrganizationServlet extends BaseServlet{
         Organization organization = JSON.parseObject(param,Organization.class);
         System.out.println(param);
         organizationservice.updateOinfo(organization);
+        OrganizeauditService organizeauditService = new OrganizeauditService();
+        organizeauditService.updatexiugai(organization);
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write("success");
     }

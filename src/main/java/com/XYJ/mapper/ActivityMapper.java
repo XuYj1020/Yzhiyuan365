@@ -1,6 +1,7 @@
 package com.XYJ.mapper;
 
 import com.XYJ.pojo.Activity;
+import com.XYJ.pojo.echars;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
@@ -47,4 +48,8 @@ public interface ActivityMapper {
     void updateActivitynumberofenrolledvolunteer(Activity activity);
 
     List<Activity> selectAcstylelimit3(Activity activity);
+
+    List<Activity> selectCOUNTbyacstyleecharts();
+
+    List<echars> selectcountbyacstatusecharts();
 }

@@ -1,0 +1,171 @@
+<!doctype html>
+<html class="x-admin-sm">
+    <head>
+        <meta charset="UTF-8">
+        <title>后台登录-X-admin2.2</title>
+        <meta name="renderer" content="webkit|ie-comp|ie-stand">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <meta http-equiv="Cache-Control" content="no-siteapp" />
+		<script src="js/axios/dist/axios.js"></script>
+        <link rel="stylesheet" href="./css/font.css">
+        <link rel="stylesheet" href="./css/xadmin.css">
+        
+    </head>
+    <body>
+
+         <div id="main" style="width: 100%;height:400px;"></div>
+		<div id="main1" style="width: 100%;height:400px;"></div>
+         <script src="./js/echarts.js"></script>
+        <script type="text/javascript">
+			
+			// fun()
+			// fun1()
+        // 基于准备好的dom，初始化echarts实例
+        (function(){var myChart = echarts.init(document.getElementById('main'));
+		let xx = []
+		let yy = []
+		// 指定图表的配置项和数据
+		var xDataArr = ['张三', '李四', '王五', '闰土', '小明', '茅台', '二妞', '大强']
+		    var yDataArr = [88, 92, 63, 77, 94, 80, 72, 86]
+		    var option = {
+				title: { // 标题设置
+				        text: '各类活动数', // 标题文字
+				        textStyle: { // 标题文字样式设置
+				          color: 'black'
+				        },
+				},
+				// 提示框 可以看到具体类目和数字
+				tooltip: {
+						// trigger: 'item',
+						// triggerOn: 'click',
+						formatter: '{b}:{c}'
+					},
+				        
+				      
+		        xAxis:{
+		            type:'category',
+		            data:xx
+		        },
+		        yAxis:{
+		            type:'value'
+		        },
+				
+		        series:[
+		            {
+		                type:'bar',
+		                data:yy
+		            }
+		        ]
+		    }
+		
+		
+		
+		
+		function fun(){
+			axios({
+			        url: "http://localhost:8080/Yzhiyuan365/Activity/selectCOUNTbyacstyleecharts",
+			        method: 'post'
+			        
+			    })
+			        .then(function (response) {
+			            console.log(response.data)
+						let cc = response.data
+						for ( let i = 0 ; i <= cc.length - 1 ; i++){
+							
+							xx.push(cc[i]["title"])
+							yy.push(cc[i]["activityid"])
+							
+							
+						}
+						// 使用刚指定的配置项和数据显示图表。
+						myChart.setOption(option);
+						console.log(xx)
+			        }).catch(function (err) {
+			            console.log(err)
+			        });
+		}
+		fun()
+		})();
+		
+		
+		
+	(function() {
+		var pieData = [
+		        {
+		            value:11231,
+		            name: '淘宝'
+		        },
+		        {
+		            name: '京东',
+		            value: 22673
+		        },
+		        {
+		            name: '唯品会',
+		            value: 6123
+		        },
+		        {
+		            name: '1号店',
+		            value: 8989
+		        },
+		        {
+		            name: '聚美优品',
+		            value: 6700
+		        }
+		    ]
+		let pieData1 = []
+		// label.show：显示文字
+		// label.formatter：格式化文字
+		 var myChart = echarts.init(document.getElementById('main1'));
+		 var option = {
+		    series:[
+		        {
+		            type:'pie',
+		            data:pieData1,
+		            label:{
+		                show:true,
+		                formatter:function(arg){
+		                    return arg.data.name + '活动' + arg.data.value + '个\n' + arg.percent + '%'
+		                }
+		            }
+		        }
+		    ]
+		}
+		 function fun1(){
+		 	axios({
+		 	        url: "http://localhost:8080/Yzhiyuan365/Activity/selectcountbyacstatusecharts",
+		 	        method: 'post'
+		 	        
+		 	    })
+		 	    .then(function (response) {
+		 	        console.log(response.data)
+		 			// pieData1 = response.data
+					let cc = response.data
+					for ( let i = 0 ; i <= cc.length - 1 ; i++){
+						
+						pieData1.push(cc[i])
+					}
+					
+					
+					
+					
+					
+		 			// 使用刚指定的配置项和数据显示图表。
+		 			myChart.setOption(option);
+		 			console.log(pieData1)
+		 	    }).catch(function (err) {
+		 	        console.log(err)
+		 	    });
+		 }
+		 fun1()
+	})()
+		
+		// 使用刚指定的配置项和数据显示图表。
+		// myChart.setOption(option1);
+
+    </script>
+    <script>
+
+        </script>
+    </body>
+</html>

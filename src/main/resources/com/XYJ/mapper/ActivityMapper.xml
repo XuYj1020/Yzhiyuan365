@@ -525,4 +525,14 @@
     <select id="selectAcstylelimit3" resultType="com.XYJ.pojo.Activity">
         select * from activity where organizationid = #{organizationid} and activestatusid = #{activestatusid} ORDER BY RAND() LIMIT 3
     </select>
+    <select id="selectCOUNTbyacstyleecharts" resultType="com.XYJ.pojo.Activity">
+        select acstyle.acstyle as title, count(*) as activityid from activity
+        left join acstyle on acstyle.acstyleid = activity.acstyle
+        where activestatusid in (1,2,3) GROUP BY activity.acstyle
+    </select>
+    <select id="selectcountbyacstatusecharts" resultType="com.XYJ.pojo.echars">
+        select activestatus.status as name,count(*) as value from activity
+        left join activestatus on activity.activestatusid = activestatus.activestatusid
+        GROUP BY activity.activestatusid
+    </select>
 </mapper>
