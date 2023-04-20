@@ -139,7 +139,21 @@
 									  show-word-limit
 									  style="width:300px"></el-input>
 									</el-form-item>
-									
+									<el-upload
+									  class="upload-demo"
+									  ref="upload"
+									  action="http://localhost:8080/Yzhiyuan365/test/zuzhitupian"
+									  :on-preview="handlePreview"
+									  :on-remove="handleRemove"
+									  :file-list="fileList"
+									  :auto-upload="false"
+									  :class="{disabled: uploadDisabled}"
+									  :on-success = "handleSuccess"
+									  accept="image/png,image/jpg,image/jpeg">
+									  <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+									  <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+									  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+									</el-upload>
 									<el-form-item>
 										<el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
 										<el-button @click="resetForm('ruleForm')">重置</el-button>
@@ -166,6 +180,8 @@
 				},
 				data() {
 				    return {
+						uploadDisabled:'',
+						fileList:[],
 						local:'',
 						olongin:'',
 						//登记状态选择
@@ -197,7 +213,8 @@
 						ointroduce:'',
 						province:'',
 						city:'',
-						district:''					
+						district:'',
+						pictureaddress:''
 				      },
 					  
 					  // 表单验证规则
@@ -289,9 +306,12 @@
 							  // console.log(resp.data);
 							  if(resp.data == "success"){
 								  this.$message.success('提交成功，请等待审核')
-								  this.resetForm(ruleForm)
+								  this.resetForm('ruleForm')
 								  location.href=this.olongin
+								  
 							  }
+							  
+							  this.resetForm('ruleForm')
 						  }).catch((error)=>{
 							  console.log(error.response);
 						  })
@@ -304,6 +324,7 @@
 					// 重置按钮
 				    resetForm(formName) {
 				      this.$refs[formName].resetFields();
+					  this.handleRemove()
 				    },
 					
 					// 发送短信验证码按钮,执行一次单体验证,验证手机号是否正确
@@ -406,6 +427,42 @@
 						  }).catch((error)=> {
 						    console.log(error.response);//可以拿到后端返回的信息
 						  });
+					},
+					
+					submitUpload() {
+					  this.$refs.upload.submit();
+					},
+					handleRemove(file, fileList) {
+					  // console.log(file, fileList);
+					  this.fileList = [];
+					  // this.form.photo = '';
+					  this.uploadDisabled = false
+					  this.ruleForm.pictureaddress = ''
+					},
+					handlePreview(file) {
+					  console.log(file);
+					},
+					handleSuccess(resp, file, fileList) {
+					  	// console.log("file",file);
+					  	this.fileList = fileList;
+					  	console.log(fileList);
+						console.log("我点击了1")
+					  	if (fileList.length >= 1) {
+					  		this.uploadDisabled = true;
+					  	}
+					  	// this.photo = file.response.data;
+						console.log("我点击了2")
+						console.log(resp)
+						this.ruleForm.pictureaddress = resp
+						console.log(resp)
+						console.log(file)
+						console.log(resp.data)
+						// console.log(response.data)
+						// console.log(file.resp.data)
+					  	this.$message({
+					  		message: '上传成功！',
+					  		type: 'success'
+					  	});
 					}
 					
 				}

@@ -129,7 +129,8 @@
 								<!-- 图片 -->
 								<el-col :span="4" >
 									<div>
-										<el-avatar shape="square" :size="150"  src="upload/1680266431674.jpg"></el-avatar>
+										<!-- <el-avatar shape="square" :size="150"  src="upload/1680266431674.jpg"></el-avatar> -->
+										<el-avatar shape="square" :size="150"  :src="`http://localhost:80/upload/huodong/${activitys.pictureaddress}`"></el-avatar>
 										<!-- <img src="upload/1680266431674.jpg" class="image"> -->
 										<!-- <el-image 
 									src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" 

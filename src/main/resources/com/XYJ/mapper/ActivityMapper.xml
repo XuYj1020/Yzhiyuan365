@@ -48,7 +48,12 @@
                 #{enrolmentopeningtime},
                 #{enrolmentdeadline},
                 #{volunteerhours},
-                #{pictureaddress},
+                <if test="pictureaddress != null and  pictureaddress !=''">
+                    #{pictureaddress},
+                </if>
+                <if test="pictureaddress == null or pictureaddress ==''">
+                    CONCAT(FLOOR(1 + (RAND() * 3)) , '.png'),
+                </if>
                 #{admissionpolicy},
                 #{creditscorerequirement},
                 #{leaveapproval},
@@ -325,13 +330,13 @@
     </select>
 
     <select id="selectActivityByVIDFYSQ" resultMap="rs1">
-        select *,organization.oname,areanew.whole_name,auditstatus.`status`  as lon1 ,activestatus.`status` as acstatus from activity, organization,applicationreview,areanew,auditstatus,activestatus
-        where
-            activity.organizationid = organization.organizationid AND
-            applicationreview.activityid = activity.activityid and
-            auditstatus.auditstatusid = applicationreview.auditstatusid and
-            activity.activestatusid = activestatus.activestatusid and
-            activity.district = areanew.area_code
+        select *,organization.oname,areanew.whole_name,auditstatus.`status`  as lon1 ,activestatus.`status` as acstatus from activity
+         LEFT JOIN  organization on activity.organizationid = organization.organizationid
+         left join  applicationreview on applicationreview.activityid = activity.activityid
+         left join auditstatus on   auditstatus.auditstatusid = applicationreview.auditstatusid
+         left join activestatus on  activity.activestatusid = activestatus.activestatusid
+        left join  areanew on activity.district = areanew.area_code
+        <where>
           <if test="activity.auditstatusid == 1 ">
               and applicationreview.auditstatusid = 1
           </if>
@@ -342,17 +347,18 @@
             and applicationreview.auditstatusid in (3,4)
         </if>
           and applicationreview.volunteerid = #{activity.volunteerid}
+        </where>
         order by activity.starttime limit #{begin},#{size};
     </select>
 
     <select id="selectActivityByVIDCountSQ" resultType="java.lang.Integer">
-        select count(*) from activity, organization,applicationreview,areanew,auditstatus,activestatus
-        where
-        activity.organizationid = organization.organizationid AND
-        applicationreview.activityid = activity.activityid and
-        auditstatus.auditstatusid = applicationreview.auditstatusid and
-        activity.activestatusid = activestatus.activestatusid and
-        activity.district = areanew.area_code
+        select count(*) from activity
+        LEFT JOIN  organization on activity.organizationid = organization.organizationid
+        left join  applicationreview on applicationreview.activityid = activity.activityid
+        left join auditstatus on   auditstatus.auditstatusid = applicationreview.auditstatusid
+        left join activestatus on  activity.activestatusid = activestatus.activestatusid
+        left join  areanew on activity.district = areanew.area_code
+        <where>
         <if test="auditstatusid == 1">
             and applicationreview.auditstatusid = 1
         </if>
@@ -363,16 +369,18 @@
             and applicationreview.auditstatusid in (3,4)
         </if>
         and applicationreview.volunteerid = #{volunteerid}
+        </where>
     </select>
 
     <select id="selectActivityByOIDFYSQ" resultMap="rs1">
-        select *,areanew.whole_name,auditstatus.`status`  as lon1 ,activestatus.`status` as acstatus,activityreview.auditid as acreviewsauditid,activityreview.eta as acreviewseta,activityreview.feedback as acreviewsfeedback,(select count(*) from signcode where signcode.activityid = activity.activityid) as cc,(select signinid from signcode where signcode.activityid = activity.activityid) as lat1 from activity,activityreview,areanew,acstyle,admissionpolicy,auditstatus,activestatus
-        where activity.activityid = activityreview.activityid AND
-        areanew.area_code = activity.district and areanew.`level` = 3 and
-        activity.acstyle = acstyle.acstyleid and
-        activity.admissionpolicy = admissionpolicy.admissionpolicyid and
-        activityreview.auditstatusid = auditstatus.auditstatusid and
-        activity.activestatusid = activestatus.activestatusid
+        select *,areanew.whole_name,auditstatus.`status`  as lon1 ,activestatus.`status` as acstatus,activityreview.auditid as acreviewsauditid,activityreview.eta as acreviewseta,activityreview.feedback as acreviewsfeedback,(select count(*) from signcode where signcode.activityid = activity.activityid) as cc,(select signinid from signcode where signcode.activityid = activity.activityid) as lat1 from activity
+        left join activityreview on activity.activityid = activityreview.activityid
+        left join areanew on areanew.area_code = activity.district and areanew.`level` = 3
+        left join acstyle on activity.acstyle = acstyle.acstyleid
+        left join admissionpolicy on activity.admissionpolicy = admissionpolicy.admissionpolicyid
+        left join auditstatus on activityreview.auditstatusid = auditstatus.auditstatusid
+        left join activestatus on activity.activestatusid = activestatus.activestatusid
+        <where>
         <if test="activity.activestatusid == 16">
             and activityreview.auditstatusid = 1 and activity.activestatusid = 6
         </if>
@@ -400,16 +408,18 @@
           <if test="activity.organizationid !=null and activity.organizationid != ''">
               and activity.organizationid = #{activity.organizationid}
           </if>
+        </where>
         order by activity.starttime limit #{begin},#{size};
     </select>
     <select id="selectActivityByOIDCountSQ" resultType="java.lang.Integer">
-        select count(*) from activity,activityreview,areanew,acstyle,admissionpolicy,auditstatus,activestatus
-        where activity.activityid = activityreview.activityid AND
-            areanew.area_code = activity.district and areanew.`level` = 3 and
-            activity.acstyle = acstyle.acstyleid and
-            activity.admissionpolicy = admissionpolicy.admissionpolicyid and
-            activityreview.auditstatusid = auditstatus.auditstatusid and
-            activity.activestatusid = activestatus.activestatusid
+        select count(*) from activity
+          left join activityreview on activity.activityid = activityreview.activityid
+          left join areanew on areanew.area_code = activity.district and areanew.`level` = 3
+          left join acstyle on activity.acstyle = acstyle.acstyleid
+          left join admissionpolicy on activity.admissionpolicy = admissionpolicy.admissionpolicyid
+          left join auditstatus on activityreview.auditstatusid = auditstatus.auditstatusid
+          left join activestatus on activity.activestatusid = activestatus.activestatusid
+        <where>
           <if test="activestatusid == 16">
               and activityreview.auditstatusid = 1 and activity.activestatusid = 6
           </if>
@@ -437,7 +447,7 @@
           <if test="organizationid != null and organizationid != ''">
               and activity.organizationid = #{organizationid}
           </if>
-
+    </where>
     </select>
 
 
