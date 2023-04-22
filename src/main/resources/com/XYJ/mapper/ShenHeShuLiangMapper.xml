@@ -14,4 +14,35 @@
                (select count(*) from activity where activestatusid in (1,2,3,4)) as huodongshu,
                (select count(*) from activityreview where auditid = 2  and date(eta) = date(now())) as jinrifabuhuodongshu
     </select>
+    <select id="selectv" resultType="com.XYJ.pojo.ShenHeShuLiang">
+        select
+        (select count(*) from activity,aapplication,volunteer where activity.activityid = aapplication.activityid and aapplication.volunteerid = volunteer.volunteerid and volunteer.volunteerid = #{volunteerid} and activity.activestatusid in (1,2,3) and aapplication.applicationstatusid = 1) as ybm,
+        (select count(*) from activity,aapplication,volunteer where activity.activityid = aapplication.activityid and aapplication.volunteerid = volunteer.volunteerid and volunteer.volunteerid = #{volunteerid} and activity.activestatusid in (1,2,3) and aapplication.applicationstatusid = 4) as yqd,
+        (select count(*) from activity,aapplication,volunteer where activity.activityid = aapplication.activityid and aapplication.volunteerid = volunteer.volunteerid and volunteer.volunteerid = #{volunteerid} and activity.activestatusid in (1,2,3) and aapplication.applicationstatusid = 5) as wqd,
+        (select count(*) from activity,aapplication,volunteer where activity.activityid = aapplication.activityid and aapplication.volunteerid = volunteer.volunteerid and volunteer.volunteerid = #{volunteerid} and activity.activestatusid in (1,2,3) and aapplication.applicationstatusid = 3) as qj,
+        (select count(*) from omembers,volunteer where omembers.volunteerid = volunteer.volunteerid and omembers.memberstatusid = 1 and volunteer.volunteerid = #{volunteerid}) as jiarudzuzhishu
+    </select>
+    <select id="selecto" resultType="com.XYJ.pojo.ShenHeShuLiang">
+        select
+            (select SUM(distribute.volunteerhours) from distribute
+                                                            left join activity on activity.activityid = distribute.activityid
+                                                            left join organization on organization.organizationid = activity.organizationid
+             where activity.organizationid = #{organizationid}) as yff,
+            (select SUM(activity.volunteerhours) from aapplication
+                                                          left join activity on activity.activityid = aapplication.activityid
+             where activity.organizationid = #{organizationid} and aapplication.applicationstatusid = 4) as dff,
+            (select count(*) from omembers
+             where memberstatusid = 1 and organizationid = #{organizationid}) as zzrs,
+            (select count(*) from omembers
+             where memberstatusid = 4 and organizationid = #{organizationid}) as dshcy,
+            (select count(*) from applicationreview
+                                      left join activity on activity.activityid = applicationreview.activityid
+                                      left join organization on organization.organizationid = activity.organizationid
+             where organization.organizationid = #{organizationid} and applicationreview.auditstatusid = 1) as dshbmry,
+            (select count(*) from aleave
+                                      left join aapplication on aapplication.applicationid = aleave.applicationid
+                                      left join activity on activity.activityid = aapplication.activityid
+                                      left join organization on organization.organizationid = activity.organizationid
+             where organization.organizationid = #{organizationid} and aleave.statusid = 1) as dshqjry
+    </select>
 </mapper>

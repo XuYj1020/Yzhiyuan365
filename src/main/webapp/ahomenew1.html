@@ -33,20 +33,15 @@
             <ul class="layui-nav right" lay-filter="">
                 <li class="layui-nav-item">
                     <a href="javascript:;" id="aa">admin</a>
-                   <!-- <dl class="layui-nav-child"> -->
-                        <!-- 二级菜单 -->
-                    <!--    <dd>
-                            <a onclick="xadmin.open('个人信息','https://www.baidu.com')">个人信息</a></dd>
+                   <dl class="layui-nav-child">
                         <dd>
-                            <a onclick="xadmin.open('切换帐号','https://www.baidu.com')">切换帐号</a></dd>
-                        <dd>
-                            <a href="./login.html">退出</a></dd> -->
-                    <!-- </dl> -->
-                </li>
-                <li class="layui-nav-item to-index">
-                    <a href="./index.html">首页</a></li>
-            </ul>
-        </div>
+                            <a id="tcdl">退出</a></dd> 
+					</dl>
+					</li>
+					<li class="layui-nav-item to-index">
+					    <a href="/">前台首页</a></li>
+						 </ul>
+				</div>		 
         <!-- 顶部结束 -->
         <!-- 中部开始 -->
         <!-- 左侧菜单开始 -->
@@ -60,12 +55,12 @@
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
                             <li>
-                                <a onclick="xadmin.add_tab('查看组织','azuzhick1.html')">
+                                <a onclick="xadmin.add_tab('查看组织','azuzhick2.html')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>查看组织</cite></a>
                             </li>
                             <li>
-                                <a onclick="xadmin.add_tab('审核组织','azuzhick2.html')">
+                                <a onclick="xadmin.add_tab('审核组织','azuzhick1.html')">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>审核组织</cite></a>
                             </li>
@@ -172,7 +167,13 @@
 						return;
 			            }
 					aa.innerText = aid
-			    }
+			    },
+			
+			document.querySelector("#tcdl").onclick=function tcdll(){
+					localStorage.removeItem('atoken')
+					localStorage.removeItem('aid')
+					window.location.href = 'alongin.html'
+			}
 
 			
         </script>

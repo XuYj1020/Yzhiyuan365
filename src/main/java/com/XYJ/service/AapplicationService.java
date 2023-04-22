@@ -2,13 +2,15 @@ package com.XYJ.service;
 
 import com.XYJ.mapper.AapplicationMapper;
 import com.XYJ.mapper.ActivityMapper;
-import com.XYJ.pojo.Aapplication;
-import com.XYJ.pojo.Activity;
-import com.XYJ.pojo.PageFY;
-import com.XYJ.pojo.User;
+import com.XYJ.pojo.*;
+import com.alibaba.fastjson.JSON;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
@@ -115,6 +117,14 @@ public class AapplicationService {
         String[] aapplications = aapplicationemapper.selectVID(aapplication);
         sqlSession.close();
         return aapplications;
+    }
+
+    public List<echars> selectcountbyacstatuseandaappchartsv(Aapplication aapplication){
+        SqlSession sqlSession = factory.openSession();
+        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+        List<echars> echars = aapplicationemapper.selectcountbyacstatuseandaappchartsv(aapplication);
+        sqlSession.close();
+        return echars;
     }
     public static void main(String[] args) {
         AapplicationService app = new AapplicationService();

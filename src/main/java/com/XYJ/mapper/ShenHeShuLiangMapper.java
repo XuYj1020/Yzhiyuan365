@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface ShenHeShuLiangMapper {
     List<ShenHeShuLiang> selectindexxinx();
+
+    List<ShenHeShuLiang> selectv(ShenHeShuLiang shenHeShuLiang);
+
+    List<ShenHeShuLiang> selecto(ShenHeShuLiang shenHeShuLiang);
 }

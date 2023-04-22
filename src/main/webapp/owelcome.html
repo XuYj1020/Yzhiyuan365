@@ -2,7 +2,7 @@
 <html class="x-admin-sm">
     <head>
         <meta charset="UTF-8">
-        <title>欢迎页面-X-admin2.2</title>
+        <title></title>
         <meta name="renderer" content="webkit|ie-comp|ie-stand">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
@@ -20,8 +20,8 @@
                 <div class="layui-col-md12">
                     <div class="layui-card">
                         <div class="layui-card-body ">
-                            <blockquote class="layui-elem-quote">欢迎管理员：
-                                <span class="x-red" id="gly">test</span>！当前时间:<span id="time"></span>
+                            <blockquote class="layui-elem-quote">欢迎组织负责人：
+                                <span class="x-red" id="zyz">test</span>！当前时间:<span id="time"></span>
                             </blockquote>
                         </div>
                     </div>
@@ -33,56 +33,55 @@
                             <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
                                 <li class="layui-col-md2 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>志愿者数量</h3>
+                                        <h3>已发放志愿时长</h3>
                                         <p>
-                                            <cite id="zhiyuanzsl"></cite></p>
+                                            <cite id="yff"></cite></p>
                                     </a>
                                 </li>
                                 <li class="layui-col-md2 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>组织数量</h3>
+                                        <h3>待发放志愿时长</h3>
                                         <p>
-                                            <cite id="zuzhishul"></cite></p>
+                                            <cite id="dff"></cite></p>
                                     </a>
                                 </li>
                                 <li class="layui-col-md2 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>活动数量</h3>
+                                        <h3>组织人数</h3>
                                         <p>
-                                            <cite id="huodongshu"></cite></p>
+                                            <cite id="zzrs"></cite></p>
                                     </a>
                                 </li>
                                 <li class="layui-col-md2 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>今日注册志愿者数</h3>
+                                        <h3>待审核成员</h3>
                                         <p>
-                                            <cite id="jinrzhuczhiyzshul"></cite></p>
+                                            <cite id="dshcy"></cite></p>
                                     </a>
                                 </li>
                                 <li class="layui-col-md2 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3 >今日注册组织数</h3>
+                                        <h3 >待审核报名志愿者</h3>
                                         <p>
-                                            <cite id="jinrzhucezuzhishul"></cite></p>
+                                            <cite id="dshbmry"></cite></p>
                                     </a>
                                 </li>
-                                <li class="layui-col-md2 layui-col-xs6 ">
-                                    <a href="javascript:;" class="x-admin-backlog-body">
-                                        <h3>今日发布活动数</h3>
-                                        <p>
-                                            <cite id="jinrifabuhuodongshu"></cite></p>
-                                    </a>
-                                </li>
+								<li class="layui-col-md2 layui-col-xs6">
+								    <a href="javascript:;" class="x-admin-backlog-body">
+								        <h3 >待审核请假志愿者</h3>
+								        <p>
+								            <cite id="dshqjry"></cite></p>
+								    </a>
+								</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 				<div class="layui-col-sm12 layui-col-md6">
 				    <div class="layui-card">
-				        <div class="layui-card-header">各类活动数</div>
+				        <div class="layui-card-header">活动进行状态</div>
 				        <div class="layui-card-body" style="min-height: 400px;">
 				            <div id="main" class="layui-col-sm12" style="height: 400px;">
-								
 							</div>
 				
 				        </div>
@@ -90,10 +89,9 @@
 				</div>
 				<div class="layui-col-sm12 layui-col-md6">
 				    <div class="layui-card">
-				        <div class="layui-card-header">活动状态</div>
+				        <div class="layui-card-header">活动发布状态</div>
 				        <div class="layui-card-body" style="min-height: 400px;">
-				            <div  class="layui-col-sm12" style="height: 400px;" id="main1">
-								
+				            <div id="main1" class="layui-col-sm12" style="height: 400px;">
 							</div>
 				
 				        </div>
@@ -105,36 +103,39 @@
 		 <script type="text/javascript">
 			 
 			 (function(){
-			        let gly = document.querySelector('#gly') 
-					let aid = localStorage.getItem('aid')	
-					gly.innerText = aid
+			        let zyz = document.querySelector('#zyz') 
+					let oname = localStorage.getItem('oname')	
+					zyz.innerText = oname
 			    })();
 			 
 			 (function(){
-				 let zhiyuanzsl =  document.querySelector('#zhiyuanzsl') 
-				 let zuzhishul =  document.querySelector('#zuzhishul') 
-				 let huodongshu =  document.querySelector('#huodongshu') 
-				 let jinrzhuczhiyzshul =  document.querySelector('#jinrzhuczhiyzshul') 
-				 let jinrzhucezuzhishul =  document.querySelector('#jinrzhucezuzhishul') 
-				 let jinrifabuhuodongshu =  document.querySelector('#jinrifabuhuodongshu') 
+				 let yff =  document.querySelector('#yff') 
+				 let dff =  document.querySelector('#dff') 
+				 let zzrs =  document.querySelector('#zzrs') 
+				 let dshcy =  document.querySelector('#dshcy') 
+				 let dshbmry =  document.querySelector('#dshbmry') 
+				 let dshqjry =  document.querySelector('#dshqjry') 
 				 let count 
-				 selectindexxinx();
+				 let a = {}
+				 a.organizationid = localStorage.getItem('oid')
+				 selecto();
 				 
-				function selectindexxinx(){
+				function selecto(){
 				 	axios({
 				 	    method:"post",
-				 	    url:"http://localhost:8080/Yzhiyuan365/shenheshuliang/selectindexxinx",
+				 	    url:"http://localhost:8080/Yzhiyuan365/shenheshuliang/selecto",
+						data:a
 				 	  }).then((resp)=>{
 				 	    
 				 		console.log(resp.data)
 				 		
 				 		count=resp.data[0]
-						zhiyuanzsl.innerText = count["zhiyuanzsl"]
-						zuzhishul.innerText =  count["zuzhishul"]
-						huodongshu.innerText = count["huodongshu"]
-						jinrzhuczhiyzshul.innerText = count["jinrzhuczhiyzshul"]
-						jinrzhucezuzhishul.innerText = count["jinrzhucezuzhishul"]
-						jinrifabuhuodongshu.innerText = count["jinrifabuhuodongshu"]
+						yff.innerText = count["yff"]
+						dff.innerText =  count["dff"]
+						zzrs.innerText = count["zzrs"]
+						dshcy.innerText = count["dshcy"]
+						dshbmry.innerText = count["dshbmry"]
+						dshqjry.innerText = count["dshqjry"]
 				 	  }).catch((error)=> {
 				 	    console.log(error.response);//可以拿到后端返回的信息
 				 	  });
@@ -172,59 +173,52 @@
 			 )();
 			 
 			 
-			 // 基于准备好的dom，初始化echarts实例
-			 (function(){var myChart = echarts.init(document.getElementById('main'));
-			 let xx = []
-			 let yy = []
-			 // 指定图表的配置项和数据
-			     var option = {
-			 		title: { // 标题设置
-			 		        // text: '各类活动数', // 标题文字
-			 		        // textStyle: { // 标题文字样式设置
-			 		        //   color: 'black'
-			 		        // },
-			 		},
-			 		// 提示框 可以看到具体类目和数字
-			 		tooltip: {
-			 				// trigger: 'item',
-			 				// triggerOn: 'click',
-			 				formatter: '{b}:{c}'
-			 			},
-			         xAxis:{
-			             type:'category',
-			             data:xx
-			         },
-			         yAxis:{
-			             type:'value'
-			         },
-			         series:[
-			             {
-			                 type:'bar',
-			                 data:yy
-			             }
-			         ]
-			     }
-
-			 function fun(){
-			 	axios({
-			 	        url: "http://localhost:8080/Yzhiyuan365/Activity/selectCOUNTbyacstyleecharts",
-			 	        method: 'post'
-			 	    })
-			 	        .then(function (response) {
-			 	            console.log(response.data)
+			
+			 
+			 (function() {
+			 	let pieData1 = []
+			 	// label.show：显示文字
+			 	// label.formatter：格式化文字
+			 	 var myChart = echarts.init(document.getElementById('main'));
+			 	 var option = {
+			 	    series:[
+			 	        {
+			 	            type:'pie',
+			 	            data:pieData1,
+			 	            label:{
+			 	                show:true,
+			 	                formatter:function(arg){
+			 	                    return arg.data.name + '活动' + arg.data.value + '个\n' + arg.percent + '%'
+			 	                }
+			 	            }
+			 	        }
+			 	    ]
+			 	}
+				let a = {}
+				a.organizationid = localStorage.getItem('oid')
+			 	 function fun1(){
+			 	 	axios({
+			 	 	        url: "http://localhost:8080/Yzhiyuan365/Activity/selectActivestatuscounts",
+			 	 	        method: 'post',
+							data:a
+			 	 	    })
+			 	 	    .then(function (response) {
+			 	 	        console.log(response.data)
+			 	 			// pieData1 = response.data
 			 				let cc = response.data
+							console.log(a)
 			 				for ( let i = 0 ; i <= cc.length - 1 ; i++){
-			 					xx.push(cc[i]["title"])
-			 					yy.push(cc[i]["activityid"])
+			 					
+			 					pieData1.push(cc[i])
 			 				}
-			 				// 使用刚指定的配置项和数据显示图表。
-			 				myChart.setOption(option);
-			 				console.log(xx)
-			 	        }).catch(function (err) {
-			 	            console.log(err)
-			 	        });
-			 }
-			 fun()
+			 	 			// 使用刚指定的配置项和数据显示图表。
+			 	 			myChart.setOption(option);
+			 	 			console.log(pieData1)
+			 	 	    }).catch(function (err) {
+			 	 	        console.log(err)
+			 	 	    });
+			 	 }
+			 	 fun1()
 			 })();
 			 
 			 (function() {
@@ -246,15 +240,19 @@
 			 	        }
 			 	    ]
 			 	}
+			 				let a = {}
+			 				a.organizationid = localStorage.getItem('oid')
 			 	 function fun1(){
 			 	 	axios({
-			 	 	        url: "http://localhost:8080/Yzhiyuan365/Activity/selectcountbyacstatusecharts",
-			 	 	        method: 'post'  
+			 	 	        url: "http://localhost:8080/Yzhiyuan365/Activity/selectActivestatuscounts2",
+			 	 	        method: 'post',
+			 							data:a
 			 	 	    })
 			 	 	    .then(function (response) {
 			 	 	        console.log(response.data)
 			 	 			// pieData1 = response.data
 			 				let cc = response.data
+			 							console.log(a)
 			 				for ( let i = 0 ; i <= cc.length - 1 ; i++){
 			 					
 			 					pieData1.push(cc[i])
@@ -268,6 +266,7 @@
 			 	 }
 			 	 fun1()
 			 })()
+			 
 		</script>
     </body>
 </html>

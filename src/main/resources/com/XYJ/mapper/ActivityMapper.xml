@@ -62,6 +62,7 @@
                        );
     </insert>
 
+
     <select id="selectByAcstyleid" resultType="com.XYJ.pojo.Activity">
         select * from activity where acstyle=#{acstyle} and activestatusid in (1,2,3) ORDER BY RAND() LIMIT 12;
     </select>
@@ -142,6 +143,7 @@
             <result column="cc" property="cityCode"></result>
             <result column="zip" property="zipCode"></result>
             <result column="pp" property="pinYin"></result>
+            <result column="lev" property="level"></result>
         </association>
         <association property="admissionpolicys" javaType="com.XYJ.pojo.Admissionpolicy">
             <id column="admissionpolicyid" property="admissionpolicyid"></id>
@@ -545,4 +547,68 @@
         left join activestatus on activity.activestatusid = activestatus.activestatusid
         GROUP BY activity.activestatusid
     </select>
+    <select id="selectcreditsByVid" resultType="com.XYJ.pojo.Activity">
+        select *,credits.ctdit as picture from credits
+                          left join volunteer on credits.volunteerid = volunteer.volunteerid
+                          left join activity on activity.activityid = credits.activityid
+        where credits.volunteerid = #{volunteerid}
+
+    </select>
+    <select id="selectcreditsByVidCount" resultType="java.lang.Integer">
+        select count(*) from credits
+                          left join volunteer on credits.volunteerid = volunteer.volunteerid
+                          left join activity on activity.activityid = credits.activityid
+        left join aapplication on aapplication.volunteerid = credits.volunteerid and aapplication.applicationstatusid &lt;> 2
+        left join applicationstatus on applicationstatus.applicationstatusid = aapplication.applicationstatusid
+        where credits.volunteerid = #{volunteerid}
+    </select>
+    <select id="selectcreditsByVidFY" resultMap="rs1">
+        select *,volunteer.name as lon1,
+               volunteer.volunteerid as lat1,
+               credits.time as cc,
+               credits.credit as lev  ,
+                applicationstatus.status as zip from credits
+                          left join volunteer on credits.volunteerid = volunteer.volunteerid
+                          left join activity on activity.activityid = credits.activityid
+        left join aapplication on aapplication.volunteerid = credits.volunteerid and aapplication.applicationstatusid &lt;> 2
+        left join applicationstatus on applicationstatus.applicationstatusid = aapplication.applicationstatusid
+        where credits.volunteerid = #{credits.volunteerid} limit #{begin},#{size};
+    </select>
+    <select id="selectdistributeByVidCount" resultType="java.lang.Integer">
+        select count(*) from distribute
+                                                        left join volunteer on  distribute.volunteerid = volunteer.volunteerid
+                                                        left join activity on activity.activityid = distribute.activityid
+                                                        left join aapplication on aapplication.volunteerid = distribute.volunteerid and aapplication.applicationstatusid &lt;> 2
+                                                        left join applicationstatus on applicationstatus.applicationstatusid = aapplication.applicationstatusid
+        where distribute.volunteerid = #{volunteerid}
+    </select>
+    <select id="selectdistributeByVidFY" resultMap="rs1">
+        select *,volunteer.name as lon1,
+               volunteer.volunteerid as lat1,
+               distribute.releasetime as cc,
+               distribute.volunteerhours as acreviewsfeedback ,
+               applicationstatus.status as zip from distribute
+                                                        left join volunteer on  distribute.volunteerid = volunteer.volunteerid
+                                                        left join activity on activity.activityid = distribute.activityid
+                                                        left join aapplication on aapplication.volunteerid = distribute.volunteerid and aapplication.applicationstatusid &lt;> 2
+                                                        left join applicationstatus on applicationstatus.applicationstatusid = aapplication.applicationstatusid
+        where distribute.volunteerid = #{distribute.volunteerid} limit #{begin},#{size};
+    </select>
+    <select id="selectActivestatuscounts" resultType="com.XYJ.pojo.echars">
+        select activestatus.`status` as name, count(*) as value from activity
+        left join activestatus on activestatus.activestatusid = activity.activestatusid
+        where activity.organizationid =#{organizationid} and activity.activestatusid in (1,2,3,4) GROUP BY activity.activestatusid
+    </select>
+    <select id="selectActivestatuscounts2" resultType="com.XYJ.pojo.echars">
+        select activestatus.`status` as name, count(*) as value from activity
+         left join activestatus on activestatus.activestatusid = activity.activestatusid
+        where activity.organizationid =#{organizationid} and activity.activestatusid in (5,6,7) GROUP BY activity.activestatusid
+    </select>
+    <select id="selectActivestatuscounts3" resultType="com.XYJ.pojo.echars">
+        select (select '发布成功' )as name, count(*) as value from activity
+        left join activestatus on activestatus.activestatusid = activity.activestatusid
+        where activity.organizationid = #{organizationid} and activity.activestatusid in (1,2,3,4)
+    </select>
+
+
 </mapper>

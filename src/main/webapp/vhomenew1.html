@@ -18,7 +18,7 @@
         <![endif]-->
         <script>
             // 是否开启刷新记忆tab功能
-            // var is_remember = false;
+            var is_remember = false;
         </script>
     </head>
     <body class="index">
@@ -30,44 +30,21 @@
             <div class="left_open">
                 <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
             </div>
-            <ul class="layui-nav left fast-add" lay-filter="">
-                <li class="layui-nav-item">
-                    <a href="javascript:;">+新增</a>
-                    <dl class="layui-nav-child">
-                        <!-- 二级菜单 -->
-                        <dd>
-                            <a onclick="xadmin.open('最大化','http://www.baidu.com','','',true)">
-                                <i class="iconfont">&#xe6a2;</i>弹出最大化</a></dd>
-                        <dd>
-                            <a onclick="xadmin.open('弹出自动宽高','http://www.baidu.com')">
-                                <i class="iconfont">&#xe6a8;</i>弹出自动宽高</a></dd>
-                        <dd>
-                            <a onclick="xadmin.open('弹出指定宽高','http://www.baidu.com',500,300)">
-                                <i class="iconfont">&#xe6a8;</i>弹出指定宽高</a></dd>
-                        <dd>
-                            <a onclick="xadmin.add_tab('在tab打开','member-list.html')">
-                                <i class="iconfont">&#xe6b8;</i>在tab打开</a></dd>
-                        <dd>
-                            <a onclick="xadmin.add_tab('在tab打开刷新','member-del.html',true)">
-                                <i class="iconfont">&#xe6b8;</i>在tab打开刷新</a></dd>
-                    </dl>
-                </li>
-            </ul>
             <ul class="layui-nav right" lay-filter="">
                 <li class="layui-nav-item">
-                    <a href="javascript:;" id="aa">admin</a>
+                    <a href="javascript:;" id="aa"></a>
                     <dl class="layui-nav-child">
                         <!-- 二级菜单 -->
-                        <dd>
+                  <!--      <dd>
                             <a onclick="xadmin.open('个人信息','https://www.baidu.com')">个人信息</a></dd>
                         <dd>
-                            <a onclick="xadmin.open('切换帐号','https://www.baidu.com')">切换帐号</a></dd>
+                            <a onclick="xadmin.open('切换帐号','https://www.baidu.com')">切换帐号</a></dd> -->
                         <dd>
-                            <a href="./login.html">退出</a></dd>
+                            <a id="tcdl">退出</a></dd>
                     </dl>
                 </li>
                 <li class="layui-nav-item to-index">
-                    <a href="/">前台首页</a></li>
+                    <a href="/index.html">首页</a></li>
             </ul>
         </div>
         <!-- 顶部结束 -->
@@ -201,49 +178,19 @@
                     </li>
                     <li>
                         <a href="javascript:;">
-                            <i class="iconfont left-nav-li" lay-tips="系统统计">&#xe6ce;</i>
-                            <cite>系统统计</cite>
+                            <i class="iconfont left-nav-li" lay-tips="时长信息">&#xe6ce;</i>
+                            <cite>时长信息</cite>
                             <i class="iconfont nav_right">&#xe697;</i></a>
                         <ul class="sub-menu">
                             <li>
-                                <a onclick="xadmin.add_tab('拆线图','echarts1.html')">
+                                <a onclick="xadmin.add_tab('志愿时长记录','vshichangck1.html')">
                                     <i class="iconfont">&#xe6a7;</i>
-                                    <cite>拆线图</cite></a>
+                                    <cite>志愿时长记录</cite></a>
                             </li>
                             <li>
-                                <a onclick="xadmin.add_tab('拆线图','echarts2.html')">
+                                <a onclick="xadmin.add_tab('信用分记录','vxinyongfenck1.html')">
                                     <i class="iconfont">&#xe6a7;</i>
-                                    <cite>拆线图</cite></a>
-                            </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('地图','echarts3.html')">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>地图</cite></a>
-                            </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('饼图','echarts4.html')">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>饼图</cite></a>
-                            </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('雷达图','echarts5.html')">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>雷达图</cite></a>
-                            </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('k线图','echarts6.html')">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>k线图</cite></a>
-                            </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('热力图','echarts7.html')">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>热力图</cite></a>
-                            </li>
-                            <li>
-                                <a onclick="xadmin.add_tab('仪表图','echarts8.html')">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>仪表图</cite></a>
+                                    <cite>信用分记录</cite></a>
                             </li>
                         </ul>
                     </li>
@@ -266,7 +213,7 @@
                 </div>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
-                        <iframe src='./welcome.html' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                        <iframe src='./vwelcome.html' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
                     </div>
                 </div>
                 <div id="tab_show"></div>
@@ -286,7 +233,14 @@
 						return;
 			            }
 					aa.innerText = vname
-			    }
+			    },
+			document.querySelector("#tcdl").onclick=function tcdll(){
+					localStorage.removeItem('vtoken')
+					localStorage.removeItem('vname')
+					localStorage.removeItem('vphone')
+					localStorage.removeItem('vid')
+					window.location.href = 'vlongin.html'
+			}
 		</script>
     </body>
 

@@ -125,10 +125,10 @@
 							<el-row :gutter="20">
 								<!-- 图片 -->
 								<el-col :span="4" >
-									<div>
+									<div v-if="organizations.pictureaddress">
 										<!-- <img src="upload/1680266431674.jpg" class="image"> -->
 									<!-- <el-avatar shape="square" :size="150"  src="upload/1680266431674.jpg"></el-avatar> -->
-									<el-avatar shape="square" :size="150"  :src="`http://localhost:80/upload/zuzhi/${organizations.pictureaddress}`"></el-avatar>
+									<el-avatar shape="square" :size="150"  :src="`https//localhost:80/upload/zuzhi/${organizations.pictureaddress}`"></el-avatar>
 									</div>
 								</el-col>
 								<!-- 描述信息 -->

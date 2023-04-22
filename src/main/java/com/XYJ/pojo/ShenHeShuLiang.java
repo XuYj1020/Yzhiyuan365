@@ -17,7 +17,144 @@ public class ShenHeShuLiang {
     private int jinrzhucezuzhishul;
     private int huodongshu;
     private int jinrifabuhuodongshu;
+    private int ybm;
+    private int yqd;
+    private int wqd;
+    private int qj;
+    private int volunteerhours;
+    private int credit;
+    private int jiarudzuzhishu;
 
+    private String volunteerid;
+
+  private int yff ;
+  private int dff ;
+  private int zzrs ;
+  private int dshcy ;
+  private int dshbmry;
+  private int dshqjry;
+    private String organizationid;
+
+
+    public int getYff() {
+        return yff;
+    }
+
+    public void setYff(int yff) {
+        this.yff = yff;
+    }
+
+    public int getDff() {
+        return dff;
+    }
+
+    public void setDff(int dff) {
+        this.dff = dff;
+    }
+
+    public int getZzrs() {
+        return zzrs;
+    }
+
+    public void setZzrs(int zzrs) {
+        this.zzrs = zzrs;
+    }
+
+    public int getDshcy() {
+        return dshcy;
+    }
+
+    public void setDshcy(int dshcy) {
+        this.dshcy = dshcy;
+    }
+
+    public int getDshbmry() {
+        return dshbmry;
+    }
+
+    public void setDshbmry(int dshbmry) {
+        this.dshbmry = dshbmry;
+    }
+
+    public int getDshqjry() {
+        return dshqjry;
+    }
+
+    public void setDshqjry(int dshqjry) {
+        this.dshqjry = dshqjry;
+    }
+
+    public String getOrganizationid() {
+        return organizationid;
+    }
+
+    public void setOrganizationid(String organizationid) {
+        this.organizationid = organizationid;
+    }
+
+    public int getJiarudzuzhishu() {
+        return jiarudzuzhishu;
+    }
+
+    public void setJiarudzuzhishu(int jiarudzuzhishu) {
+        this.jiarudzuzhishu = jiarudzuzhishu;
+    }
+
+    public String getVolunteerid() {
+        return volunteerid;
+    }
+
+    public void setVolunteerid(String volunteerid) {
+        this.volunteerid = volunteerid;
+    }
+
+    public int getYbm() {
+        return ybm;
+    }
+
+    public void setYbm(int ybm) {
+        this.ybm = ybm;
+    }
+
+    public int getYqd() {
+        return yqd;
+    }
+
+    public void setYqd(int yqd) {
+        this.yqd = yqd;
+    }
+
+    public int getWqd() {
+        return wqd;
+    }
+
+    public void setWqd(int wqd) {
+        this.wqd = wqd;
+    }
+
+    public int getQj() {
+        return qj;
+    }
+
+    public void setQj(int qj) {
+        this.qj = qj;
+    }
+
+    public int getVolunteerhours() {
+        return volunteerhours;
+    }
+
+    public void setVolunteerhours(int volunteerhours) {
+        this.volunteerhours = volunteerhours;
+    }
+
+    public int getCredit() {
+        return credit;
+    }
+
+    public void setCredit(int credit) {
+        this.credit = credit;
+    }
 
     public int getZhiyuanzsl() {
         return zhiyuanzsl;
@@ -148,6 +285,21 @@ public class ShenHeShuLiang {
                 ", jinrzhucezuzhishul=" + jinrzhucezuzhishul +
                 ", huodongshu=" + huodongshu +
                 ", jinrifabuhuodongshu=" + jinrifabuhuodongshu +
+                ", ybm=" + ybm +
+                ", yqd=" + yqd +
+                ", wqd=" + wqd +
+                ", qj=" + qj +
+                ", volunteerhours=" + volunteerhours +
+                ", credit=" + credit +
+                ", jiarudzuzhishu=" + jiarudzuzhishu +
+                ", volunteerid='" + volunteerid + '\'' +
+                ", yff=" + yff +
+                ", dff=" + dff +
+                ", zzrs=" + zzrs +
+                ", dshcy=" + dshcy +
+                ", dshbmry=" + dshbmry +
+                ", dshqjry=" + dshqjry +
+                ", organizationid='" + organizationid + '\'' +
                 '}';
     }
 }

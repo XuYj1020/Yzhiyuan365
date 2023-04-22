@@ -65,7 +65,7 @@
         </association>
         <association property="distributes" javaType="com.XYJ.pojo.Distribute">
             <id column="recordid" property="recordid"></id>
-            <result column="volunteerhours" property="volunteerhours"></result>
+            <result column="disvolunteerhours" property="volunteerhours"></result>
             <result column="releasetime" property="releasetime"></result>
         </association>
     </resultMap>
@@ -107,7 +107,7 @@
     </select>
 
     <select id="selectVinfoByAIDFYstatus" resultMap="rs1">
-        select * from aapplication
+        select *,distribute.volunteerhours as disvolunteerhours from aapplication
         left join volunteer on volunteer.volunteerid = aapplication.volunteerid
         left join aleave on aleave.applicationid = aapplication.applicationid
         left join signrecord on signrecord.applicationid = aapplication.applicationid
@@ -145,5 +145,12 @@
                or applicationreview.auditstatusid = 1)
     </select>
 
+    <select id="selectcountbyacstatuseandaappchartsv" resultType="com.XYJ.pojo.echars">
+        select applicationstatus.status as `name`,	count(*)	as `value`	from applicationstatus
+                                                                                         left join aapplication on applicationstatus.applicationstatusid = aapplication.applicationstatusid
+                                                                                         left join activity on activity.activityid = aapplication.activityid
+                                                                                         left join volunteer  on volunteer.volunteerid = aapplication.volunteerid
+        where volunteer.volunteerid = #{volunteerid}   and aapplication.applicationstatusid in (1,3,4,5) and activity.activestatusid in (1,2,3) group by applicationstatus.applicationstatusid
+    </select>
 
 </mapper>

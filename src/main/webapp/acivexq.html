@@ -72,11 +72,11 @@
 					<div>
 						<el-card class="box-card" shadow="never" style = "border: 0px">
 						  <div slot="header" class="clearfix">
-						    <span><h1 style="text-align: center;">{{Activitys[0].title}}</h1></span>
+						    <span><h1 style="text-align: center;">{{Activitys.title}}</h1></span>
 							<div style="text-align: center;">
-								<span>分类：</span><span>{{Activitys[0].acstyles.acstyle}}</span> &nbsp;
-								<span>发布时间：</span><span>{{Activitys[0].creationtime}}</span> &nbsp;
-								<span>发布组织：</span><span>{{organizations[0].oname}}</span>
+								<span>分类：</span><span v-if="Activitys.acstyles">{{Activitys.acstyles.acstyle}}</span> &nbsp;
+								<span>发布时间：</span><span>{{Activitys.creationtime}}</span> &nbsp;
+								<span>发布组织：</span><span v-if="organizations">{{organizations.oname}}</span>
 							</div>
 						    <el-button style="float: right; padding: 3px 0" type="text">我要举报</el-button>
 						  </div>
@@ -85,10 +85,10 @@
 							  <el-card class="box-card" shadow="never">
 							  <el-row>
 								<el-col :span="8">
-									<div style="height: 300px;">
+									<div style="height: 300px;" v-if="Activitys.pictureaddress">
 										 <el-image
 										      style="width: 90%; height: 90%"
-										      :src="`http://localhost:80/upload/huodong/${Activitys[0].pictureaddress}`"
+										      :src="`http://localhost:80/upload/huodong/${Activitys.pictureaddress}`"
 										      fit="cover"></el-image>
 										<!-- <el-avatar shape="square" :size="325" :fit="fit" src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"></el-avatar> -->
 									</div>
@@ -97,18 +97,18 @@
 									
 										<div class="text item" style="height: 310px;">
 											<el-descriptions  :column="1">
-											    <el-descriptions-item label="活动类型"><el-tag size="small" v-text="Activitys[0].acstyles.acstyle"></el-tag></el-descriptions-item>
+											    <el-descriptions-item label="活动类型" v-if="Activitys.acstyles"><el-tag size="small" v-text="Activitys.acstyles.acstyle"></el-tag></el-descriptions-item>
 											    <!-- <el-descriptions-item label="所在区域">18100000000</el-descriptions-item> -->
 											    <el-descriptions-item label="所属区域">{{Areas}}</el-descriptions-item>
-											    <el-descriptions-item label="所属组织" >{{organizations[0].oname}}</el-descriptions-item>
-												<el-descriptions-item label="报名开始时间">{{Activitys[0].enrolmentopeningtime}}</el-descriptions-item>
-												<el-descriptions-item label="报名截止时间">{{Activitys[0].enrolmentdeadline}}</el-descriptions-item>
-												<el-descriptions-item label="活动开始时间">{{Activitys[0].starttime}}</el-descriptions-item>
+											    <el-descriptions-item label="所属组织" >{{organizations.oname}}</el-descriptions-item>
+												<el-descriptions-item label="报名开始时间">{{Activitys.enrolmentopeningtime}}</el-descriptions-item>
+												<el-descriptions-item label="报名截止时间">{{Activitys.enrolmentdeadline}}</el-descriptions-item>
+												<el-descriptions-item label="活动开始时间">{{Activitys.starttime}}</el-descriptions-item>
 											</el-descriptions>
 											<el-descriptions  :column="3">
-												<el-descriptions-item label="招募人数">{{Activitys[0].numberofrequiredvolunteer}}</el-descriptions-item>
-												<el-descriptions-item label="已报名人数" >{{Activitys[0].numberofenrolledvolunteer}}</el-descriptions-item>
-												<el-descriptions-item label="录取方式">{{Activitys[0].admissionpolicys.admissionpolicy}}</el-descriptions-item>
+												<el-descriptions-item label="招募人数">{{Activitys.numberofrequiredvolunteer}}</el-descriptions-item>
+												<el-descriptions-item label="已报名人数" >{{Activitys.numberofenrolledvolunteer}}</el-descriptions-item>
+												<el-descriptions-item label="录取方式" v-if="Activitys.admissionpolicys">{{Activitys.admissionpolicys.admissionpolicy}}</el-descriptions-item>
 											</el-descriptions>
 											
 <!-- 										    <p>活动类型</p>
@@ -121,30 +121,30 @@
 <!-- 											<el-button type="primary" @click="zjbm">我要报名</el-button>
 											<el-button type="primary" @click="shbm">我要报名</el-button> -->
 											<!-- 没有到报名时间 -->
-											<el-button type="primary" v-if="new Date(Activitys[0].enrolmentopeningtime) > new Date()" :disabled="new Date(Activitys[0].enrolmentopeningtime) > new Date()">报名时间未到</el-button>
+											<el-button type="primary" v-if="new Date(Activitys.enrolmentopeningtime) > new Date()" :disabled="new Date(Activitys.enrolmentopeningtime) > new Date()">报名时间未到</el-button>
 											<!-- 报名时间内 -->
-											<!-- <el-button type="primary" @click="bm" v-if="new Date(Activitys[0].enrolmentopeningtime) < new Date() && new Date(Activitys[0].enrolmentdeadline) > new Date()">我要报名</el-button> -->
+											<!-- <el-button type="primary" @click="bm" v-if="new Date(Activitys.enrolmentopeningtime) < new Date() && new Date(Activitys.enrolmentdeadline) > new Date()">我要报名</el-button> -->
 											<!-- 报名时间已过 -->
-											<!-- <el-button type="primary" v-if="new Date(Activitys[0].enrolmentdeadline) < new Date()" :disabled="new Date(Activitys[0].enrolmentdeadline) < new Date()">报名已截止</el-button> -->
+											<!-- <el-button type="primary" v-if="new Date(Activitys.enrolmentdeadline) < new Date()" :disabled="new Date(Activitys.enrolmentdeadline) < new Date()">报名已截止</el-button> -->
 											
 											<!-- 报名时间内 -->
-											<div v-if="new Date(Activitys[0].enrolmentopeningtime) < new Date() && new Date(Activitys[0].enrolmentdeadline) > new Date()">
+											<div v-if="new Date(Activitys.enrolmentopeningtime) < new Date() && new Date(Activitys.enrolmentdeadline) > new Date()">
 												<el-button type="primary" @click="bm" v-if=" applicationcount ==0 && applicationcountjoin == 0">我要报名</el-button>
 												<el-button type="success"  v-if=" applicationcount !=0" :disabled="applicationcount !=0">已录取</el-button>
 												<el-button type="warning"  v-if=" applicationcountjoin != 0" :disabled="applicationcountjoin != 0">报名审核中</el-button>
 											</div>
 											
-											<div v-if="new Date(Activitys[0].enrolmentdeadline) < new Date()">
-												<el-button type="primary"  v-if=" applicationcount ==0 && applicationcountjoin == 0" :disabled="new Date(Activitys[0].enrolmentdeadline) < new Date()">报名已截止</el-button>
+											<div v-if="new Date(Activitys.enrolmentdeadline) < new Date()">
+												<el-button type="primary"  v-if=" applicationcount ==0 && applicationcountjoin == 0" :disabled="new Date(Activitys.enrolmentdeadline) < new Date()">报名已截止</el-button>
 												<el-button type="success"  v-if=" applicationcount !=0" :disabled="applicationcount !=0">已录取</el-button>
 												<el-button type="warning"  v-if=" applicationcountjoin != 0" :disabled="applicationcountjoin != 0">报名审核中</el-button>
 											</div>
 											
 											
 											<!-- 录取方式为先到先得，当前时间小于报名截止时间，同时状态为已报名，则显示取消报名 -->
-											<!-- <el-button type="primary" @click="bm" v-if="Activitys[0].admissionpolicy==1 &&applications.applicationstatusid === 1 && new Date(Activitys[0].enrolmentdeadline) > new Date()">取消报名</el-button> -->
+											<!-- <el-button type="primary" @click="bm" v-if="Activitys.admissionpolicy==1 &&applications.applicationstatusid === 1 && new Date(Activitys.enrolmentdeadline) > new Date()">取消报名</el-button> -->
 											<!-- 录取方式为审核制，当前时间小于报名截止时间，同时状态为已报名，则显示取消报名 -->
-											<!-- <el-button type="primary" @click="bm" v-if="Activitys[0].admissionpolicy!=1 &&applications.applicationstatusid === 1 && new Date(Activitys[0].enrolmentdeadline) > new Date()">取消报名</el-button> -->
+											<!-- <el-button type="primary" @click="bm" v-if="Activitys.admissionpolicy!=1 &&applications.applicationstatusid === 1 && new Date(Activitys.enrolmentdeadline) > new Date()">取消报名</el-button> -->
 										</div>
 										    
 									
@@ -155,7 +155,7 @@
 							      <span>活动ID：</span>
 							    </div>
 							    <div  class="text item">
-							      {{Activitys[0].activityid}}
+							      {{Activitys.activityid}}
 							    </div>
 							  </el-card>
 							  <el-card class="box-card" shadow="never">
@@ -163,7 +163,7 @@
 							      <span>活动细则：</span>
 							    </div>
 							    <div  class="text item">
-							      {{Activitys[0].introduction}}
+							      {{Activitys.introduction}}
 							    </div>
 							  </el-card>
 							  <el-card class="box-card" shadow="never">
@@ -171,7 +171,7 @@
 							      <span>活动开始时间：</span>
 							    </div>
 							    <div  class="text item">
-							      {{Activitys[0].starttime}}
+							      {{Activitys.starttime}}
 							    </div>
 							  </el-card>
 							  <el-card class="box-card" shadow="never">
@@ -179,7 +179,7 @@
 							      <span>活动结束时间：</span>
 							    </div>
 							    <div class="text item">
-							      {{Activitys[0].endtime}}
+							      {{Activitys.endtime}}
 							    </div>
 							  </el-card>
 							  <el-card class="box-card" shadow="never">
@@ -187,7 +187,7 @@
 							      <span>志愿时长：</span>
 							    </div>
 							    <div class="text item">
-							      {{Activitys[0].volunteerhours}} 小时
+							      {{Activitys.volunteerhours}} 小时
 							    </div>
 							  </el-card>
 							  <el-card class="box-card" shadow="never">
@@ -195,17 +195,17 @@
 							      <span>信用分要求：</span>
 							    </div>
 							    <div class="text item">
-							      {{Activitys[0].creditscorerequirement}}
+							      {{Activitys.creditscorerequirement}}
 							    </div>
 							  </el-card>
 							  <el-card class="box-card" shadow="never">
 							    <div slot="header" class="clearfix">
 							      <span>是否允许请假：</span>
 							    </div>
-							    <div class="text item" v-if="Activitys[0].leaveapproval == 0">
+							    <div class="text item" v-if="Activitys.leaveapproval == 0">
 							      不允许请假
 							    </div>
-								<div class="text item" v-if="Activitys[0].leaveapproval == 1">
+								<div class="text item" v-if="Activitys.leaveapproval == 1">
 								  允许请假
 								</div>
 							  </el-card>
@@ -214,18 +214,18 @@
 							      <span>活动地点：</span>
 							    </div>
 							    <div class="text item">							 
-								 <p>{{Activitys[0].place}}</p>
+								 <p>{{Activitys.place}}</p>
 							    </div>
 							  </el-card>
 							  <el-card class="box-card" shadow="never">
 							    <div slot="header" class="clearfix">
 							      <span>联系方式：</span>
 							    </div>
-							    <div  class="text item" v-if="Activitys[0].havealeader == 0">
-							      {{organizations[0].name}}{{organizations[0].phone}}
-<!-- 								  {{Activitys[0].havealeader}} -->
+							    <div  class="text item" v-if="Activitys.havealeader == 0">
+							      {{organizations.name}}{{organizations.phone}}
+<!-- 								  {{Activitys.havealeader}} -->
 							    </div>
-								<div v-for="(o,index) in leaders" :key="index" class="text item" v-if="Activitys[0].havealeader == 1">
+								<div v-for="(o,index) in leaders" :key="index" class="text item" v-if="Activitys.havealeader == 1">
 								  {{o.name + o.phone}}
 								</div>
 							  </el-card> 
@@ -251,7 +251,7 @@
 					this.olongin = this.local + '/olongin.html'
 					this.searchhuodong = this.local + '/searchhuodong.html'
 					this.alongin = this.local + '/alongin.html'
-					
+					this.index = this.local + '/index.html'
 					this.baomyanzform.volunteerid =this.sendinfo.volunteerid = localStorage.getItem('vid')
 					this.vname=localStorage.getItem('vname'),
 					// 调用方法获取url参数
@@ -335,7 +335,7 @@
 					SelectadressByAreaID(){
 						axios({
 						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/Area/SelectadressByAreaID?district="+this.Activitys[0].district,
+						    url:"http://localhost:8080/Yzhiyuan365/Area/SelectadressByAreaID?district="+this.Activitys.district,
 							// headers:headers,
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
@@ -350,10 +350,10 @@
 					},
 					// 查找组织信息
 					selectOinfoByOID(){
-						console.log(this.Activitys[0].organizationid)
+						console.log(this.Activitys.organizationid)
 						axios({
 						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/organization/selectOinfoByOID?organizationid="+this.Activitys[0].organizationid,
+						    url:"http://localhost:8080/Yzhiyuan365/organization/selectOinfoByOID?organizationid="+this.Activitys.organizationid,
 							// headers:headers,
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
@@ -365,7 +365,7 @@
 							// 得到类别中文
 							// console.log(resp.data[0].acstyles.acstyle)
 							// console.log(resp.data.datalist)
-							this.organizations=resp.data
+							this.organizations=resp.data[0]
 						  }).catch((error)=> {
 						    console.log(error.response);//可以拿到后端返回的信息
 						  });
@@ -373,10 +373,10 @@
 					
 					// 联合查询，通过活动id找到活动管理员信息
 					selectByjoinAID(){
-						console.log(this.Activitys[0].activityid)
+						console.log(this.Activitys.activityid)
 						axios({
 						    method:"post",
-						    url:"http://localhost:8080/Yzhiyuan365/user/selectByjoinAID?activityid="+this.Activitys[0].activityid,
+						    url:"http://localhost:8080/Yzhiyuan365/user/selectByjoinAID?activityid="+this.Activitys.activityid,
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},
@@ -405,9 +405,9 @@
 						    // console.log(resp)
 							console.log(resp.data)
 							// 得到类别中文
-							console.log(resp.data[0].acstyles.acstyle)
-							console.log(resp.data[0].havealeader)
-							this.Activitys=resp.data
+							// console.log(resp.data[0].acstyles.acstyle)
+							// console.log(resp.data[0].havealeader)
+							this.Activitys=resp.data[0]
 							this.sendinfo.numberofenrolledvolunteer = resp.data[0].numberofenrolledvolunteer <= 0? 1 : 2
 							this.baomyanzform.starttime = resp.data[0].starttime
 							this.baomyanzform.endtime = resp.data[0].endtime
@@ -473,7 +473,7 @@
 							}else if(this.count >0){
 								this.$message.error("与其他已报名活动时间冲突")
 							}else{
-								if(this.Activitys[0].admissionpolicy==1){
+								if(this.Activitys.admissionpolicy==1){
 									this.zjbm();	
 								}else{
 									this.shbm();
@@ -485,7 +485,7 @@
 					// 我要报名  先到先得
 					zjbm(){
 						this.sendinfo.auditid = 0
-						if(this.Activitys[0].numberofrequiredvolunteer<=this.Activitys[0].numberofenrolledvolunteer){
+						if(this.Activitys.numberofrequiredvolunteer<=this.Activitys.numberofenrolledvolunteer){
 							this.$message.error('人员已招满')
 						}else{
 						console.log(this.sendinfo.auditid)
@@ -506,7 +506,7 @@
 					// 我要报名  审核制
 					shbm(){
 						this.selectByAcstyleidjoin()
-						if(this.Activitys[0].numberofrequiredvolunteer<=this.Activitys[0].numberofenrolledvolunteer){
+						if(this.Activitys.numberofrequiredvolunteer<=this.Activitys.numberofenrolledvolunteer){
 							this.$message.error('人员已招满')
 						}else{
 							console.log(this.sendinfo.auditid)

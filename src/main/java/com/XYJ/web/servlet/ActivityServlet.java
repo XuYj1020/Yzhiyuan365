@@ -293,7 +293,9 @@ public class ActivityServlet extends BaseServlet{
         BufferedReader bufferedReader = req.getReader();
         String params = bufferedReader.readLine();
         Activity activity = JSON.parseObject(params,Activity.class);
+        System.out.println("1");
         Activityreview activityreview = IdAutoCreateUtils.activityreviewauditid(params);
+        System.out.println("2");
         ActivityreviewService activityreviewService = new ActivityreviewService();
         activityreviewService.insert(activityreview);
         System.out.println(activity);
@@ -315,6 +317,77 @@ public class ActivityServlet extends BaseServlet{
         List<echars> echars = activityservice.selectcountbyacstatusecharts();
         resp.setContentType("text/json;charset=utf-8");
         String jsonString = JSON.toJSONString(echars);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectActivestatuscounts(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String params = bufferedReader.readLine();
+        Activity activity = JSON.parseObject(params,Activity.class);
+        List<echars> echars = activityservice.selectActivestatuscounts(activity);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(echars);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectActivestatuscounts2(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String params = bufferedReader.readLine();
+        Activity activity = JSON.parseObject(params,Activity.class);
+        List<echars> echars = activityservice.selectActivestatuscounts2(activity);
+        List<echars> echars3 = activityservice.selectActivestatuscounts3(activity);
+        System.out.println(echars3);
+        String echars4 = JSON.toJSONString(echars3);
+
+        echars4 = echars4.substring(1,echars4.length()-1);
+        System.out.println(echars4);
+        com.XYJ.pojo.echars echars1 = JSON.parseObject(echars4, com.XYJ.pojo.echars.class);
+        echars.add(echars1);
+System.out.println(echars);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(echars);
+
+        resp.getWriter().write(jsonString);
+    }
+
+
+    public void selectcreditsByVidFY(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        String begin = req.getParameter("begin");
+        int currentpage = Integer.parseInt(begin);
+        System.out.println(currentpage);
+        String size = req.getParameter("size");
+        int pagesize = Integer.parseInt(size);
+        System.out.println(pagesize);
+        Credits credits = JSON.parseObject(params,Credits.class);
+        System.out.println(credits);
+        PageFY<Activity> activities = activityservice.selectcreditsByVidFY(currentpage,pagesize,credits);
+        System.out.println(activities);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(activities);
+        resp.getWriter().write(jsonString);
+    }
+
+    public void selectdistributeByVidFY(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        String begin = req.getParameter("begin");
+        int currentpage = Integer.parseInt(begin);
+        System.out.println(currentpage);
+        String size = req.getParameter("size");
+        int pagesize = Integer.parseInt(size);
+        System.out.println(pagesize);
+        Distribute distribute = JSON.parseObject(params,Distribute.class);
+        System.out.println(distribute);
+        PageFY<Activity> activities = activityservice.selectdistributeByVidFY(currentpage,pagesize,distribute);
+        System.out.println(activities);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(activities);
         resp.getWriter().write(jsonString);
     }
 }

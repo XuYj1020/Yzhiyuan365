@@ -153,6 +153,11 @@
 						{{Activitys.introduction}}
 					</el-descriptions-item>
 				  </el-descriptions>
+				  <el-descriptions :column="1" border v-if="Activitys.pictureaddress">
+				    <el-descriptions-item label="图片">
+				  	  <el-avatar shape="square" :size="150"  :src="`http://localhost:80/upload/huodong/${Activitys.pictureaddress}`"></el-avatar>
+				    </el-descriptions-item>
+				  </el-descriptions>
 			  </div>
 			  <div slot="footer" class="dialog-footer">
 			    <!-- <el-button @click="dialogVisible = false">取 消</el-button> -->

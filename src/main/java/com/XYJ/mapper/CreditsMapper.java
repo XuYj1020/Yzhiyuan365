@@ -7,4 +7,5 @@ public interface CreditsMapper {
 
     @Insert("insert into credits(credit, volunteerid, activityid, time) values (#{credit},#{volunteerid}, #{activityid}, now())")
     void insert(Credits credits);
+
 }

@@ -1,8 +1,6 @@
 package com.XYJ.web.servlet;
 
-import com.XYJ.pojo.Aapplication;
-import com.XYJ.pojo.Activity;
-import com.XYJ.pojo.PageFY;
+import com.XYJ.pojo.*;
 import com.XYJ.service.AapplicationService;
 import com.XYJ.service.ActivityService;
 import com.XYJ.util.IdAutoCreateUtils;
@@ -140,5 +138,18 @@ public class AapplicationServlet extends BaseServlet{
         String jsonString = JSON.toJSONString(aapplications);
         resp.getWriter().write(jsonString);
     }
+
+    public void selectcountbyacstatuseandaappchartsv(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+        List<echars> echars = aapplicationservice.selectcountbyacstatuseandaappchartsv(aapplication);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(echars);
+        resp.getWriter().write(jsonString);
+    }
+
+
 
 }

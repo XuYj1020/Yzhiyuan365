@@ -105,6 +105,11 @@
 					  <el-descriptions-item label="详细地址">{{oinfos.oaddress}}</el-descriptions-item>
 					  <el-descriptions-item label="组织介绍">{{oinfos.ointroduce}}</el-descriptions-item>
 					</el-descriptions>
+					<el-descriptions :column="1" border v-if="oinfos.pictureaddress">
+					  <el-descriptions-item label="图片">
+						  <el-avatar shape="square" :size="150"  :src="`http://localhost:80/upload/zuzhi/${oinfos.pictureaddress}`"></el-avatar>
+					  </el-descriptions-item>
+					</el-descriptions>
 				</div>
 			</el-dialog>
 
@@ -246,6 +251,7 @@
 						}else{
 							this.formSH1.userstatusid = '5'
 						}
+						this.formSH1.reviewerid = localStorage.getItem("aid")
 						this.updateuserstatusid()
 						})
 						.catch(()=>{
@@ -267,7 +273,12 @@
 						  }).catch((error)=> {
 						    console.log(error.response);//可以拿到后端返回的信息
 						  });
-					}
+						  this.resetForm('formSH1') 
+					},
+					// 重置
+					resetForm(formName) {
+					  this.$refs[formName].resetFields();
+					},
 
 				}
 			})

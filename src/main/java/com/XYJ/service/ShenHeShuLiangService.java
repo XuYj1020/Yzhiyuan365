@@ -18,4 +18,20 @@ public class ShenHeShuLiangService {
         sqlSession.close();
         return shenHeShuLiangs;
     }
+
+    public List<ShenHeShuLiang> selectv(ShenHeShuLiang shenHeShuLiang){
+        SqlSession sqlSession = factory.openSession();
+        ShenHeShuLiangMapper shenHeShuLiangMapper = sqlSession.getMapper(ShenHeShuLiangMapper.class);
+        List<ShenHeShuLiang> shenHeShuLiangs = shenHeShuLiangMapper.selectv(shenHeShuLiang);
+        sqlSession.close();
+        return shenHeShuLiangs;
+    }
+
+    public List<ShenHeShuLiang> selecto(ShenHeShuLiang shenHeShuLiang){
+        SqlSession sqlSession = factory.openSession();
+        ShenHeShuLiangMapper shenHeShuLiangMapper = sqlSession.getMapper(ShenHeShuLiangMapper.class);
+        List<ShenHeShuLiang> shenHeShuLiangs = shenHeShuLiangMapper.selecto(shenHeShuLiang);
+        sqlSession.close();
+        return shenHeShuLiangs;
+    }
 }

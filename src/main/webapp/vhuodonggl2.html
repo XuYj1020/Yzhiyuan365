@@ -748,7 +748,7 @@
 						let now = new Date()
 						if(row.areanews.cityCode == 0){
 							this.$message.error("未生成签到码")
-						}else if(activitys.endtime > now){
+						}else if(endtime > now){
 							this.$message.error("还没到活动结束时间")
 						}else{
 							this.formZT.activityid = row.activityid

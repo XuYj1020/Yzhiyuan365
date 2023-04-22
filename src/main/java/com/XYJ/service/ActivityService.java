@@ -190,6 +190,61 @@ public class ActivityService {
         return echars;
     }
 
+    public List<echars> selectActivestatuscounts(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        List<echars> echars = activitymapper.selectActivestatuscounts(activity);
+        sqlSession.close();
+        return echars;
+    }
+    public List<echars> selectActivestatuscounts2(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        List<echars> echars = activitymapper.selectActivestatuscounts2(activity);
+        sqlSession.close();
+        return echars;
+    }
+    public List<echars> selectActivestatuscounts3(Activity activity){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+        List<echars> echars = activitymapper.selectActivestatuscounts3(activity);
+        sqlSession.close();
+        return echars;
+    }
+    public PageFY<Activity> selectcreditsByVidFY(int begin,int size,Credits credits){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+
+//        总记录数
+        int total = activitymapper.selectcreditsByVidCount(credits);
+        System.out.println(total);
+        begin = (begin - 1) * size;
+        List<Activity> activitys = activitymapper.selectcreditsByVidFY(begin,size,credits);
+
+        PageFY<Activity> page = new PageFY<>();
+        page.setTotal(total);
+        page.setShuju(activitys);
+        sqlSession.close();
+        return page;
+    }
+
+    public PageFY<Activity> selectdistributeByVidFY(int begin,int size,Distribute distribute){
+        SqlSession sqlSession = factory.openSession();
+        ActivityMapper activitymapper = sqlSession.getMapper(ActivityMapper.class);
+
+//        总记录数
+        int total = activitymapper.selectdistributeByVidCount(distribute);
+        System.out.println(total);
+        begin = (begin - 1) * size;
+        List<Activity> activitys = activitymapper.selectdistributeByVidFY(begin,size,distribute);
+
+        PageFY<Activity> page = new PageFY<>();
+        page.setTotal(total);
+        page.setShuju(activitys);
+        sqlSession.close();
+        return page;
+    }
+
     public static void main(String[] args) {
         ActivityService activityService = new ActivityService();
         List<Activity> ac =  activityService.selectByAcstyleidjoin("HD1101019803312778");

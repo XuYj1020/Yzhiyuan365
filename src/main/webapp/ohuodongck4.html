@@ -880,6 +880,7 @@
 						  this.$message.success('提交审核成功');
 						  this.dialogFormVisibleSH1 = false
 						  this.selectVinfoByAIDFYstatus()
+						  this.resetForm('formSH1')
 						  // location.reload()
 					  }).catch((error)=>{
 						  console.log(error.response);
@@ -889,7 +890,10 @@
 						  console.log('error submit!!');
 					})
 				},
-				
+				// 重置
+				resetForm(formName) {
+				  this.$refs[formName].resetFields();
+				},
 				vinfo(row){
 					this.vid = row.users.volunteerid
 					this.dialogTableVisibleVINFO = true

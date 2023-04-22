@@ -104,11 +104,11 @@
 					        <template slot-scope="scope">
 					          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
 					          <!-- <el-button type="text" size="small">取消报名</el-button> -->
-							  <!-- <el-popconfirm
-							    title="取消报名后需要重新报名,是否确认取消报名？"
-								@confirm="qxbm(scope.row)"
+							  <el-popconfirm
+							    title="将跳转活动详情页报名"
+								@confirm="cxbm(scope.row)"
 								>
-							    <el-button type="text" size="small" slot="reference">取消报名</el-button> -->
+							    <el-button type="text" size="small" slot="reference">重新报名</el-button>
 							  </el-popconfirm>
 					        </template>
 					      </el-table-column>
@@ -302,10 +302,9 @@
 							this.dialogVisible=true
 							this.selectActivityAID()
 					      },
-					qxbm(row){
-						console.log(row.applicationreviews.auditid)
-						this.auditid = row.applicationreviews.auditid
-						this.updateApplicationreviewsAuditstatusid()
+					cxbm(row){
+						
+						window.open('acivexq.html?activityid=' + row.activityid)
 						
 						
 					}

@@ -1,6 +1,8 @@
 package com.XYJ.mapper;
 
 import com.XYJ.pojo.Activity;
+import com.XYJ.pojo.Credits;
+import com.XYJ.pojo.Distribute;
 import com.XYJ.pojo.echars;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -52,4 +54,19 @@ public interface ActivityMapper {
     List<Activity> selectCOUNTbyacstyleecharts();
 
     List<echars> selectcountbyacstatusecharts();
+
+List<Activity> selectcreditsByVid(Activity activity);
+    int selectcreditsByVidCount(Credits credits);
+
+    List<Activity> selectcreditsByVidFY(@Param("begin") int begin, @Param("size") int size, @Param("credits") Credits credits);
+
+    int selectdistributeByVidCount(Distribute distribute);
+
+    List<Activity> selectdistributeByVidFY(@Param("begin") int begin, @Param("size") int size, @Param("distribute") Distribute distribute);
+
+    List<echars> selectActivestatuscounts(Activity activity);
+
+    List<echars> selectActivestatuscounts2(Activity activity);
+
+    List<echars> selectActivestatuscounts3(Activity activity);
 }
