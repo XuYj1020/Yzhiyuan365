@@ -205,6 +205,7 @@
 									  :auto-upload="false"
 									  :class="{disabled: uploadDisabled}"
 									  :on-success = "handleSuccess"
+									  :limit="1"
 									  accept="image/png,image/jpg,image/jpeg">
 									  <el-button slot="trigger" size="small" type="primary" :disabled = "osid != 1">选取文件</el-button>
 									  <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload" :disabled = "osid != 1">上传到服务器</el-button>

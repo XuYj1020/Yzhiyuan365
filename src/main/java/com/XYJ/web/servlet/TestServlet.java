@@ -98,7 +98,7 @@ public class TestServlet extends BaseServlet {
                     String path = "E:\\Download\\nginx-1.22.1\\html\\upload\\huodong\\";
 //                    File file=new File(path+fileName);
                     File file=new File(path+newName);
-                    file.getParentFile().mkdirs();
+                    file.getParentFile().mkdirs();    //判断上级目录是否存在，若不存在则新建
                     file.createNewFile();
                     //获得file对象的输出流
                     FileOutputStream out=new FileOutputStream(file);
