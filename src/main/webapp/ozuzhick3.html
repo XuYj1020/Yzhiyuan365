@@ -137,7 +137,7 @@
 						dialogVisible:false,
 						formInline:{
 							organizationid:'',
-							mlevelid:3,
+							mlevelid:2,
 							memberstatusid:1
 						},
 						
@@ -231,15 +231,15 @@
 					tzzz(row){
 						this.formInlinememberstatus.stafid = row.stafid
 						this.formInlinememberstatus.memberstatusid = 2
-						this.updateombers()
+						this.updateomberstatus()
 					},
 					jrhmd(row){
 						this.formInlinememberstatus.stafid = row.stafid
 						this.formInlinememberstatus.memberstatusid = 3
-						this.updateombers()
+						this.updateomberstatus()
 					},
 					
-					updateombers(){
+					updateomberstatus(){
 						axios({
 						    method:"post",
 						    url:"http://localhost:8080/Yzhiyuan365/Omembers/updateombers",

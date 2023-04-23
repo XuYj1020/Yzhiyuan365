@@ -304,6 +304,16 @@ public class ActivityServlet extends BaseServlet{
         resp.getWriter().write("success");
     }
 
+    public void updateAinfoshz(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader bufferedReader = req.getReader();
+        String params = bufferedReader.readLine();
+        Activity activity = JSON.parseObject(params,Activity.class);
+        activityservice.updateAinfo(activity);
+        resp.setContentType("text/json;charset=utf-8");
+        resp.getWriter().write("success");
+    }
+
     public void selectCOUNTbyacstyleecharts(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         List<Activity> activity = activityservice.selectCOUNTbyacstyleecharts();

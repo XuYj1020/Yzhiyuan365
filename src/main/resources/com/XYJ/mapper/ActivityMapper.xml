@@ -218,9 +218,11 @@
         </where>
     </select>
     <select id="selectActivityVCount" resultType="java.lang.Integer">
-        select count(*) from activity, acstyle,areanew,organization
+        select count(*) from activity
+        left join acstyle on activity.acstyle = acstyle.acstyleid
+        left join areanew on activity.district = areanew.area_code and areanew.level = 3
+        left join organization on activity.organizationid = organization.organizationid
         <where>
-            activity.organizationid = organization.organizationid and activity.acstyle = acstyle.acstyleid and activity.district = areanew.area_code and areanew.level = 3
             <if test="acstyle != 0">
                 and activity.acstyle = #{acstyle}
             </if>
@@ -248,9 +250,11 @@
     </select>
 
     <select id="selectActivityVFY" resultMap="rs1">
-        select  *,acstyle.acstyle as aa,areanew.whole_name,organization.oname from activity, acstyle,areanew,organization
+        select  *,acstyle.acstyle as aa,areanew.whole_name,organization.oname from activity
+        left join acstyle on activity.acstyle = acstyle.acstyleid
+        left join areanew on activity.district = areanew.area_code and areanew.level = 3
+        left join organization on activity.organizationid = organization.organizationid
         <where>
-            activity.organizationid = organization.organizationid and activity.acstyle = acstyle.acstyleid and activity.district = areanew.area_code and areanew.level = 3
             <if test="activity.acstyle != 0">
                 and activity.acstyle = #{activity.acstyle}
             </if>

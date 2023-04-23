@@ -78,7 +78,7 @@
 								<span>发布时间：</span><span>{{Activitys.creationtime}}</span> &nbsp;
 								<span>发布组织：</span><span v-if="organizations">{{organizations.oname}}</span>
 							</div>
-						    <el-button style="float: right; padding: 3px 0" type="text">我要举报</el-button>
+						    <!-- <el-button style="float: right; padding: 3px 0" type="text">我要举报</el-button> -->
 						  </div>
 						  <!-- 内容 -->
 						  <div class="text item">
@@ -252,7 +252,7 @@
 					this.searchhuodong = this.local + '/searchhuodong.html'
 					this.alongin = this.local + '/alongin.html'
 					this.index = this.local + '/index.html'
-					this.baomyanzform.volunteerid =this.sendinfo.volunteerid = localStorage.getItem('vid')
+					this.sendinfo.stafid=this.baomyanzform.volunteerid =this.sendinfo.volunteerid = localStorage.getItem('vid')
 					this.vname=localStorage.getItem('vname'),
 					// 调用方法获取url参数
 					this.getQueryString();
@@ -294,9 +294,10 @@
 							volunteerid:'',
 							auditid:'',
 							numberofenrolledvolunteer:'',
-							applicationstatusid: 1
+							applicationstatusid: 1,
+							stafid:''
 						},
-						
+						aleadercount:'',
 						baomyanzform:{
 							volunteerid:'',
 							starttime:'',
@@ -421,6 +422,7 @@
 							// 如果有活动管理员就去活动管理员表搜索管理员的信息
 							if(resp.data[0].havealeader == 1){
 								this.selectByjoinAID()
+								this.selectcount()
 							}
 						  }).catch((error)=> {
 						    console.log(error.resp);//可以拿到后端返回的信息
@@ -453,6 +455,19 @@
 						})
 					},
 					
+					// 判断是否活动管理员
+					selectcount(){
+						axios({
+							method:"post",
+							url:"http://localhost:8080/Yzhiyuan365/aleader/selectcount",
+							data:this.sendinfo
+						}).then((resp)=>{
+							console.log(resp.data)
+							this.aleadercount = resp.data
+						}).catch((resp)=>{
+							console.log(error.resp)
+						})
+					},
 					// 报名
 					bm(){
 						if(!localStorage.getItem('vid')){
@@ -460,9 +475,12 @@
 							window.open('./vlongin.html'); 
 							return
 						}
+						this.selectcount()
 						this.selectByVAIDCOUNT()
 						this.selectByVAIDjoinCOUNT()
-						if(this.applicationcount != 0){
+						if(this.aleadercount != 0){
+							this.$message.error("管理员不能报名")
+						}else if(this.applicationcount != 0){
 							this.$message.error("你已报名该活动")
 						}else if(this.applicationcountjoin != 0){
 							this.$message.error("你已报名该活动")

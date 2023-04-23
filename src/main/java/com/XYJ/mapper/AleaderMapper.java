@@ -16,4 +16,6 @@ public interface AleaderMapper {
 
     List<Aleader> selectActivityByVAleadIDFYSQ(@Param("begin") int begin, @Param("size") int size, @Param("aleader") Aleader aleader);
     int selectActivityByVAleadIDCountSQ(Aleader aleader);
+
+    int selectcount(Aleader aleader);
 }

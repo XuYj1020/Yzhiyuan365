@@ -581,7 +581,7 @@
 					
 					shenh2(row){
 						this.dialogFormVisibleSH1 = true
-						this.formSH1.leaderid = row.leaderid ==''?localStorage.getItem('oid'):row.leaderid
+						this.formSH1.leaderid = localStorage.getItem('oid')
 						this.formSH1.volunteerid = row.users.volunteerid
 						this.formSH1.auditid = row.auditid
 					},

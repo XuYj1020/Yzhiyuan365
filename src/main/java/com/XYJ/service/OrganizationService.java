@@ -34,6 +34,14 @@ public class OrganizationService {
         return organizatios;
     }
 
+    public Integer selectuserstatusid(String origanizationID){
+        SqlSession sqlSession = factory.openSession();
+        OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);
+        Integer organizatios =organizationmapper.selectuserstatusid(origanizationID);
+        sqlSession.close();
+        return organizatios;
+    }
+
     public List<Organization> selectByPhonePass(Organization organization){
         SqlSession sqlSession = factory.openSession();
         OrganizationMapper organizationmapper = sqlSession.getMapper(OrganizationMapper.class);

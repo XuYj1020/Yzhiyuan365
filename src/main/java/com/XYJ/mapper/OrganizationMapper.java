@@ -15,6 +15,9 @@ public interface OrganizationMapper {
     Integer selectByPhone(String phone);
     List<Organization> selectByPhonePass(Organization organization);
 
+    @Select("select userstatusid from organization where organizationid = #{organizationid}")
+    Integer selectuserstatusid(String origanizationID);
+
 //    通过组织id查看组织详细信息
     List<Organization> selectByOID(String origanizationID);
     List<Organization> selectByOIDAll(String origanizationID);

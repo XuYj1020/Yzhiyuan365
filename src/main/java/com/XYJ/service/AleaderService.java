@@ -42,6 +42,18 @@ public class AleaderService {
         return page;
     }
 
+    public int selectcount( Aleader aleader){
+        SqlSession sqlSession = factory.openSession();
+        AleaderMapper aleadermapper = sqlSession.getMapper(AleaderMapper.class);
+
+//        总记录数
+        int total = aleadermapper.selectcount(aleader);
+
+        sqlSession.close();
+        return total;
+    }
+
+
     public static void main(String[] args) {
         AleaderService aleaderService = new AleaderService();
         Map<String,Object> ainfo = new HashMap<>();

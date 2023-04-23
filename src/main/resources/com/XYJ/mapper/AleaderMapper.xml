@@ -107,6 +107,11 @@
                           left join admissionpolicy on admissionpolicy.admissionpolicyid = activity.admissionpolicy
         where aleader.stafid = #{stafid} and activity.activestatusid = #{activestatusid}
     </select>
+    <select id="selectcount" resultType="java.lang.Integer">
+        select count(*) from aleader
+        left join activity on activity.activityid = aleader.activityid
+        where aleader.stafid = #{stafid} and activity.activityid = #{activityid}
+    </select>
 
 
 </mapper>

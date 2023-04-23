@@ -295,4 +295,5 @@
         order by organization.registrationtime limit #{begin},#{size};
     </select>
 
+
 </mapper>

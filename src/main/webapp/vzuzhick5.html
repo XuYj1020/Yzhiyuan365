@@ -19,6 +19,10 @@
 			  .bg-purple-light {
 			    background: #e5e9f2;
 			  }
+			  
+			  .el-table .success-row {
+			    background: #f0f9eb;
+			  }
 		</style>
 	</head>
 	<body>
@@ -117,7 +121,8 @@
 				<el-table
 				    :data="tableDataCYCK"
 				    border
-				    style="width: 100%">
+				    style="width: 100%"
+					:row-class-name="tableRowClassName">
 				    <el-table-column
 				      prop="users.name"
 				      label="成员姓名"
@@ -566,7 +571,13 @@
 						  }).catch((error)=> {
 						    console.log(error.response);
 						  });
-					}
+					},
+					tableRowClassName({row, rowIndex}) {
+					       if (row.users.volunteerid == localStorage.getItem('vid')) {
+					         return 'success-row';
+					       } 
+					       return '';
+					     }
 				}
 			})
 		</script>

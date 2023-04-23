@@ -97,4 +97,18 @@ public class AleaderServlet extends BaseServlet{
         String jsonString = JSON.toJSONString(aleaders);
         resp.getWriter().write(jsonString);
     }
+
+    public void selectcount(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("utf-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+
+        Aleader aleader = JSON.parseObject(params,Aleader.class);
+
+        int count = aleaderservice.selectcount(aleader);
+
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(count);
+        resp.getWriter().write(jsonString);
+    }
 }

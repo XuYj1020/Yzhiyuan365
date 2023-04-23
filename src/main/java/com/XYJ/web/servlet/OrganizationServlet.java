@@ -61,6 +61,20 @@ public class OrganizationServlet extends BaseServlet{
         }
     }
 
+
+    public void selectuserstatusid(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+
+        String organizationid = req.getParameter("organizationid");
+//        调用方法
+        Integer a = organizationservice.selectuserstatusid(organizationid);
+//        返回数据
+        resp.setContentType("text/json;charset=utf-8");
+//        resp.getWriter().write("false");
+        String jsonString = JSON.toJSONString(a);
+        resp.getWriter().write(jsonString);
+    }
+
     public void selectByPhonePass(HttpServletRequest req,HttpServletResponse resp) throws ServletException,IOException {
         req.setCharacterEncoding("UTF-8");
 

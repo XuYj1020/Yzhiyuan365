@@ -66,7 +66,7 @@
 							  title="移除黑名单后,该成员将会被移出组织,并且可以重新申请加入,是否确认？"
 								@confirm="ychmd(scope.row)"
 								>
-							  <el-button type="text" size="small" slot="reference">加入黑名单</el-button>
+							  <el-button type="text" size="small" slot="reference">移出黑名单</el-button>
 							</el-popconfirm>
 							
 							
@@ -125,8 +125,8 @@
 						dialogVisible:false,
 						formInline:{
 							organizationid:'',
-							mlevelid:3,
-							memberstatusid:1
+							// mlevelid:3,
+							memberstatusid:3
 						},
 						
 						dialogTableVisibleVINFO:false,
