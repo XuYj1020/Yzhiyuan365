@@ -13,4 +13,10 @@ public interface DistributeMapper {
 
     @Select("SELECT IFNULL(( select recordid  from distribute where activityid = #{activityid} order by recordid desc limit 1),'0001')")
     String recordid(String activityid);
+
+    @Insert("insert into distribute2(volunteerhours,releasetime,applicationid) values(#{volunteerhours},NOW(),#{applicationid})")
+    void insertyqdN(Distribute distribute);
+    @Insert("insert into distribute2(volunteerhours,releasetime,applicationid) values(0,NOW(),#{applicationid})")
+    void insertwqdN(Distribute distribute);
+
 }

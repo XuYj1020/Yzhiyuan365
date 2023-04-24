@@ -377,7 +377,7 @@
 						dialogFormVisibleCKPJ:false,
 						formCKPJ:{
 							activityid:'',
-							volunteerid:'',
+							// volunteerid:'',
 						},
 						index:1,
 						tableDataCKPJ:[]
@@ -537,6 +537,7 @@
 				
 				ckpj(row){
 					this.dialogFormVisibleCKPJ = true
+					this.formCKPJ.activityid = row.activityid
 					this.selecteva()
 				},
 				selecteva(){

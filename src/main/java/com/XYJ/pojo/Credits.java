@@ -9,6 +9,15 @@ public class Credits {
   private String activityid;
   private String time;
 
+private String applicationid;
+
+  public String getApplicationid() {
+    return applicationid;
+  }
+
+  public void setApplicationid(String applicationid) {
+    this.applicationid = applicationid;
+  }
 
   public int getCreditid() {
     return creditid;
@@ -54,4 +63,15 @@ public class Credits {
     this.time = time;
   }
 
+  @Override
+  public String toString() {
+    return "Credits{" +
+            "creditid=" + creditid +
+            ", credit=" + credit +
+            ", volunteerid='" + volunteerid + '\'' +
+            ", activityid='" + activityid + '\'' +
+            ", time='" + time + '\'' +
+            ", applicationid='" + applicationid + '\'' +
+            '}';
+  }
 }

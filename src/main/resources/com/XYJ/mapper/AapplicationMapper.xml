@@ -107,12 +107,12 @@
     </select>
 
     <select id="selectVinfoByAIDFYstatus" resultMap="rs1">
-        select *,distribute.volunteerhours as disvolunteerhours from aapplication
+        select *,distribute2.volunteerhours as disvolunteerhours from aapplication
         left join volunteer on volunteer.volunteerid = aapplication.volunteerid
         left join aleave on aleave.applicationid = aapplication.applicationid
         left join signrecord on signrecord.applicationid = aapplication.applicationid
         left join leavereview on leavereview.leaveapplicationid = aleave.leaveapplicationid
-        left join distribute on distribute.activityid = aapplication.activityid and volunteer.volunteerid = distribute.volunteerid
+        left join distribute2 on distribute2.applicationid = aapplication.applicationid and volunteer.volunteerid = aapplication.volunteerid
                  <where>
                      aapplication.activityid =#{aapplication.activityid}  and aapplication.applicationstatusid = #{aapplication.applicationstatusid}
                      <if test="aapplication.auditid == 1">
@@ -127,7 +127,7 @@
                           left join aleave on aleave.applicationid = aapplication.applicationid
                           left join signrecord on signrecord.applicationid = aapplication.applicationid
                           left join leavereview on leavereview.leaveapplicationid = aleave.leaveapplicationid
-        left join distribute on distribute.activityid = aapplication.activityid and volunteer.volunteerid = distribute.volunteerid
+        left join distribute2 on distribute2.applicationid = aapplication.applicationid and volunteer.volunteerid = aapplication.volunteerid
         <where>
             aapplication.activityid =#{activityid}  and aapplication.applicationstatusid = #{applicationstatusid}
             <if test="auditid == 1">
@@ -157,6 +157,13 @@
                                                                                          left join activity on activity.activityid = aapplication.activityid
                                                                                          left join volunteer  on volunteer.volunteerid = aapplication.volunteerid
         where volunteer.volunteerid = #{volunteerid}   and aapplication.applicationstatusid in (1,3,4,5) and activity.activestatusid in (1,2,3) group by applicationstatus.applicationstatusid
+    </select>
+    <select id="selecthuodongcyqk" resultType="com.XYJ.pojo.echars">
+        select applicationstatus.status as `name` , count(*) as `value` from aapplication
+                                                            left join activity on activity.activityid = aapplication.activityid
+                                                            left join applicationstatus on applicationstatus.applicationstatusid = aapplication.applicationstatusid
+        where activity.activestatusid = 4 and aapplication.volunteerid = #{volunteerid} and aapplication.applicationstatusid in (3,4,5)
+        GROUP BY applicationstatus.applicationstatusid
     </select>
 
 </mapper>

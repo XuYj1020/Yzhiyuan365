@@ -206,7 +206,88 @@ public class ActivityServlet extends BaseServlet{
         resp.getWriter().write("success");
     }
 
-    public void updateActivityActivestatusid4(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//    public void updateActivityActivestatusid4(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        req.setCharacterEncoding("UTF-8");
+//        BufferedReader bufferedReader = req.getReader();
+//        String params = bufferedReader.readLine();
+//        Activity activity = JSON.parseObject(params,Activity.class);
+//        User user = JSON.parseObject(params,User.class);
+////      1根据传入的 applicationstatusid 判断是否已签到 是否为4  已签到调用 yqs  未签到调用wqd  完成时长记录新增
+//        Map mapTypes = JSON.parseObject(params);
+//        int applicationstatusid = (int)mapTypes.get("applicationstatusid");
+//
+//        String applicationstatusids = String.valueOf(applicationstatusid);
+//        int creditss = (int)mapTypes.get("credit");
+//        String credit = String.valueOf(creditss);
+//        if(applicationstatusids.equals("4")){
+////            调用方法获取志愿者ID数组
+//            Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+//            AapplicationService aapplicationService = new AapplicationService();
+//            String[] volunteerids= aapplicationService.selectVID(aapplication);
+//            System.out.println("--------------------------");
+//            System.out.println(applicationstatusids);
+//            System.out.println("--------------------------");
+//            for (int i = 0; i < volunteerids.length; i++) {
+////                System.out.println(volunteerids[i] + " ");
+//                mapTypes.put("volunteerid",volunteerids[i]);
+//                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+//                DistributeService distributeService = new DistributeService();
+//                distributeService.insertyqd(distribute);
+//                String jsonString = JSON.toJSONString(mapTypes);
+//                Credits credits = JSON.parseObject(jsonString,Credits.class);
+//                CreditsService creditsService = new CreditsService();
+//                creditsService.insert(credits);
+//                System.out.println("--------------------------");
+//                System.out.println(distribute);
+//                System.out.println("--------------------------");
+//            }
+//            UserService userService = new UserService();
+//            userService.updatehourse(activity);
+//            userService.updateCreditjia(activity);
+//        } else if (applicationstatusids.equals("3")) {
+//            Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+//            AapplicationService aapplicationService = new AapplicationService();
+//            String[] volunteerids= aapplicationService.selectVID(aapplication);
+//            for (int i = 0; i < volunteerids.length; i++) {
+////            System.out.println(volunteerids[i] + " ");
+//                mapTypes.put("volunteerid", volunteerids[i]);
+//                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+//                DistributeService distributeService = new DistributeService();
+//                distributeService.insertwqd(distribute);
+//                String jsonString = JSON.toJSONString(mapTypes);
+//                Credits credits = JSON.parseObject(jsonString,Credits.class);
+//                CreditsService creditsService = new CreditsService();
+//                creditsService.insert(credits);
+//
+//            }
+//
+//        } else{
+//            Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+//            AapplicationService aapplicationService = new AapplicationService();
+//            String[] volunteerids= aapplicationService.selectVID(aapplication);
+//            for (int i = 0; i < volunteerids.length; i++) {
+////            System.out.println(volunteerids[i] + " ");
+//                mapTypes.put("volunteerid",volunteerids[i]);
+//                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+//                DistributeService distributeService = new DistributeService();
+//                distributeService.insertwqd(distribute);
+//                String jsonString = JSON.toJSONString(mapTypes);
+//                Credits credits = JSON.parseObject(jsonString,Credits.class);
+//                CreditsService creditsService = new CreditsService();
+//                creditsService.insert(credits);
+//            }
+//            UserService userService = new UserService();
+//            userService.updateCreditjian(activity);
+//        }
+//
+//        activityservice.updateActivityActivestatusid4(activity);
+////        activityservice.updateActivityActivestatusid4(ac);
+//        resp.setContentType("text/json;charset=utf-8");
+//        resp.getWriter().write("success");
+//    }
+
+//    新
+    public void updateActivityActivestatusid4N(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         BufferedReader bufferedReader = req.getReader();
         String params = bufferedReader.readLine();
@@ -217,64 +298,81 @@ public class ActivityServlet extends BaseServlet{
         int applicationstatusid = (int)mapTypes.get("applicationstatusid");
 
         String applicationstatusids = String.valueOf(applicationstatusid);
+//        拿到信用分 前台传入
         int creditss = (int)mapTypes.get("credit");
         String credit = String.valueOf(creditss);
         if(applicationstatusids.equals("4")){
-//            调用方法获取志愿者ID数组
+//            调用方法获取报名编号ID数组
             Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
             AapplicationService aapplicationService = new AapplicationService();
-            String[] volunteerids= aapplicationService.selectVID(aapplication);
+//            得到报名编号ID数组
+            String[] applicationids= aapplicationService.selectVIDN(aapplication);
+            System.out.println("wo dayin");
             System.out.println("--------------------------");
             System.out.println(applicationstatusids);
             System.out.println("--------------------------");
-            for (int i = 0; i < volunteerids.length; i++) {
-//                System.out.println(volunteerids[i] + " ");
-                mapTypes.put("volunteerid",volunteerids[i]);
-                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+            System.out.println(applicationstatusids);
+//            遍历 取出申请编号，把编号放到Distribute中
+            for (int i = 0; i < applicationids.length; i++) {
+                System.out.println(applicationids[i] + "我在循环");
+                mapTypes.put("applicationid",applicationids[i]);
+//                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
                 DistributeService distributeService = new DistributeService();
-                distributeService.insertyqd(distribute);
+                String jsonString1 = JSON.toJSONString(mapTypes);
+                Distribute distribute = JSON.parseObject(jsonString1,Distribute.class);
+//                插入志愿时长
+                distributeService.insertyqdN(distribute);
+                System.out.println(applicationids[i] + "插入志愿时长");
                 String jsonString = JSON.toJSONString(mapTypes);
+                //                插入信用分
                 Credits credits = JSON.parseObject(jsonString,Credits.class);
                 CreditsService creditsService = new CreditsService();
-                creditsService.insert(credits);
+                creditsService.insertN(credits);
+                System.out.println(applicationids[i] + " 插入信用分");
                 System.out.println("--------------------------");
                 System.out.println(distribute);
                 System.out.println("--------------------------");
             }
             UserService userService = new UserService();
+            //                增加志愿时长
             userService.updatehourse(activity);
+            //                增加信用分
             userService.updateCreditjia(activity);
         } else if (applicationstatusids.equals("3")) {
             Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
             AapplicationService aapplicationService = new AapplicationService();
-            String[] volunteerids= aapplicationService.selectVID(aapplication);
-            for (int i = 0; i < volunteerids.length; i++) {
+            String[] applicationids= aapplicationService.selectVIDN(aapplication);
+            for (int i = 0; i < applicationids.length; i++) {
 //            System.out.println(volunteerids[i] + " ");
-                mapTypes.put("volunteerid", volunteerids[i]);
-                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+                mapTypes.put("applicationid", applicationids[i]);
+//                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+                String jsonString1 = JSON.toJSONString(mapTypes);
+                Distribute distribute = JSON.parseObject(jsonString1,Distribute.class);
                 DistributeService distributeService = new DistributeService();
-                distributeService.insertwqd(distribute);
+                distributeService.insertwqdN(distribute);
                 String jsonString = JSON.toJSONString(mapTypes);
                 Credits credits = JSON.parseObject(jsonString,Credits.class);
                 CreditsService creditsService = new CreditsService();
-                creditsService.insert(credits);
+                creditsService.insertN(credits);
 
             }
 
         } else{
             Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
             AapplicationService aapplicationService = new AapplicationService();
-            String[] volunteerids= aapplicationService.selectVID(aapplication);
-            for (int i = 0; i < volunteerids.length; i++) {
+            String[] applicationids= aapplicationService.selectVIDN(aapplication);
+            for (int i = 0; i < applicationids.length; i++) {
 //            System.out.println(volunteerids[i] + " ");
-                mapTypes.put("volunteerid",volunteerids[i]);
-                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+                mapTypes.put("applicationid",applicationids[i]);
+//                Distribute distribute = IdAutoCreateUtils.distributerecordid(mapTypes);
+                String jsonString1 = JSON.toJSONString(mapTypes);
+                Distribute distribute = JSON.parseObject(jsonString1,Distribute.class);
                 DistributeService distributeService = new DistributeService();
-                distributeService.insertwqd(distribute);
+                distributeService.insertwqdN(distribute);
                 String jsonString = JSON.toJSONString(mapTypes);
                 Credits credits = JSON.parseObject(jsonString,Credits.class);
                 CreditsService creditsService = new CreditsService();
-                creditsService.insert(credits);
+                creditsService.insertN(credits);
             }
             UserService userService = new UserService();
             userService.updateCreditjian(activity);
@@ -285,8 +383,6 @@ public class ActivityServlet extends BaseServlet{
         resp.setContentType("text/json;charset=utf-8");
         resp.getWriter().write("success");
     }
-
-
 
     public void updateAinfo(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");

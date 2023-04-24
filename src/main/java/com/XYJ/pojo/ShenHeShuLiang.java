@@ -34,7 +34,15 @@ public class ShenHeShuLiang {
   private int dshbmry;
   private int dshqjry;
     private String organizationid;
+private String lishicanyhdshu;
 
+    public String getLishicanyhdshu() {
+        return lishicanyhdshu;
+    }
+
+    public void setLishicanyhdshu(String lishicanyhdshu) {
+        this.lishicanyhdshu = lishicanyhdshu;
+    }
 
     public int getYff() {
         return yff;
@@ -300,6 +308,7 @@ public class ShenHeShuLiang {
                 ", dshbmry=" + dshbmry +
                 ", dshqjry=" + dshqjry +
                 ", organizationid='" + organizationid + '\'' +
+                ", lishicanyhdshu='" + lishicanyhdshu + '\'' +
                 '}';
     }
 }

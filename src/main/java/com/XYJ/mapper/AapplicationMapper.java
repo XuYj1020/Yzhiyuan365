@@ -2,6 +2,7 @@ package com.XYJ.mapper;
 
 import com.XYJ.pojo.Aapplication;
 import com.XYJ.pojo.Activity;
+import com.XYJ.pojo.User;
 import com.XYJ.pojo.echars;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
@@ -42,8 +43,13 @@ public interface AapplicationMapper {
     void updateApplicationstatusid3(String applicationid);
 
 //    搜索志愿者ID存入数组 新增志愿时长发放表时用到
-    @Select("select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = #{applicationstatusid} GROUP BY volunteerid")
-    String[] selectVID(Aapplication aapplication);
+//    @Select("select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = #{applicationstatusid} GROUP BY volunteerid")
+//    String[] selectVID(Aapplication aapplication);
 
+//    新的优化，把活动申请ID取出，用来更新志愿时长表和信用分表
+    @Select("select applicationid from aapplication where activityid = #{activityid} and applicationstatusid = #{applicationstatusid}")
+    String[] selectVIDN(Aapplication aapplication);
     List<echars> selectcountbyacstatuseandaappchartsv(Aapplication aapplication);
+
+    List<echars> selecthuodongcyqk(Aapplication aapplication);
 }

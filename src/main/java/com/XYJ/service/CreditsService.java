@@ -17,4 +17,11 @@ public class CreditsService {
         creditsMapper.insert(credits);
         sqlSession.close();
     }
+
+    public void insertN(Credits credits) {
+        SqlSession sqlSession = factory.openSession();
+        CreditsMapper creditsMapper = sqlSession.getMapper(CreditsMapper.class);
+        creditsMapper.insertN(credits);
+        sqlSession.close();
+    }
 }

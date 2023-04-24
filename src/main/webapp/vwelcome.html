@@ -59,6 +59,13 @@
                                             <cite id="qj"></cite></p>
                                     </a>
                                 </li>
+								<li class="layui-col-md2 layui-col-xs6">
+								    <a href="javascript:;" class="x-admin-backlog-body">
+								        <h3 >历史参与的活动数</h3>
+								        <p>
+								            <cite id="lishicanyhdshu"></cite></p>
+								    </a>
+								</li>
                                 <li class="layui-col-md2 layui-col-xs6">
                                     <a href="javascript:;" class="x-admin-backlog-body">
                                         <h3 >加入的组织数</h3>
@@ -81,6 +88,17 @@
 				        </div>
 				    </div>
 				</div>
+				<div class="layui-col-sm12 layui-col-md6">
+				    <div class="layui-card">
+				        <div class="layui-card-header">历史活动参与情况</div>
+				        <div class="layui-card-body" style="min-height: 400px;">
+				            <div id="main1" class="layui-col-sm12" style="height: 400px;">
+								
+							</div>
+				
+				        </div>
+				    </div>
+				</div>
         </div>
         </div>
 
@@ -97,6 +115,7 @@
 				 let yqd =  document.querySelector('#yqd') 
 				 let wqd =  document.querySelector('#wqd') 
 				 let qj =  document.querySelector('#qj') 
+				 let lishicanyhdshu = document.querySelector('#lishicanyhdshu') 
 				 let jiarudzuzhishu =  document.querySelector('#jiarudzuzhishu') 
 				 let count 
 				 let a = {}
@@ -118,6 +137,7 @@
 						wqd.innerText = count["wqd"]
 						qj.innerText = count["qj"]
 						jiarudzuzhishu.innerText = count["jiarudzuzhishu"]
+						lishicanyhdshu.innerText = count["lishicanyhdshu"]
 				 	  }).catch((error)=> {
 				 	    console.log(error.response);//可以拿到后端返回的信息
 				 	  });
@@ -189,6 +209,52 @@
 			 	 			// pieData1 = response.data
 			 				let cc = response.data
 							console.log(a)
+			 				for ( let i = 0 ; i <= cc.length - 1 ; i++){
+			 					
+			 					pieData1.push(cc[i])
+			 				}
+			 	 			// 使用刚指定的配置项和数据显示图表。
+			 	 			myChart.setOption(option);
+			 	 			console.log(pieData1)
+			 	 	    }).catch(function (err) {
+			 	 	        console.log(err)
+			 	 	    });
+			 	 }
+			 	 fun1()
+			 })();
+			 
+			 (function() {
+			 	let pieData1 = []
+			 	// label.show：显示文字
+			 	// label.formatter：格式化文字
+			 	 var myChart = echarts.init(document.getElementById('main1'));
+			 	 var option = {
+			 	    series:[
+			 	        {
+			 	            type:'pie',
+			 	            data:pieData1,
+			 	            label:{
+			 	                show:true,
+			 	                formatter:function(arg){
+			 	                    return arg.data.name + '活动' + arg.data.value + '个\n' + arg.percent + '%'
+			 	                }
+			 	            }
+			 	        }
+			 	    ]
+			 	}
+			 				let a = {}
+			 				a.volunteerid = localStorage.getItem('vid')
+			 	 function fun1(){
+			 	 	axios({
+			 	 	        url: "http://localhost:8080/Yzhiyuan365/aapplication/selecthuodongcyqk",
+			 	 	        method: 'post',
+			 				data:a
+			 	 	    })
+			 	 	    .then(function (response) {
+			 	 	        console.log(response.data)
+			 	 			// pieData1 = response.data
+			 				let cc = response.data
+			 							console.log(a)
 			 				for ( let i = 0 ; i <= cc.length - 1 ; i++){
 			 					
 			 					pieData1.push(cc[i])

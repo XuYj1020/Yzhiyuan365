@@ -2,6 +2,7 @@ package com.XYJ.mapper;
 
 import com.XYJ.pojo.Activity;
 import com.XYJ.pojo.User;
+import com.XYJ.pojo.echars;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
 
@@ -37,6 +38,11 @@ public interface UserMapper {
 
     void updateCreditjia(Activity activity);
     void updateCreditjian(Activity activity);
+
+    void updatehourseN(Activity activity);
+
+    void updateCreditjiaN(Activity activity);
+    void updateCreditjianN(Activity activity);
     int selectActivityCount(@Param("volunteerid") String volunteerid, @Param("activity") Activity activity);
     List<User> selectVCredit(String volunteerid);
 

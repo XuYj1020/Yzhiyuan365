@@ -695,6 +695,8 @@
 // 查看已报名人员
 					ckbmry(row){
 						this.formZT.activityid = row.activityid
+						this.activeName = 'yiqiandao'
+						this.formZT.auditid = ''
 						this.selectVinfoByAIDFYstatus()
 						this.dialogTableVisibleZTshow=false
 						this.dialogTableVisibleZT = true
@@ -756,6 +758,8 @@
 						}else if(endtime > now){
 							this.$message.error("还没到活动结束时间")
 						}else{
+							this.activeName = 'yiqiandao'
+							this.formZT.auditid = ''
 							this.formZT.activityid = row.activityid
 							this.formWC.activityid = row.activityid
 							this.formWC.volunteerhours = row.volunteerhours
@@ -788,7 +792,8 @@
 						console.log(this.formWC.applicationstatusid)
 						axios({
 							method:"post",
-							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
+							// url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
+							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4N',
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},
@@ -807,7 +812,8 @@
 						this.formWC.credit = -2
 						axios({
 							method:"post",
-							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
+							// url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
+							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4N',
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},
@@ -826,7 +832,8 @@
 						this.formWC.credit = 0
 						axios({
 							method:"post",
-							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
+							// url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4',
+							url:'http://localhost:8080/Yzhiyuan365/Activity/updateActivityActivestatusid4N',
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},

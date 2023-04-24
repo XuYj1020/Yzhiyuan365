@@ -142,7 +142,7 @@
         select *,otype.otype as oo ,
                registrationstatus.registrationstatus as rr,
                (select count(*) from omembers where omembers.organizationid = organization.organizationid and omembers.memberstatusid = 1) as count,
-                (select sum(distribute.volunteerhours) from distribute,activity,organization where distribute.activityid = activity.activityid and activity.organizationid = organization.organizationid) as zipCode
+                (select sum(distribute2.volunteerhours) from distribute2,activity,organization,aapplication where distribute2.applicationid =aapplication.applicationid and  aapplication.activityid = activity.activityid and activity.organizationid = organization.organizationid) as zipCode
         from organization
           left join  otype on organization.otype = otype.otypeid
           left join  registrationstatus on organization.registrationstatus = registrationstatus.registrationstatusid

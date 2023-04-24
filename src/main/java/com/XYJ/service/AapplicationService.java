@@ -111,18 +111,34 @@ public class AapplicationService {
         return page;
     }
 
-    public String[] selectVID(Aapplication aapplication){
-        SqlSession sqlSession = factory.openSession();
-        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
-        String[] aapplications = aapplicationemapper.selectVID(aapplication);
-        sqlSession.close();
-        return aapplications;
-    }
+//    public String[] selectVID(Aapplication aapplication){
+//        SqlSession sqlSession = factory.openSession();
+//        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+//        String[] aapplications = aapplicationemapper.selectVID(aapplication);
+//        sqlSession.close();
+//        return aapplications;
+//    }
+//      新的优化，把活动申请ID取出，用来更新志愿时长表和信用分表
+public String[] selectVIDN(Aapplication aapplication){
+    SqlSession sqlSession = factory.openSession();
+    AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+    String[] aapplications = aapplicationemapper.selectVIDN(aapplication);
+    sqlSession.close();
+    return aapplications;
+}
 
     public List<echars> selectcountbyacstatuseandaappchartsv(Aapplication aapplication){
         SqlSession sqlSession = factory.openSession();
         AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
         List<echars> echars = aapplicationemapper.selectcountbyacstatuseandaappchartsv(aapplication);
+        sqlSession.close();
+        return echars;
+    }
+
+    public List<echars> selecthuodongcyqk(Aapplication aapplication){
+        SqlSession sqlSession = factory.openSession();
+        AapplicationMapper aapplicationemapper = sqlSession.getMapper(AapplicationMapper.class);
+        List<echars> echars = aapplicationemapper.selecthuodongcyqk(aapplication);
         sqlSession.close();
         return echars;
     }

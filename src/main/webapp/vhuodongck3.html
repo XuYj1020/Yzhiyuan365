@@ -82,11 +82,11 @@
 						    label="报名时间"
 						    align="center">
 						  </el-table-column>
-						  <el-table-column
-						    prop="areanews.lon"
+<!-- 						  <el-table-column
+						    prop="areanews.lat"
 						    label="签到码"
-						    align="center">
-						  </el-table-column>
+						    align="center"> 
+						  </el-table-column>-->
 					      <el-table-column
 					        fixed="right"
 					        label="操作"
@@ -394,7 +394,8 @@
 									console.log(resp.data);
 									this.dialogFormVisibleQJ = false
 									this.$message.success('请假申请提交成功');
-									location.reload()
+									// location.reload()
+									this.selectActivityBYVIDFY()
 								}).catch((error)=>{
 									console.log(error.response);
 								})

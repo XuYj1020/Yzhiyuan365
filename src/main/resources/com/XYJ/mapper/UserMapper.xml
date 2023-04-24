@@ -233,6 +233,16 @@
         update volunteer set credit = credit + #{credit} WHERE volunteerid in (select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = 5 GROUP BY volunteerid)
     </update>
 
+    <update id="updatehourseN">
+        update volunteer set volunteerhours = volunteerhours + #{volunteerhours} , volunteercoins = volunteercoins + #{volunteerhours} WHERE volunteerid in (select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = 4 GROUP BY volunteerid)
+    </update>
+    <update id="updateCreditjiaN">
+        update volunteer set credit = credit + #{credit} WHERE volunteerid in (select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = 4 GROUP BY volunteerid) and credit &lt; 100
+    </update>
+    <update id="updateCreditjianN">
+        update volunteer set credit = credit + #{credit} WHERE volunteerid in (select volunteerid from aapplication where activityid = #{activityid} and applicationstatusid = 5 GROUP BY volunteerid)
+    </update>
+
     <select id="selectActivityCount" resultType="java.lang.Integer">
         select count(*) from volunteer
           left join aapplication on aapplication.volunteerid = volunteer.volunteerid

@@ -150,6 +150,15 @@ public class AapplicationServlet extends BaseServlet{
         resp.getWriter().write(jsonString);
     }
 
-
+    public void selecthuodongcyqk(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        BufferedReader us = req.getReader();
+        String params = us.readLine();
+        Aapplication aapplication = JSON.parseObject(params,Aapplication.class);
+        List<echars> echars = aapplicationservice.selecthuodongcyqk(aapplication);
+        resp.setContentType("text/json;charset=utf-8");
+        String jsonString = JSON.toJSONString(echars);
+        resp.getWriter().write(jsonString);
+    }
 
 }

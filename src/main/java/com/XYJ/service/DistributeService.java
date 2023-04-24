@@ -31,4 +31,17 @@ public class DistributeService {
         sqlSession.close();
         return recordid;
     }
+
+    public void insertyqdN(Distribute distribute){
+        SqlSession sqlSession = factory.openSession();
+        DistributeMapper distributeMapper = sqlSession.getMapper(DistributeMapper.class);
+        distributeMapper.insertyqdN(distribute);
+        sqlSession.close();
+    }
+    public  void insertwqdN(Distribute distribute){
+        SqlSession sqlSession = factory.openSession();
+        DistributeMapper distributeMapper = sqlSession.getMapper(DistributeMapper.class);
+        distributeMapper.insertwqdN(distribute);
+        sqlSession.close();
+    }
 }

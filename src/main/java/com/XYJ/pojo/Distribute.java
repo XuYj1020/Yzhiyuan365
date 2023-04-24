@@ -8,7 +8,16 @@ public class Distribute {
   private double volunteerhours;
   private String releasetime;
   private String activityid;
+private String applicationid;
 
+
+  public String getApplicationid() {
+    return applicationid;
+  }
+
+  public void setApplicationid(String applicationid) {
+    this.applicationid = applicationid;
+  }
 
   public String getRecordid() {
     return recordid;
@@ -62,6 +71,7 @@ public class Distribute {
             ", volunteerhours=" + volunteerhours +
             ", releasetime='" + releasetime + '\'' +
             ", activityid='" + activityid + '\'' +
+            ", applicationid='" + applicationid + '\'' +
             '}';
   }
 }
