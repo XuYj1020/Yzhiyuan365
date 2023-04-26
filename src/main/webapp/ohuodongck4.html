@@ -550,7 +550,7 @@
 						insertqdmform:{
 							activityid:''
 						},
-						
+						starttimee:'',
 						dialogTableVisibleRYSH:false,
 						currentPageRYSH:1,
 						pageSizeRYSH:20,
@@ -697,6 +697,7 @@
 						this.formZT.activityid = row.activityid
 						this.activeName = 'yiqiandao'
 						this.formZT.auditid = ''
+						this.formZT.applicationstatusid = 4
 						this.selectVinfoByAIDFYstatus()
 						this.dialogTableVisibleZTshow=false
 						this.dialogTableVisibleZT = true
@@ -965,6 +966,7 @@
 							console.log(this.dialogTableVisibleRYSH1)
 							this.selectVinfoByAIDFYRYSH()
 							this.selectshenhshul()
+							this.starttimee = row.starttime
 							this.formRYSH1.leaderid = localStorage.getItem('oid')
 						}
 					},
@@ -990,7 +992,7 @@
 					selectshenhshul(){
 						axios({
 							method:"post",
-							url:'http://localhost:8080/Yzhiyuan365/applicationreview/selectshenhshul?activityid=' + this.formSH1.activityid,
+							url:'http://localhost:8080/Yzhiyuan365/applicationreview/selectshenhshul?activityid=' + this.formRYSH1.activityid,
 							headers:{
 								vtoken:localStorage.getItem('vtoken')
 							},
@@ -1006,7 +1008,10 @@
 					Validatorauditstatusid(rule, value, callback) {
 						if(value == '2' && this.selectshenhshuls.numberofenrolledvolunteer >= this.selectshenhshuls.numberofrequiredvolunteer){
 							callback('人员已招满，无法审核通过');
-						}else{
+						}else if(value == '2'&& new Date(this.starttimee)<new Date()){
+							callback('活动已开始，不可审核通过');
+						}
+						else{
 							callback();
 						}
 					},

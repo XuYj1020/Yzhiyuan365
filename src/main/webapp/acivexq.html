@@ -547,7 +547,7 @@
 						console.log(this.baomyanzform)
 						axios({
 							method:"post",
-							url:"http://localhost:8080/Yzhiyuan365/user/baomingyanz?vid="+this.baomyanzform.volunteerid,
+							url:"http://localhost:8080/Yzhiyuan365/user/baomingyanz?vid="+localStorage.getItem('vid'),
 							data:this.baomyanzform
 						}).then((resp)=>{
 							this.count = resp.data['total']
@@ -556,7 +556,7 @@
 							console.log(resp.data['total'])
 							console.log(resp.data['shuju'][0].credit)
 						}).catch((resp)=>{
-							console.log(error.response)
+							console.log(error.resp)
 						})
 					},
 					
