@@ -434,6 +434,8 @@ public static Applicationreview auditid(String params){
             String a = sid.substring(4);
 //            把去掉后的数字转成long类型  ，  转换完成后+1
             long num =Long.parseLong(a.substring(a.length()-15))+1;
+            num=num+1;
+            System.out.println("我是AUTO里面的num"+num);
 //            int num = Integer.parseInt(a.substring(a.length()-10))+1;
 //            把前面被截掉的拿回来
             String str = a.substring(0,a.length()-15);
