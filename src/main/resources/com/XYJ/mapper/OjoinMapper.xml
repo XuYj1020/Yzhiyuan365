@@ -29,7 +29,7 @@
             <result column="otype" property="otype" />
             <result column="registrationstatus" property="registrationstatus" />
             <result column="unifiedcode" property="unifiedcode"/>
-            <result column="name" property="name"/>
+            <result column="ooname" property="name"/>
             <result column="idnumber" property="idnumber" />
             <result column="oname" property="oname" />
             <result column="province" property="province" />
@@ -73,7 +73,7 @@
     </resultMap>
 
     <select id="selectALLBYOVIDJOINFY" resultMap="rs1">
-        select * from ojoin
+        select *,organization.name as ooname from ojoin
                           left join volunteer on ojoin.volunteerid = volunteer.volunteerid
                           left join omembers on omembers.volunteerid =ojoin.volunteerid and omembers.applicationid = ojoin.applicationid
                           left join organization on organization.organizationid = ojoin.organizationid
